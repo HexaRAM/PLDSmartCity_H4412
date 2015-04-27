@@ -1,1 +1,2 @@
-# PLDSmartCity_H4412
+# Android
+Client de l'application
