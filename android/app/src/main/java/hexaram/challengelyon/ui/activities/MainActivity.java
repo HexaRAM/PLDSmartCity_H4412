@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import hexaram.challengelyon.R;
+import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -46,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(this, "Hey l'HexaRAM+, pas encore de paramètres :(", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_params, Toast.LENGTH_SHORT).show();
             return true;
         }
 

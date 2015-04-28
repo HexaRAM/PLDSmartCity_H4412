@@ -9,6 +9,9 @@
     <string name="drawer_open">Ouvrir</string>
     <string name="drawer_close">Fermer</string>
 
+    <!-- Parameters -->
+    <string name="toast_params">Hey l\'HexaRAM+, pas encore de paramètres :(</string>
+
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

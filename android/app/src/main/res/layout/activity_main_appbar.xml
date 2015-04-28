@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:layout="@layout/fragment_navigation_drawer"
-            android:name="hexaram.challengelyon.ui.activities.NavigationDrawerFragment"
+            android:name="hexaram.challengelyon.ui.fragments.NavigationDrawerFragment"
             tools:layout="@layout/fragment_navigation_drawer">
         </fragment>
     </android.support.v4.widget.DrawerLayout>
