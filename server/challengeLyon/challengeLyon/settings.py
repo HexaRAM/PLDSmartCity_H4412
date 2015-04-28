@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 """
 Django settings for challengeLyon project.
 
@@ -25,7 +27,9 @@ SECRET_KEY = '#jx(z@69et*760-ecq@rqp90h_j*$0tmpsw#r@c9h3+5$sb#+u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+SITE_ID = 1
 
 
 # Application definition
@@ -34,9 +38,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.sites',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'challengeLyon',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,11 +84,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'challengeLyon_db',
-        'USER': 'salma',
-        'PASSWORD': 'password',
-        'HOST': '127.0.0.1',
+        'USER': 'hexaram',
+        'PASSWORD': 'hexaramdbpass',
+        'HOST': 'localhost',
         'PORT': '3306',
-
     }
 }
 
@@ -92,15 +97,15 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-FR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
