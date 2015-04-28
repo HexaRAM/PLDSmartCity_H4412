@@ -3,5 +3,9 @@
     <string name="title_activity_main">MainActivity</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Paramètres</string>
+
+    <!-- Drawer -->
+    <string name="drawer_open">Ouvrir</string>
+    <string name="drawer_close">Fermer</string>
 </resources>
