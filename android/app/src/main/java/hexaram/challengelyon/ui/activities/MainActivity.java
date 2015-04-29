@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
+import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
 
@@ -32,6 +33,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     SectionsPagerAdapter sectionsPagerAdapter;
     ViewPager viewPager;
     ArrayList<Challenge> challengeList = new ArrayList<>();
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +44,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        /**
+         * Get User info from server TO DO
+         */
+        user = new User("Villeurbanne","hexaram","hexaram@insa-lyon.fr");
 
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        drawerFragment.setUp((DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+        drawerFragment.setUp((DrawerLayout) findViewById(R.id.drawer_layout), toolbar, user);
 
         /**
         * Get Challenge List from server TO DO !

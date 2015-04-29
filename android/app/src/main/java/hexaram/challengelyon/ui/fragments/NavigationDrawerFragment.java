@@ -2,6 +2,7 @@ package hexaram.challengelyon.ui.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hexaram.challengelyon.R;
+import hexaram.challengelyon.models.User;
+import hexaram.challengelyon.ui.activities.ProfileViewActivity;
 
 
 /**
@@ -37,6 +40,8 @@ public class NavigationDrawerFragment extends Fragment implements ItemMenuAdapte
 
     private boolean mUserLearnedDrawer;
     private boolean mFromSavedInstanceState;
+
+    private User user;
 
     public NavigationDrawerFragment() {
         // Required empty public constructor
@@ -79,7 +84,8 @@ public class NavigationDrawerFragment extends Fragment implements ItemMenuAdapte
     }
 
 
-    public void setUp(DrawerLayout drawerLayout, final Toolbar toolbar) {
+    public void setUp(DrawerLayout drawerLayout, final Toolbar toolbar, User user) {
+        this.user = user;
         mDrawerLayout = drawerLayout;
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
@@ -141,7 +147,19 @@ public class NavigationDrawerFragment extends Fragment implements ItemMenuAdapte
 
     @Override
     public void itemClicked(View view, int position) {
-        Fragment newFragment = new ProfileViewFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+    if(position == 0){
+        startActivity(new Intent(getActivity(), ProfileViewActivity.class));
+    } else {
+        //TODO
+    }
+       // startActivity(new Intent(getActivity(), ProfileViewActivity.class));
+      /*  Log.d("myTag", R.id.pager+"");
+        Fragment newFragment = ProfileViewFragment.newInstance (user);
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.pager, newFragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();*/
+
     }
 }
