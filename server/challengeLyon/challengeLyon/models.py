@@ -189,7 +189,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChallengeUser
-        fields = ('url', 'email', 'username', 'ranking')
+        fields = ('url', 'email', 'ranking')
 
 class ChallengeSerializer(serializers.ModelSerializer):
     starttime = serializers.DateTimeField()
