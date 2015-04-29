@@ -3,6 +3,7 @@
 from django.contrib import admin
 from challengeLyon.models import *
 
+admin.site.register(ChallengeUser)
 admin.site.register(Category)
 admin.site.register(Type)
 admin.site.register(Quizz)
