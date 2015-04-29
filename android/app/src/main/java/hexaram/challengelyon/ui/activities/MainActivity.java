@@ -38,9 +38,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_appbar);
 
-        //toolbar = (Toolbar) findViewById(R.id.app_bar);
-        //setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // Set up the action bar.
         final ActionBar sectionBar = getSupportActionBar();
         // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < 2; i++) {
+        /*for (int i = 0; i < 2; i++) {
             // Create a tab with text corresponding to the page title defined by
             // the adapter. Also specify this Activity object, which implements
             // the TabListener interface, as the callback (listener) for when
@@ -76,7 +76,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     sectionBar.newTab()
                             .setText(sectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
-        }
+        }*/
     }
 
 
