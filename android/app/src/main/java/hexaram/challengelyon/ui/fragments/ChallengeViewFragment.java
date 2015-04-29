@@ -39,6 +39,7 @@ public class ChallengeViewFragment extends Fragment {
         TextView textEndTime = (TextView) rootView.findViewById(R.id.challenge_view_endtime);
         TextView textCategory = (TextView) rootView.findViewById(R.id.challenge_view_category);
         TextView textValidation = (TextView) rootView.findViewById(R.id.challenge_view_validation);
+        TextView textScore = (TextView) rootView.findViewById(R.id.challenge_view_reward);
 
         Challenge challenge = (Challenge) args.getSerializable("challenge");
         textDescription.setText(challenge.getSummary());
@@ -47,7 +48,8 @@ public class ChallengeViewFragment extends Fragment {
         textStartTime.setText(challenge.getStarttime());
         textEndTime.setText(challenge.getEndtime());
         textCategory.setText(challenge.getCategory().getName());
-        //TODO VALIDATION
+        textScore.setText(challenge.getReward());
+        textValidation.setText(challenge.getValidation());
         return rootView;
     }
 

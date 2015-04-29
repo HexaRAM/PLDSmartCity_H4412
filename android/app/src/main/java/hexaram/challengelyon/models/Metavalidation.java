@@ -25,4 +25,19 @@ public class Metavalidation implements Serializable {
     public boolean isLocationValidation() {
         return location_validation;
     }
+
+    @Override
+    public String toString() {
+        String validationMode = "";
+        if(picture_validation) {
+            validationMode += "Photo ";
+        }
+        if(location_validation) {
+            validationMode += "Localisation ";
+        }
+        if(quizz_validation) {
+            validationMode += "Quizz ";
+        }
+        return validationMode;
+    }
 }

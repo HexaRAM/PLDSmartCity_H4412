@@ -74,5 +74,7 @@ public class Challenge implements Serializable {
         return summary;
     }
 
+    public String getValidation() { return metavalidation.toString(); }
+
 
 }
