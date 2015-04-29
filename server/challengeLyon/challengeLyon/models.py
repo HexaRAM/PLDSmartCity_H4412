@@ -4,11 +4,75 @@ from django.db import models
 
 # Bloc User
 from django.contrib.auth.models import User
+from django.utils import timezone
+from django.utils.http import urlquote
+from django.utils.translation import ugettext_lazy as _
+from django.core.mail import send_mail
+from django.contrib.auth.models import (
+BaseUserManager, AbstractBaseUser
+)
 
 # TODO : créer une classe User qui hérite de celle ci-dessus et y ajouter les attributs supplémentaires dont on a besoin / à noter que Django gère les groupes !
 
 # note : pas besoin de class ranking, on ajoute un attribut score dans User
 
+# Custom User
+
+class ChallengeUserManager(BaseUserManager):
+
+    def _create_user(self, email, password, is_admin, **extra_fields):
+        if not email:
+            raise ValueError('Users must have an email address')
+        user = self.model(
+            email = self.normalize_email(email),
+            is_admin = is_admin,
+            **extra_fields
+        )
+        user.set_password(password)
+        user.save(using = self._db)
+        return user
+
+    def create_user(self, email, password, **extra_fields):
+        return self._create_user(email, password, False, **extra_fields)
+
+    def create_superuser(self, email,password, **extra_fields):
+        return self._create_user(email, password, True, **extra_fields)
+
+
+class ChallengeUser(AbstractBaseUser):
+    
+    email = models.EmailField(max_length = 254, unique = True)
+    is_admin = models.BooleanField(default=False,
+    help_text=_('Designates whether the user can log into this admin '
+        'site.'))
+    is_active = models.BooleanField(default=True,
+    help_text=_('Designates whether this user should be treated as '
+        'active. Unselect this instead of deleting accounts.'))
+    date_joined = models.DateTimeField(default=timezone.now)
+
+    ranking = models.IntegerField(default=0) 
+    objects = ChallengeUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    def get_full_name(self):
+        return self.email
+
+    def get_short_name(self):
+        return self.email
+
+    def __str__(self):
+        return self.email   
+    def __unicode__(self):
+        return self.email      
+    def has_perm(self, perm, obj=None):
+        return True
+    def has_module_perms(self, app_label):
+        return True
+    @property
+    def is_staff(self):
+        return self.is_admin
 
 # Bloc Challenge
 class Location(models.Model):
@@ -27,6 +91,7 @@ class Picture(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=45)
+    reward = models.IntegerField(default=10)
 
     def __unicode__(self):
         return u"Catégorie : %s"%self.name
@@ -60,7 +125,7 @@ class Challenge(models.Model):
     description = models.TextField(blank=True, null=True)
     starttime = models.DateTimeField(blank=True, null=True, verbose_name="Date de début")
     endtime = models.DateTimeField(blank=True, null=True, verbose_name="Date de fin")
-    creator = models.ForeignKey(User, verbose_name="Créateur")
+    creator = models.ForeignKey(ChallengeUser, verbose_name="Créateur")
     category = models.ForeignKey(Category, verbose_name="Catégorie")
     type = models.ForeignKey(Type, verbose_name="Type")
     quizz = models.ForeignKey(Quizz, null=True, blank=True)
@@ -72,7 +137,7 @@ class Challenge(models.Model):
 
 class Challengeplayed(models.Model):
     challenge = models.ForeignKey(Challenge)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(ChallengeUser)
     score = models.IntegerField(default=0) # score gagnable du challenge lancé
 
     def __unicode__(self):
@@ -103,7 +168,7 @@ class Validationitem(models.Model):
     challengeplayed = models.ForeignKey(Challengeplayed)
     locations = models.ManyToManyField(Location, blank=True)
     pictures = models.ManyToManyField(Picture, blank=True)
-    users = models.ManyToManyField(User, verbose_name="Validations", blank=True)
+    users = models.ManyToManyField(ChallengeUser, verbose_name="Validations", blank=True)
 
     def __unicode__(self):
         return u"Validation du challenge %s"%(self.challengeplayed.challenge)
@@ -112,6 +177,25 @@ class Useranswer(models.Model):
     question = models.ForeignKey(Question)
     answer = models.ForeignKey(Answer)
     challengeplayed = models.ForeignKey(Challengeplayed)
-
     def __unicode__(self):
         return u"Réponse d'un utilisateur à la question %s : %s"%(self.question, self.answer)
+
+
+
+# Serializers class
+
+from rest_framework import serializers
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChallengeUser
+        fields = ('url', 'email', 'ranking')
+
+class ChallengeSerializer(serializers.ModelSerializer):
+    starttime = serializers.DateTimeField()
+    endtime = serializers.DateTimeField()
+    creator = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Challenge
+        fields = ('url', 'title', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz', 'locations')

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/inscription_view">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email:"
+        android:layout_marginTop="70dp"
+        android:layout_marginLeft="15dp" />
+
+    <EditText
+        android:id="@+id/inscription_view_userEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:layout_marginLeft="15dp"
+        android:ems="10" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mot de passe:"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="15dp" />
+
+    <EditText
+        android:id="@+id/inscription_view_userPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:layout_marginLeft="15dp"
+        android:ems="10"
+       />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirmez le mot de passe:"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="15dp" />
+
+    <EditText
+        android:id="@+id/inscription_view_passwordConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:layout_marginLeft="15dp"
+        android:ems="10"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inscription"
+        android:id="@+id/inscription_view_buttonInscription"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:background="#ff35d0c1"
+        android:clickable="true" />
+    <TextView
+        android:id="@+id/inscription_view_textError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="15dp"
+        android:background="#1aff182e" />
+
+</LinearLayout>
