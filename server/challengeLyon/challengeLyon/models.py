@@ -1,6 +1,4 @@
 #-*- coding: utf-8 -*-
-
-# TODO : rajouter toutes les méthodes def __unicode__(self):
 from django.db import models
 
 
@@ -13,8 +11,25 @@ from django.contrib.auth.models import User
 
 
 # Bloc Challenge
+class Location(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    name = models.CharField(max_length=127)
+
+    def __unicode__(self):
+        return u"%s [%s,%s]"%(self.name,self.longitude,self.latitude)
+
+class Picture(models.Model):
+    name = models.CharField(max_length=127, verbose_name="Nom du fichier")
+
+    def __unicode__(self):
+        return u"Image : %s"%self.name
+
 class Category(models.Model):
     name = models.CharField(max_length=45)
+
+    def __unicode__(self):
+        return u"Catégorie : %s"%self.name
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -22,14 +37,23 @@ class Category(models.Model):
 class Type(models.Model):
     name = models.CharField(max_length=45)
 
+    def __unicode__(self):
+        return u"Type : %s"%self.name
+
 class Quizz(models.Model):
     title = models.CharField(max_length=45)
     description = models.TextField(blank=True, null=True)
+
+    def __unicode__(self):
+        return u"Quizz : %s"%self.title
 
 class Metavalidation(models.Model):
     picture_validation = models.BooleanField(default=False)
     quizz_validation = models.BooleanField(default=False)
     location_validation = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return u"Photos : %s / Quizz : %s / Lieux : %s"%(self.picture_validation, self.quizz_validation, self.location_validation)
 
 class Challenge(models.Model):
     title = models.CharField(max_length=45)
@@ -39,13 +63,20 @@ class Challenge(models.Model):
     creator = models.ForeignKey(User, verbose_name="Créateur")
     category = models.ForeignKey(Category, verbose_name="Catégorie")
     type = models.ForeignKey(Type, verbose_name="Type")
-    quizz = models.ForeignKey(Quizz, null=True)
+    quizz = models.ForeignKey(Quizz, null=True, blank=True)
     metavalidation = models.ForeignKey(Metavalidation, null=True)
+    locations = models.ManyToManyField(Location, blank=True)
+
+    def __unicode__(self):
+        return u"%s [%s - %s]"%(self.title, self.category, self.type)
 
 class Challengeplayed(models.Model):
     challenge = models.ForeignKey(Challenge)
     user = models.ForeignKey(User)
     score = models.IntegerField(default=0) # score gagnable du challenge lancé
+
+    def __unicode__(self):
+        return u"%s lancé par %s [score : %s]"%(self.challenge, self.user, self.score)
 
     class Meta:
         unique_together = (('challenge', 'user'),)
@@ -55,36 +86,32 @@ class Challengeplayed(models.Model):
 class Question(models.Model):
     quizz = models.ForeignKey(Quizz)
     content = models.TextField(verbose_name="Contenu")
-    goodAnswer_id = models.IntegerField(null=True)
+    goodAnswer_id = models.IntegerField(null=True, blank=True)
+
+    def __unicode__(self):
+        return u"Question : %s [Réponse ID : %s]"%(self.content, self.goodAnswer_id)
 
 class Answer(models.Model):
     question = models.ForeignKey(Question)
     content = models.TextField(verbose_name="Contenu")
 
-
+    def __unicode__(self):
+        return u"Réponse à la question %s : %s"%(self.question.id, self.content)
 
 # Bloc validation
-class Location(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    name = models.CharField(max_length=127)
-
-
-# TODO : gestion des liaisons n-n (reprendre le diagramme de classe et les autres classes tranquillement)
-# Picture et ValidationItem
-# Location et ValidationItem
-
-
-#class Picture(models.Model):
-#    validationItem = models.ForeignKey('Validationitem')
-#    name = models.CharField(max_length=127)
-
-# ajouter les n-n avec Picture / Location / Quizz (peut-être juste une ForeignKey pour le questionnaire)
 class Validationitem(models.Model):
     challengeplayed = models.ForeignKey(Challengeplayed)
+    locations = models.ManyToManyField(Location, blank=True)
+    pictures = models.ManyToManyField(Picture, blank=True)
+    users = models.ManyToManyField(User, verbose_name="Validations", blank=True)
 
-# revoir le modèle des questions/réponses avec juste des id_reponse (à la place des textes)
+    def __unicode__(self):
+        return u"Validation du challenge %s"%(self.challengeplayed.challenge)
+
 class Useranswer(models.Model):
     question = models.ForeignKey(Question)
-    user = models.ForeignKey(User)
-    content = models.CharField(max_length=255, verbose_name="Réponse") # à changer en reponse_id et comparer si ce reponse_id vaut bien le question.goodAnswer_id
+    answer = models.ForeignKey(Answer)
+    challengeplayed = models.ForeignKey(Challengeplayed)
+
+    def __unicode__(self):
+        return u"Réponse d'un utilisateur à la question %s : %s"%(self.question, self.answer)
