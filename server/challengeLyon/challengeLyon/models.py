@@ -89,6 +89,7 @@ class Picture(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=45)
+    reward = models.IntegerField(default=10)
 
     def __unicode__(self):
         return u"Catégorie : %s"%self.name
