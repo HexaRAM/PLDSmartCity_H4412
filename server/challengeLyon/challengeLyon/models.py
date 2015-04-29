@@ -16,6 +16,9 @@ from django.contrib.auth.models import User
 class Category(models.Model):
     name = models.CharField(max_length=45)
 
+    class Meta:
+        verbose_name_plural = "Categories"
+
 class Type(models.Model):
     name = models.CharField(max_length=45)
 
@@ -46,6 +49,7 @@ class Challengeplayed(models.Model):
 
     class Meta:
         unique_together = (('challenge', 'user'),)
+        verbose_name_plural = "ChallengesPlayed"
 
 # Bloc Quizz
 class Question(models.Model):
