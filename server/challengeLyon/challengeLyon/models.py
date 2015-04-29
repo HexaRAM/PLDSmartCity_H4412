@@ -177,3 +177,22 @@ class Useranswer(models.Model):
     def __unicode__(self):
         return u"Réponse d'un utilisateur à la question %s : %s"%(self.question, self.answer)
 
+
+
+# Serializers class
+
+from rest_framework import serializers
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChallengeUser
+        fields = ('url', 'email', 'username', 'ranking')
+
+class ChallengeSerializer(serializers.ModelSerializer):
+    starttime = serializers.DateTimeField()
+    endtime = serializers.DateTimeField()
+    creator = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Challenge
+        fields = ('url', 'title', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz', 'locations')
