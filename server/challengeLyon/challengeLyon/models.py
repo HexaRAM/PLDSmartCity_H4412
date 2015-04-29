@@ -32,7 +32,7 @@ class ChallengeUserManager(BaseUserManager):
         user.save(using = self._db)
         return user
 
-    def create_user(self, email, password = None, **extra_fields):
+    def create_user(self, email, password, **extra_fields):
         return self._create_user(email, password, False, **extra_fields)
 
     def create_superuser(self, email,password, **extra_fields):
@@ -42,11 +42,9 @@ class ChallengeUserManager(BaseUserManager):
 class ChallengeUser(AbstractBaseUser):
     
     email = models.EmailField(max_length = 254, unique = True)
-    username = models.CharField(max_length=30, unique = True)
     is_admin = models.BooleanField(default=False,
     help_text=_('Designates whether the user can log into this admin '
         'site.'))
-
     is_active = models.BooleanField(default=True,
     help_text=_('Designates whether this user should be treated as '
         'active. Unselect this instead of deleting accounts.'))
@@ -59,11 +57,15 @@ class ChallengeUser(AbstractBaseUser):
     REQUIRED_FIELDS = []
 
     def get_full_name(self):
-        return self.username
+        return self.email
+
     def get_short_name(self):
-        return self.username
+        return self.email
+
     def __str__(self):
-        return self.username
+        return self.email   
+    def __unicode__(self):
+        return self.email      
     def has_perm(self, perm, obj=None):
         return True
     def has_module_perms(self, app_label):
