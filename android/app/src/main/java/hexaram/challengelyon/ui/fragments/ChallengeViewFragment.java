@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import hexaram.challengelyon.R;
+import hexaram.challengelyon.models.Challenge;
 import hexaram.challengelyon.models.User;
 
 /**
@@ -32,6 +33,7 @@ public class ChallengeViewFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_challenge_view, container, false);
         Bundle args = this.getArguments();
         TextView textCreatorName = (TextView) rootView.findViewById(R.id.challenge_view_creator);
+        TextView textDescription = (TextView) rootView.findViewById(R.id.challenge_view_description);
         TextView textTitle = (TextView) rootView.findViewById(R.id.challenge_view_title);
         TextView textStartTime = (TextView) rootView.findViewById(R.id.challenge_view_starttime);
         TextView textEndTime = (TextView) rootView.findViewById(R.id.challenge_view_endtime);
@@ -39,12 +41,13 @@ public class ChallengeViewFragment extends Fragment {
         TextView textValidation = (TextView) rootView.findViewById(R.id.challenge_view_validation);
 
         Challenge challenge = (Challenge) args.getSerializable("challenge");
+        textDescription.setText(challenge.getSummary());
         textCreatorName.setText(challenge.getCreator());
         textTitle.setText(challenge.getTitle());
         textStartTime.setText(challenge.getStarttime());
         textEndTime.setText(challenge.getEndtime());
-        textCategory.setText(challenge.category.getName());
-        //TODO VALIDATION MODE
+        textCategory.setText(challenge.getCategory().getName());
+        //TODO VALIDATION
         return rootView;
     }
 
