@@ -7,32 +7,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.List;
 
 import hexaram.challengelyon.R;
 
-class ItemMenuViewHolder extends RecyclerView.ViewHolder {
 
-    TextView title;
-    ImageView icon;
 
-    public ItemMenuViewHolder(View itemView) {
-        super(itemView);
-        title = (TextView) itemView.findViewById(R.id.listText);
-        icon = (ImageView) itemView.findViewById(R.id.listIcon);
-    }
-}
-
-public class ItemMenuAdapter extends RecyclerView.Adapter<ItemMenuViewHolder> {
+public class ItemMenuAdapter extends RecyclerView.Adapter<ItemMenuAdapter.ItemMenuViewHolder> {
 
     private LayoutInflater inflater;
     List<ItemMenu> data = Collections.emptyList();
+    private ClickListener clickListener;
+    private Context context;
 
     public ItemMenuAdapter(Context context, List<ItemMenu> data) {
         inflater = LayoutInflater.from(context);
         this.data = data;
+        this.context = context;
+    }
+
+    public void setClickListener(ClickListener clickListener){
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -43,7 +41,7 @@ public class ItemMenuAdapter extends RecyclerView.Adapter<ItemMenuViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ItemMenuViewHolder holder, int position) {
+    public void onBindViewHolder(ItemMenuViewHolder holder, final int position) {
         ItemMenu current = data.get(position);
         holder.title.setText(current.title);
         holder.icon.setImageResource(current.iconId);
@@ -54,4 +52,28 @@ public class ItemMenuAdapter extends RecyclerView.Adapter<ItemMenuViewHolder> {
         return data.size();
     }
 
+    public interface ClickListener {
+        public void itemClicked(View view, int position);
+    }
+
+    class ItemMenuViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
+
+        TextView title;
+        ImageView icon;
+
+        public ItemMenuViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.listText);
+            icon = (ImageView) itemView.findViewById(R.id.listIcon);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(clickListener != null){
+                clickListener.itemClicked(v,getPosition());
+            }
+        }
+    }
 }
