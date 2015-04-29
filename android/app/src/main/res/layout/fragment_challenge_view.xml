@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginTop="30dp"
+    android:orientation="vertical"
+    android:id="@+id/challenge_view">
+
+    <TextView
+        android:id="@+id/challenge_view_title"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="TITLE"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="5dp"
+        android:textColor="#ff19b2ab"
+        android:gravity="center" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="5dp"
+        android:text="By: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="right"/>
+
+    <TextView
+        android:id="@+id/challenge_view_creator"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="author"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="0dp"
+        android:gravity="right"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="0dp"
+        android:text="Challenge valable du: "
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/challenge_view_starttime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10 Mai 2014"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="0dp"
+        android:text="jusqu'au: "
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/challenge_view_endtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10 Juin 2014"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:text="Description: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/challenge_view_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Challenge description ..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:text="Catégorie: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/challenge_view_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="category"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:text="Validation: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/challenge_view_validation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="validation mode"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="20dp"/>
+
+
+
+</LinearLayout>
