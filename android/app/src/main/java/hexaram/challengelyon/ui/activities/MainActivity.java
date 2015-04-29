@@ -25,6 +25,7 @@ import hexaram.challengelyon.models.Challenge;
 import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
+import hexaram.challengelyon.ui.tabs.SlidingTabLayout;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
@@ -32,6 +33,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private Toolbar toolbar;
     SectionsPagerAdapter sectionsPagerAdapter;
     ViewPager viewPager;
+    private SlidingTabLayout mSlide;
     ArrayList<Challenge> challengeList = new ArrayList<>();
     private User user;
 
@@ -66,12 +68,18 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // primary sections of the activity.
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
+
+
         // Set up the ViewPager with the sections adapter.
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(sectionsPagerAdapter);
 
+        //Set up Tabbar
+        mSlide = (SlidingTabLayout)findViewById(R.id.tabs);
+        mSlide.setViewPager(viewPager);
+
         // Set up the action bar.
-        final ActionBar sectionBar = getSupportActionBar();
+        //final ActionBar sectionBar = getSupportActionBar();
         // For each of the sections in the app, add a tab to the action bar.
         /*for (int i = 0; i < 2; i++) {
             // Create a tab with text corresponding to the page title defined by
@@ -156,9 +164,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return "1";
+                    return "Hot";
                 case 1:
-                    return "2";
+                    return "New";
                 case 2:
                     return "3";
             }

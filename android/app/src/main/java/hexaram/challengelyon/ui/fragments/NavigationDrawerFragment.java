@@ -72,7 +72,7 @@ public class NavigationDrawerFragment extends Fragment implements ItemMenuAdapte
     public static List<ItemMenu> getData() {
         List<ItemMenu> data = new ArrayList<>();
         int[] icons= {R.drawable.ic_menu_home, R.drawable.ic_menu_agenda, R.drawable.ic_menu_allfriends, R.drawable.ic_menu_call};
-        String[] titles = {"Titre 1", "Titre 2", "Titre 3", "Titre 4"};
+        String[] titles = {"Profile", "Titre 2", "Titre 3", "Titre 4"};
 
         for (int i = 0; i < titles.length && i < icons.length; ++i) {
             ItemMenu current = new ItemMenu();
