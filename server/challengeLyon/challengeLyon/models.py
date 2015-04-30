@@ -212,6 +212,16 @@ class ChallengeSerializer(serializers.ModelSerializer):
         fields = ('url', 'title', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz', 'locations')
 
 class PictureSerializer(serializers.ModelSerializer):
+    def validate_image(self, value):
+        """
+        Check image size
+        """
+        if value.size > settings.MEDIA_MAX_SIZE:
+            max_size_o = int(settings.MEDIA_MAX_SIZE)
+            max_size_mo = settings.MEDIA_MAX_SIZE/1024/1024
+            raise serializers.ValidationError(u"L'image est trop lourde (maximum %s mo [%s o])"%(max_size_mo, max_size_o))
+        return value
+
     class Meta:
         model = Picture
         fields = ('url', 'image', 'name')

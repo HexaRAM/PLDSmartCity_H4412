@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from rest_framework import viewsets
+from django.conf import settings
 from challengeLyon.models import *
 
 class ChallengeViewSet(viewsets.ModelViewSet):

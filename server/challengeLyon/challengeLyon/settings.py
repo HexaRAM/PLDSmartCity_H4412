@@ -122,6 +122,7 @@ if DEBUG:
 else:
     MEDIA_ROOT = '/home/hexaram/media/'
 MEDIA_URL = '/media/'
+MEDIA_MAX_SIZE = 1.0*1024*1024 # 1 mo max
 
 REST_FRAMEWORK = {
 # Use Django's standard `django.contrib.auth` permissions,
