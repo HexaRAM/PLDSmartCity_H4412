@@ -83,7 +83,10 @@ class Location(models.Model):
     def __unicode__(self):
         return u"%s [%s,%s]"%(self.name,self.longitude,self.latitude)
 
+from django.conf import settings
+
 class Picture(models.Model):
+    image = models.ImageField(upload_to = 'picture', default="upload.jpg") 
     name = models.CharField(max_length=127, verbose_name="Nom du fichier")
 
     def __unicode__(self):
@@ -140,6 +143,13 @@ class Challengeplayed(models.Model):
     user = models.ForeignKey(ChallengeUser)
     score = models.IntegerField(default=0) # score gagnable du challenge lancé
 
+    def save(self, *args, **kwargs):
+        super(Challengeplayed, self).save(*args, **kwargs)
+        if self.id is not None:
+            # objet créé et ajouté
+            validation = Validationitem(challengeplayed=self)
+            validation.save()
+
     def __unicode__(self):
         return u"%s lancé par %s [score : %s]"%(self.challenge, self.user, self.score)
 
@@ -168,6 +178,7 @@ class Validationitem(models.Model):
     challengeplayed = models.ForeignKey(Challengeplayed)
     locations = models.ManyToManyField(Location, blank=True)
     pictures = models.ManyToManyField(Picture, blank=True)
+    submitted = models.BooleanField(default=False)
     users = models.ManyToManyField(ChallengeUser, verbose_name="Validations", blank=True)
 
     def __unicode__(self):
@@ -176,7 +187,7 @@ class Validationitem(models.Model):
 class Useranswer(models.Model):
     question = models.ForeignKey(Question)
     answer = models.ForeignKey(Answer)
-    challengeplayed = models.ForeignKey(Challengeplayed)
+    validationitem = models.ForeignKey(Validationitem)
     def __unicode__(self):
         return u"Réponse d'un utilisateur à la question %s : %s"%(self.question, self.answer)
 
@@ -191,6 +202,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = ChallengeUser
         fields = ('url', 'email', 'ranking')
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('name', 'reward')
+
 class ChallengeSerializer(serializers.ModelSerializer):
     starttime = serializers.DateTimeField()
     endtime = serializers.DateTimeField()
@@ -199,3 +215,18 @@ class ChallengeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
         fields = ('url', 'title', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz', 'locations')
+
+class PictureSerializer(serializers.ModelSerializer):
+    def validate_image(self, value):
+        """
+        Check image size
+        """
+        if value.size > settings.MEDIA_MAX_SIZE:
+            max_size_o = int(settings.MEDIA_MAX_SIZE)
+            max_size_mo = settings.MEDIA_MAX_SIZE/1024/1024
+            raise serializers.ValidationError(u"L'image est trop lourde (maximum %s mo [%s o])"%(max_size_mo, max_size_o))
+        return value
+
+    class Meta:
+        model = Picture
+        fields = ('url', 'image', 'name')

@@ -116,6 +116,14 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
+#IMAGES_URL = '/home/hexaram/media'
+if DEBUG:
+    MEDIA_ROOT = '/home/groscheri/Programmation/Python/Django/PLDSmartCity_H4412/media/'
+else:
+    MEDIA_ROOT = '/home/hexaram/media/'
+MEDIA_URL = '/media/'
+MEDIA_MAX_SIZE = 1.0*1024*1024 # 1 mo max
+
 REST_FRAMEWORK = {
 # Use Django's standard `django.contrib.auth` permissions,
 # or allow read-only access for unauthenticated users.
