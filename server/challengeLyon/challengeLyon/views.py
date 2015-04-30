@@ -10,3 +10,7 @@ class ChallengeViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ChallengeUser.objects.all()
     serializer_class = UserSerializer
+
+class PictureViewSet(viewsets.ModelViewSet):
+    queryset = Picture.objects.all()
+    serializer_class = PictureSerializer
