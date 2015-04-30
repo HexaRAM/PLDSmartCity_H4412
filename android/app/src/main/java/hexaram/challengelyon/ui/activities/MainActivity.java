@@ -1,5 +1,7 @@
 package hexaram.challengelyon.ui.activities;
 
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,7 +20,27 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.support.v4.app.FragmentTransaction;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONTokener;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import hexaram.challengelyon.R;
@@ -41,6 +63,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        StrictMode.ThreadPolicy policy = new
+        StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_appbar);
 
@@ -79,6 +104,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //Set up Tabbar
         mSlide = (SlidingTabLayout)findViewById(R.id.tabs);
         mSlide.setViewPager(viewPager);
+        makePostRequest();
+
 
     }
 
@@ -157,4 +184,52 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
     }
 
+    private void makePostRequest() {
+
+
+        HttpClient httpClient = new DefaultHttpClient();
+        // replace with your url
+        HttpPost httpPost = new HttpPost("http://vps165185.ovh.net/auth/login");
+
+
+        //Post Data
+        List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(2);
+        nameValuePair.add(new BasicNameValuePair("email", "cosmi@hexaram.com"));
+        nameValuePair.add(new BasicNameValuePair("password", "cosmi"));
+
+
+        //Encoding POST data
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+        } catch (UnsupportedEncodingException e) {
+            // log exception
+            e.printStackTrace();
+        }
+
+        //making POST request.
+        try {
+            HttpResponse response = httpClient.execute(httpPost);
+            // write response to log
+            Reader in = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+            StringBuilder builder= new StringBuilder();
+            char[] buf = new char[1000];
+            int l = 0;
+            while (l >= 0) {
+                builder.append(buf, 0, l);
+                l = in.read(buf);
+            }
+            JSONTokener tokener = new JSONTokener( builder.toString() );
+            Log.d("Http Post Response:", builder.toString());
+        } catch (ClientProtocolException e) {
+            // Log exception
+            e.printStackTrace();
+        } catch (IOException e) {
+            // Log exception
+            e.printStackTrace();
+        }
+
+    }
+
 }
+
