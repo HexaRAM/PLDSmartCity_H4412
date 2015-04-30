@@ -34,12 +34,14 @@ public class NavigationDrawerFragment extends Fragment implements ItemMenuAdapte
     public static final String KEY_USER_LEARNED_DRAWER="user_learned_drawer";
 
     private RecyclerView recyclerView;
+    private ProfileViewFragment profileView;
+    private View containerView;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private ItemMenuAdapter adapter;
 
-    private boolean mUserLearnedDrawer;
-    private boolean mFromSavedInstanceState;
+    private boolean mUserLearnedDrawer = false;
+    private boolean mFromSavedInstanceState = false;
 
     private User user;
 
@@ -61,11 +63,16 @@ public class NavigationDrawerFragment extends Fragment implements ItemMenuAdapte
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+/*
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
         adapter = new ItemMenuAdapter(getActivity(), getData());
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+*/
+        profileView = (ProfileViewFragment) getChildFragmentManager().findFragmentById(R.id.fragment_navigation_profile);
+
+
         return layout;
     }
 
@@ -84,27 +91,28 @@ public class NavigationDrawerFragment extends Fragment implements ItemMenuAdapte
     }
 
 
-    public void setUp(DrawerLayout drawerLayout, final Toolbar toolbar, User user) {
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar, User user) {
         this.user = user;
         mDrawerLayout = drawerLayout;
+        containerView = (View) getActivity().findViewById(fragmentId);
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                /*
+
                 if (!mUserLearnedDrawer) {
                     mUserLearnedDrawer = true;
                     saveToPreferences(getActivity(), KEY_USER_LEARNED_DRAWER, mUserLearnedDrawer+"");
                 }
 
                 getActivity().invalidateOptionsMenu();
-                 */
+
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                //getActivity().invalidateOptionsMenu();
+                getActivity().invalidateOptionsMenu();
             }
 
             @Override
@@ -113,16 +121,15 @@ public class NavigationDrawerFragment extends Fragment implements ItemMenuAdapte
                 if (slideOffset < 0.6) {
                     toolbar.setAlpha(1-slideOffset);
                 }
-                //Log.d("Lau & Quentin","Offset : " + slideOffset);
             }
         };
 
 
-        /*
+
         if(!mUserLearnedDrawer && !mFromSavedInstanceState) {
             // app int fragment id to setUp method => video #9 6min30
-            mDrawerLayout.openDrawer("");
-        }*/
+            mDrawerLayout.openDrawer(containerView);
+        }
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerLayout.post(new Runnable() {

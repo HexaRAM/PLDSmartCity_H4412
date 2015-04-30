@@ -16,4 +16,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_profile_view">ProfileViewActivity</string>
+    
+    <string-array name="tabs">
+        <item>Hot</item>
+        <item>New</item>
+        <item>To Validate</item>
+        <item>Ranking</item>
+    </string-array>
 </resources>

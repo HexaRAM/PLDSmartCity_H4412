@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class HotFragment extends Fragment {
         Bundle args = new Bundle();
         args.putSerializable("Hot", list);
         challengeFragment.setArguments(args);
+        Log.d("myTagInstance",list.size()+"");
         return challengeFragment;
     }
 
@@ -42,25 +44,29 @@ public class HotFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
 //        if (getActivity() instanceof MainActivity) {
 //            ((MainActivity) getActivity()).addOnListChangedListener(this);
 //        }
     }
 
-    @Nullable
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.challenge_list, container, false);
 
         challengeList = (ArrayList<Challenge>) getArguments().getSerializable("Hot");
+        if(challengeList == null) {
+            challengeList = new ArrayList<>();
+        }
         getArguments().remove("Hot");
-
         //Initialiser l'adapter
-        adapter = new ChallengeAdapter<>(getActivity(), R.layout.challenge_list_item, challengeList);
-        challengeListView = (ListView) rootView.findViewById(R.id.challenge_list);
-        //L'appliquer sur la listView
-        challengeListView.setAdapter(adapter);
+            adapter = new ChallengeAdapter<>(getActivity(), R.layout.challenge_list_item, challengeList);
+            challengeListView = (ListView) rootView.findViewById(R.id.challenge_list);
+            //L'appliquer sur la listView
+            challengeListView.setAdapter(adapter);
+
 
 //        challengeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
@@ -78,6 +84,11 @@ public class HotFragment extends Fragment {
 ////            }
 //        });
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle){
+        super.onSaveInstanceState(icicle);
     }
 
     @Override

@@ -3,6 +3,8 @@ package hexaram.challengelyon.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,35 +19,52 @@ import hexaram.challengelyon.models.User;
  */
 public class ProfileViewFragment extends Fragment {
 
-    public static ProfileViewFragment newInstance(User user) {
-        /*
-        * Replace the usual constructor
-        */
-        ProfileViewFragment f = new ProfileViewFragment();
-        //Bundle allows you to pass parameters
-        Bundle args = new Bundle();
-        args.putSerializable("user", user);
-        f.setArguments(args);
+    User user;
+    DrawerLayout mDrawerLayout;
 
+    ImageView imageItem;
+    TextView textItemName;
+    TextView textItemMail;
+    TextView textItemAddress;
+    TextView textItemNbPlayed;
+    TextView textItemScore;
+    TextView textItemRank;
 
-        return f;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile_view, container, false);
-        Bundle args = this.getArguments();
+
+        imageItem = (ImageView) rootView.findViewById(R.id.profile_view_picture);
+        textItemName = (TextView) rootView.findViewById(R.id.profile_view_username);
+        textItemMail = (TextView) rootView.findViewById(R.id.profile_view_mail);
+        textItemAddress = (TextView) rootView.findViewById(R.id.profile_view_address);
+        textItemNbPlayed = (TextView) rootView.findViewById(R.id.profile_view_nbPlayed);
+        textItemScore = (TextView) rootView.findViewById(R.id.profile_view_score);
+        textItemRank = (TextView) rootView.findViewById(R.id.profile_view_rank);
+    Log.d("Profile","Lauchend");
+        /*Bundle args = this.getArguments();
         ImageView imageItem = (ImageView) rootView.findViewById(R.id.profile_view_picture);
         TextView textItemName = (TextView) rootView.findViewById(R.id.profile_view_username);
         TextView textItemMail = (TextView) rootView.findViewById(R.id.profile_view_mail);
         TextView textItemAddress = (TextView) rootView.findViewById(R.id.profile_view_address);
         TextView textItemNbPlayed = (TextView) rootView.findViewById(R.id.profile_view_nbPlayed);
         TextView textItemScore = (TextView) rootView.findViewById(R.id.profile_view_score);
-        TextView textItemRank = (TextView) rootView.findViewById(R.id.profile_view_rank);
+        TextView textItemRank = (TextView) rootView.findViewById(R.id.profile_view_rank);*/
 
-        User user = (User) args.getSerializable("user");
+        //User user = (User) args.getSerializable("user");
 //        imageItem.setImageDrawable(user.getImage());
+
+        return rootView;
+    }
+
+    public void setUp(User user, DrawerLayout drawerLayout){
+        this.user = user;
         textItemName.setText(user.getUsername());
         textItemMail.setText(user.getMail());
         textItemAddress.setText(user.getAddress());
@@ -53,8 +72,7 @@ public class ProfileViewFragment extends Fragment {
         textItemScore.setText(user.getScore());
         textItemRank.setText(user.getRank());
 
-
-        return rootView;
+        mDrawerLayout = drawerLayout;
     }
 
 

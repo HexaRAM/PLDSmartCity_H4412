@@ -16,14 +16,23 @@
     >
 
      </LinearLayout>
-
+<!--
     <android.support.v7.widget.RecyclerView
         android:id="@+id/drawerList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
-
+-->
+    <fragment
+        android:id="@+id/fragment_navigation_profile"
+        android:layout_width="@dimen/nav_drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout="@layout/fragment_profile_view"
+        android:name="hexaram.challengelyon.ui.fragments.ProfileViewFragment"
+        tools:layout="@layout/fragment_profile_view">
+    </fragment>
 
 
 </RelativeLayout>
