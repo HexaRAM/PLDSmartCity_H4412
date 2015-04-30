@@ -8,6 +8,10 @@ class ChallengeViewSet(viewsets.ModelViewSet):
     queryset = Challenge.objects.all()
     serializer_class = ChallengeSerializer
 
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ChallengeUser.objects.all()
     serializer_class = UserSerializer

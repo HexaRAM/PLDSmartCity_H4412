@@ -202,6 +202,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = ChallengeUser
         fields = ('url', 'email', 'ranking')
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('name', 'reward')
+
 class ChallengeSerializer(serializers.ModelSerializer):
     starttime = serializers.DateTimeField()
     endtime = serializers.DateTimeField()
