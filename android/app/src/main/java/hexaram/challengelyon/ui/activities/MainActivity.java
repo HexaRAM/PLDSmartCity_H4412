@@ -20,6 +20,17 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.support.v4.app.FragmentTransaction;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.AsyncServer;
+import com.koushikdutta.async.http.server.AsyncHttpServer;
+import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
+import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
+import com.koushikdutta.async.http.server.HttpServerRequestCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.future.ResponseFuture;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -107,6 +118,26 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         makePostRequest();
 
 
+        //testing the ION library
+
+       Ion.with(getApplicationContext())
+                .load("http://vps165185.ovh.net/auth/login")
+               .setLogging("MyLogs", Log.DEBUG)
+                .setBodyParameter("email", "salma@hexaram.com")
+                .setBodyParameter("password", "test")
+                .asString()
+               .setCallback(new FutureCallback<String>() {
+                   @Override
+                   public void onCompleted(Exception e, String result) {
+                       Log.d("Salma", result);
+                   }
+               });
+
+
+
+
+
+
     }
 
 
@@ -147,6 +178,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
     }
+
+
 
     /**
      * A {@link android.support.v4.app.FragmentPagerAdapter} that returns a fragment corresponding to
