@@ -129,7 +129,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                .setCallback(new FutureCallback<String>() {
                    @Override
                    public void onCompleted(Exception e, String result) {
-                       Log.d("Salma", result);
+                       Log.d("Salma", result+" OK");
                    }
                });
 
