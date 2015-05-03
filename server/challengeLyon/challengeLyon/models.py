@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.utils.http import urlquote
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import (
 BaseUserManager, AbstractBaseUser
 )
@@ -175,14 +176,45 @@ class Answer(models.Model):
 
 # Bloc validation
 class Validationitem(models.Model):
-    challengeplayed = models.ForeignKey(Challengeplayed)
+    challengeplayed = models.ForeignKey(Challengeplayed) # plutôt un OneToOneField ici
     locations = models.ManyToManyField(Location, blank=True)
     pictures = models.ManyToManyField(Picture, blank=True)
     submitted = models.BooleanField(default=False)
-    users = models.ManyToManyField(ChallengeUser, verbose_name="Validations", blank=True)
+    users = models.ManyToManyField(ChallengeUser, verbose_name="Validations", blank=True, through="Validation", through_fields=('validationitem','user',))
 
     def __unicode__(self):
         return u"Validation du challenge %s"%(self.challengeplayed.challenge)
+
+class Validation(models.Model):
+    validationitem = models.ForeignKey(Validationitem)
+    user = models.ForeignKey(ChallengeUser)
+    vote = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('user', 'validationitem')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(Validation, self).save(*args, **kwargs)
+
+    def clean(self):
+        if not self.validationitem.submitted:
+            raise ValidationError('Impossible de voter. Le challenge n\'a pas été validé.')
+
+    def __unicode__(self):
+        return u"%s a voté %s pour le challenge %s"%(self.user, self.vote, self.validationitem.challengeplayed.challenge)
+
+    def changeVote(self, value=0):
+        self.vote = value
+
+    def upvote(self):
+        self.changeVote(1)
+
+    def downvote(self):
+        self.changeVote(-1)
+
+    def removeVote(self):
+        self.changeVote(0)
 
 class Useranswer(models.Model):
     question = models.ForeignKey(Question)
@@ -207,6 +239,10 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ('name', 'reward')
 
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+
 class ChallengeSerializer(serializers.ModelSerializer):
     starttime = serializers.DateTimeField()
     endtime = serializers.DateTimeField()
@@ -215,6 +251,9 @@ class ChallengeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
         fields = ('url', 'title', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz', 'locations')
+
+class HotChallengeSerializer(ChallengeSerializer):
+    pass
 
 class PictureSerializer(serializers.ModelSerializer):
     def validate_image(self, value):
