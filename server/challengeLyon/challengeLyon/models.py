@@ -13,12 +13,7 @@ from django.contrib.auth.models import (
 BaseUserManager, AbstractBaseUser
 )
 
-# TODO : créer une classe User qui hérite de celle ci-dessus et y ajouter les attributs supplémentaires dont on a besoin / à noter que Django gère les groupes !
-
-# note : pas besoin de class ranking, on ajoute un attribut score dans User
-
 # Custom User
-
 class ChallengeUserManager(BaseUserManager):
 
     def _create_user(self, email, password, is_admin, **extra_fields):
@@ -143,6 +138,7 @@ class Challengeplayed(models.Model):
     challenge = models.ForeignKey(Challenge)
     user = models.ForeignKey(ChallengeUser)
     score = models.IntegerField(default=0) # score gagnable du challenge lancé
+    validated = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         super(Challengeplayed, self).save(*args, **kwargs)
@@ -150,6 +146,9 @@ class Challengeplayed(models.Model):
             # objet créé et ajouté
             validation = Validationitem(challengeplayed=self)
             validation.save()
+
+    def validate(self):
+        self.validated = True
 
     def __unicode__(self):
         return u"%s lancé par %s [score : %s]"%(self.challenge, self.user, self.score)
