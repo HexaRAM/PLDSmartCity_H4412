@@ -23,4 +23,5 @@
         <item>To Validate</item>
         <item>Ranking</item>
     </string-array>
+    <string name="title_activity_realisation">RealisationActivity</string>
 </resources>
