@@ -141,11 +141,16 @@ class Challengeplayed(models.Model):
     validated = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
+        new = False
+        if self.id is None:
+            new = True
         super(Challengeplayed, self).save(*args, **kwargs)
-        if self.id is not None:
+        if new and self.id is not None:
             # objet créé et ajouté
             validation = Validationitem(challengeplayed=self)
             validation.save()
+            self.validationitem = validation
+            self.save()
 
     def validate(self):
         self.validated = True
@@ -175,7 +180,7 @@ class Answer(models.Model):
 
 # Bloc validation
 class Validationitem(models.Model):
-    challengeplayed = models.ForeignKey(Challengeplayed) # plutôt un OneToOneField ici
+    challengeplayed = models.OneToOneField(Challengeplayed)
     locations = models.ManyToManyField(Location, blank=True)
     pictures = models.ManyToManyField(Picture, blank=True)
     submitted = models.BooleanField(default=False)
