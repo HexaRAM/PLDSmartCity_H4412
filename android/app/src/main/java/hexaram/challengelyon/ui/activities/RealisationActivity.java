@@ -1,5 +1,8 @@
 package hexaram.challengelyon.ui.activities;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -23,8 +26,12 @@ import hexaram.challengelyon.models.Challenge;
 public class RealisationActivity extends ActionBarActivity {
 
 
-    Button uploadButton;
+    Button bUpload;
+    Button bSubmit;
+    Button bBack;
     ImageView photo;
+
+    Context context;
 
     private final String CHALLENGE_PARAM_ID = "challenge";
     private final int UPLOAD_ACTION = 945;
@@ -38,9 +45,11 @@ public class RealisationActivity extends ActionBarActivity {
         Intent intent = getIntent();
         String challengeID = intent.getStringExtra(CHALLENGE_PARAM_ID);
 
+        context = getApplicationContext();
+
         photo = (ImageView) findViewById(R.id.uploaded_photo);
-        uploadButton = (Button) findViewById(R.id.upload_photo);
-        uploadButton.setOnClickListener(new View.OnClickListener() {
+        bUpload = (Button) findViewById(R.id.upload_photo);
+        bUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -50,6 +59,43 @@ public class RealisationActivity extends ActionBarActivity {
                 startActivityForResult(photoPickerIntent,945);
 
 
+            }
+        });
+
+        bSubmit = (Button) findViewById(R.id.submit_challenge);
+        bSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new AlertDialog.Builder(RealisationActivity.this)
+                        .setTitle("Submit challenge")
+                        .setMessage("Are you sure you want to submit? After submit, no further changes can be done.")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                //TODO Appel à l'API pour enrigestrer l'image
+
+                                finish();
+
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //do nothing
+
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+            }
+        });
+
+        bBack = (Button) findViewById(R.id.back_button);
+        bBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
