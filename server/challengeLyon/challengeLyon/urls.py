@@ -11,15 +11,16 @@ from challengeLyon.views import *
 
 router = routers.DefaultRouter()
 router.register(r'challenges', ChallengeViewSet)
-router.register(r'users', UserViewSet)
+router.register(r'users', UserViewSet) # TODO : isAdminOnly
 router.register(r'pictures', PictureViewSet)
 router.register(r'categories', CategoryViewSet)
+router.register(r'hot', HotChallengeViewSet, base_name="hot")
+router.register(r'challengePlayed', ChallengePlayedViewSet, base_name="validation")
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    #url(r'^api-token-auth/', views.obtain_auth_token),
     url(r'^auth/', include('djoser.urls')),
 ]
 

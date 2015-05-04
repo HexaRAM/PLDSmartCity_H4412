@@ -20,6 +20,7 @@ admin.site.register(Location)
 admin.site.register(Validationitem)
 admin.site.register(Useranswer)
 admin.site.register(Picture)
+admin.site.register(Validation)
 
 
 class UserCreationForm(forms.ModelForm):
