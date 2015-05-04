@@ -7,12 +7,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,16 +23,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
 
 public class RealisationActivity extends ActionBarActivity {
 
 
-    Button bUpload;
+    FloatingActionButton bUpload;
     Button bSubmit;
     Button bBack;
     ImageView photo;
+    Toolbar toolbar;
 
     Context context;
 
@@ -48,7 +54,13 @@ public class RealisationActivity extends ActionBarActivity {
         context = getApplicationContext();
 
         photo = (ImageView) findViewById(R.id.uploaded_photo);
-        bUpload = (Button) findViewById(R.id.upload_photo);
+        bUpload = (FloatingActionButton) findViewById(R.id.upload_photo);
+        bUpload.setColorNormalResId(R.color.colorPrimaryDark);
+        bUpload.setColorPressedResId(R.color.colorPrimaryLight);
+        bUpload.setIcon(R.drawable.ic_menu_add);
+
+
+
         bUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +87,7 @@ public class RealisationActivity extends ActionBarActivity {
 
                                 //TODO Appel à l'API pour enrigestrer l'image
 
+                                setResult(RealisationActivity.RESULT_OK);
                                 finish();
 
                             }
@@ -99,6 +112,9 @@ public class RealisationActivity extends ActionBarActivity {
             }
         });
 
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -131,14 +147,16 @@ public class RealisationActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+     /*   int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);*/
+        onBackPressed();
+        return true;
     }
 
     private String getPath(Uri uri) {

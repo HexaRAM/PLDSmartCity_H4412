@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="hexaram.challengelyon" >
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:debuggable="true"
@@ -29,9 +32,10 @@
             android:name=".ui.activities.RealisationActivity"
             android:label="@string/title_activity_realisation" >
         </activity>
+        <activity
+            android:name=".ui.activities.ChallengeViewActivity"
+            android:label="@string/title_activity_challenge_view" >
+        </activity>
     </application>
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
