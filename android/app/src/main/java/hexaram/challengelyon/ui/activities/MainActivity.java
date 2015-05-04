@@ -36,6 +36,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -115,29 +116,35 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //Set up Tabbar
         mSlide = (SlidingTabLayout)findViewById(R.id.tabs);
         mSlide.setViewPager(viewPager);
-        makePostRequest();
-
 
         //testing the ION library
 
-       Ion.with(getApplicationContext())
+      /* Ion.with(getApplicationContext())
                 .load("http://vps165185.ovh.net/auth/login")
-               .setLogging("MyLogs", Log.DEBUG)
-                .setBodyParameter("email", "salma@hexaram.com")
-                .setBodyParameter("password", "test")
+                .setLogging("MyLogs", Log.DEBUG)
+                .setBodyParameter("email", "cosmi@hexaram.com")
+                .setBodyParameter("password", "cosmi")
                 .asString()
                .setCallback(new FutureCallback<String>() {
                    @Override
                    public void onCompleted(Exception e, String result) {
-                       Log.d("Salma", result);
+                       Log.d("Token", result);
                    }
                });
+        Ion.with(getApplicationContext())
+                .load("http://vps165185.ovh.net/challenges")
+                .setHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9")
+                .setHeader("content-type", "application/json")
+                .setLogging("MyLogs", Log.DEBUG)
+                .asString()
+                .setCallback(new FutureCallback<String>() {
+                    @Override
+                    public void onCompleted(Exception e, String result) {
+                        Log.d("res", result);
+                    }
+                });*/
 
-
-
-
-
-
+        makeGetRequest();
     }
 
 
@@ -217,12 +224,50 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
     }
 
-    private void makePostRequest() {
+    private void makeGetRequest() {
 
 
         HttpClient httpClient = new DefaultHttpClient();
         // replace with your url
-        HttpPost httpPost = new HttpPost("http://vps165185.ovh.net/auth/login");
+        HttpGet httpget = new HttpGet("http://vps165185.ovh.net/challenges/");
+        httpget.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
+
+
+
+        //making POST request.
+        try {
+            HttpResponse response = httpClient.execute(httpget);
+            Reader in = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+            StringBuilder builder= new StringBuilder();
+            char[] buf = new char[1000];
+            int l = 0;
+            while (l >= 0) {
+                builder.append(buf, 0, l);
+                l = in.read(buf);
+            }
+            //JSONTokener tokener = new JSONTokener( builder.toString() );
+            //Log.d("Http Post Response:", builder.toString());
+            Log.d("Response:", builder.toString());
+        } catch (ClientProtocolException e) {
+            // Log exception
+            e.printStackTrace();
+        } catch (IOException e) {
+            // Log exception
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void makeGetRequest_Photo() {
+
+
+        HttpClient httpClient = new DefaultHttpClient();
+        // replace with your url
+        HttpPost httpPost = new HttpPost("http://vps165185.ovh.net/challengePlayed/1/pictures/");
+
+        httpPost.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
 
 
         //Post Data
