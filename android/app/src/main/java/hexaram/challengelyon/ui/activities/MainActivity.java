@@ -259,55 +259,5 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     }
 
-
-    private void makeGetRequest_Photo() {
-
-
-        HttpClient httpClient = new DefaultHttpClient();
-        // replace with your url
-        HttpPost httpPost = new HttpPost("http://vps165185.ovh.net/challengePlayed/1/pictures/");
-
-        httpPost.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
-
-
-        //Post Data
-        List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(2);
-        nameValuePair.add(new BasicNameValuePair("email", "cosmi@hexaram.com"));
-        nameValuePair.add(new BasicNameValuePair("password", "cosmi"));
-
-
-        //Encoding POST data
-        try {
-            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
-        } catch (UnsupportedEncodingException e) {
-            // log exception
-            e.printStackTrace();
-        }
-
-        //making POST request.
-        try {
-            HttpResponse response = httpClient.execute(httpPost);
-            // write response to log
-            Reader in = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-            StringBuilder builder= new StringBuilder();
-            char[] buf = new char[1000];
-            int l = 0;
-            while (l >= 0) {
-                builder.append(buf, 0, l);
-                l = in.read(buf);
-            }
-            JSONTokener tokener = new JSONTokener( builder.toString() );
-            Log.d("Http Post Response:", builder.toString());
-        } catch (ClientProtocolException e) {
-            // Log exception
-            e.printStackTrace();
-        } catch (IOException e) {
-            // Log exception
-            e.printStackTrace();
-        }
-
-    }
-
 }
 
