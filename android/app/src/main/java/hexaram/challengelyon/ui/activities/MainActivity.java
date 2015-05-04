@@ -1,5 +1,9 @@
 package hexaram.challengelyon.ui.activities;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -27,6 +31,7 @@ import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
 import hexaram.challengelyon.ui.fragments.ProfileViewFragment;
+import hexaram.challengelyon.ui.listeners.MyLocationListener;
 import hexaram.challengelyon.ui.tabs.SlidingTabLayout;
 
 
