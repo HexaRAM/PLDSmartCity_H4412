@@ -131,6 +131,14 @@ class Challenge(models.Model):
     metavalidation = models.ForeignKey(Metavalidation, null=True)
     locations = models.ManyToManyField(Location, blank=True)
 
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(Challenge, self).save(*args, **kwargs)
+
+    def clean(self):
+        if self.metavalidation.quizz_validation and self.quizz is None:
+            raise ValidationError('Quizz manquant')
+
     def __unicode__(self):
         return u"%s [%s - %s]"%(self.title, self.category, self.type)
 
@@ -226,50 +234,3 @@ class Useranswer(models.Model):
     validationitem = models.ForeignKey(Validationitem)
     def __unicode__(self):
         return u"Réponse d'un utilisateur à la question %s : %s"%(self.question, self.answer)
-
-
-
-# Serializers class
-
-from rest_framework import serializers
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChallengeUser
-        fields = ('url', 'email', 'ranking')
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ('name', 'reward')
-
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-
-class ChallengeSerializer(serializers.ModelSerializer):
-    starttime = serializers.DateTimeField()
-    endtime = serializers.DateTimeField()
-    creator = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Challenge
-        fields = ('url', 'title', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz', 'locations')
-
-class HotChallengeSerializer(ChallengeSerializer):
-    pass
-
-class PictureSerializer(serializers.ModelSerializer):
-    def validate_image(self, value):
-        """
-        Check image size
-        """
-        if value.size > settings.MEDIA_MAX_SIZE:
-            max_size_o = int(settings.MEDIA_MAX_SIZE)
-            max_size_mo = settings.MEDIA_MAX_SIZE/1024/1024
-            raise serializers.ValidationError(u"L'image est trop lourde (maximum %s mo [%s o])"%(max_size_mo, max_size_o))
-        return value
-
-    class Meta:
-        model = Picture
-        fields = ('url', 'image', 'name')

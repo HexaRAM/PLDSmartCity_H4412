@@ -15,7 +15,9 @@ router.register(r'users', UserViewSet) # TODO : isAdminOnly
 router.register(r'pictures', PictureViewSet)
 router.register(r'categories', CategoryViewSet)
 router.register(r'hot', HotChallengeViewSet, base_name="hot")
-router.register(r'challengePlayed', ChallengePlayedViewSet, base_name="validation")
+router.register(r'challengePlayed', ChallengePlayedViewSet, base_name="challengeplayed")
+
+router.register(r'validationItem', ValidationItemViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
