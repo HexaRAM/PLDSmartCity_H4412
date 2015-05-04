@@ -19,6 +19,7 @@ import java.util.List;
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
 import hexaram.challengelyon.ui.activities.MainActivity;
+import hexaram.challengelyon.ui.activities.RealisationActivity;
 import hexaram.challengelyon.ui.adapter.ChallengeAdapter;
 
 
@@ -28,6 +29,8 @@ public class HotFragment extends Fragment {
     protected ChallengeAdapter<Challenge> adapter;
     protected ListView challengeListView;
 
+    private final String CHALLENGE_PARAM = "challenge";
+
     public HotFragment() {
     }
 
@@ -36,7 +39,6 @@ public class HotFragment extends Fragment {
         Bundle args = new Bundle();
         args.putSerializable("Hot", list);
         challengeFragment.setArguments(args);
-        Log.d("myTagInstance",list.size()+"");
         return challengeFragment;
     }
 
@@ -68,21 +70,22 @@ public class HotFragment extends Fragment {
             challengeListView.setAdapter(adapter);
 
 
-//        challengeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                Challenge c = (Challenge) parent.getItemAtPosition(position);
-////                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-////                intent.putExtra("challenge", c);
-//////                String transitionName = getString(R.string.challenge_details_transition);
-//////                ActivityOptionsCompat options =
-//////                        ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-//////                                view,   // The view which starts the transition
-//////                                transitionName    // The transitionName of the view we’re transitioning to
-//////                        );
-//////                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-////            }
-//        });
+        challengeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Challenge c = (Challenge) parent.getItemAtPosition(position);
+                Intent intent = new Intent(getActivity(), RealisationActivity.class);
+                intent.putExtra(CHALLENGE_PARAM, c.getTitle());
+               // String transitionName = getString(R.string.challenge_details_transition);
+                /*ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
+                                view,   // The view which starts the transition
+                                transitionName    // The transitionName of the view we’re transitioning to
+                        );*/
+                //ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 
