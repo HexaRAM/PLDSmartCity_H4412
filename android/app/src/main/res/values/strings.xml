@@ -24,4 +24,8 @@
         <item>Ranking</item>
     </string-array>
     <string name="title_activity_access">AccessActivity</string>
+
+    <string name="no_login">Identifiants incorrects</string>
+    <string name="login_ok">Connexion réussie</string>
+
 </resources>

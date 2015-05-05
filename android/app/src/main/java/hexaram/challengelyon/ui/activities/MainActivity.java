@@ -1,7 +1,9 @@
 package hexaram.challengelyon.ui.activities;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -115,23 +117,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //Set up Tabbar
         mSlide = (SlidingTabLayout)findViewById(R.id.tabs);
         mSlide.setViewPager(viewPager);
-        makePostRequest();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String token = prefs.getString("token","no_token");
+        Log.d("TOKEN", token);
 
-        //testing the ION library
-
-       Ion.with(getApplicationContext())
-                .load("http://vps165185.ovh.net/auth/login")
-               .setLogging("MyLogs", Log.DEBUG)
-                .setBodyParameter("email", "salma@hexaram.com")
-                .setBodyParameter("password", "test")
-                .asString()
-               .setCallback(new FutureCallback<String>() {
-                   @Override
-                   public void onCompleted(Exception e, String result) {
-                       Log.d("Salma", result+" OK");
-                   }
-               });
 
 
 
