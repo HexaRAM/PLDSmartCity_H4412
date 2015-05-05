@@ -1,6 +1,7 @@
 package hexaram.challengelyon.models;
 
 import java.io.Serializable;
+import java.text.ParseException;
 
 /**
  * Created by William on 28/04/2015.
@@ -18,6 +19,11 @@ public class User implements Serializable {
         this.address = address;
         this.username = username;
         this.email = mail;
+    }
+    public User(String url, String email, int ranking) throws ParseException {
+        this.url = url;
+        this.email = email;
+        this.ranking = ranking;
     }
 
     public String getAddress() {

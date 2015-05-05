@@ -188,7 +188,7 @@ public class RealisationActivity extends ActionBarActivity {
         return cursor.getString(column_index);
     }
     public class PostFetcher extends AsyncTask<Void, Void, String> {
-        private static final String TAG = "PostFetcher";
+        private static final String TAG = "Log";
         public static final String SERVER_URL = "http://vps165185.ovh.net/challenges/";
 
         @Override
@@ -208,14 +208,15 @@ public class RealisationActivity extends ActionBarActivity {
 
                     try {
                         //Read the server response and attempt to parse it as JSON
-                        Reader reader = new InputStreamReader(content);
+
 
                         Gson gson = new Gson();
+                        Reader reader = new InputStreamReader(content);
                         JsonResultGetChallenges resp = gson.fromJson(reader, JsonResultGetChallenges.class);
                         Log.d("maria", ""+ resp.getCount());
+
                         content.close();
 
-                        // handleResult(res);
                     } catch (Exception ex) {
                         Log.e(TAG, "Failed to parse JSON due to: " + ex);
 
@@ -225,7 +226,7 @@ public class RealisationActivity extends ActionBarActivity {
 
                 }
             } catch (Exception ex) {
-                Log.e(TAG, "Failed to send HTTP POST request due to: " + ex);
+                Log.e(TAG, "Failed to send request due to: " + ex);
 
             }
             return null;
