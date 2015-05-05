@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.ActionBar;
@@ -24,9 +25,26 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
+import hexaram.challengelyon.models.JsonResultGetChallenges;
 
 public class RealisationActivity extends ActionBarActivity {
 
@@ -115,6 +133,8 @@ public class RealisationActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        PostFetcher req = new PostFetcher();
+        req.execute();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -166,5 +186,49 @@ public class RealisationActivity extends ActionBarActivity {
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);
+    }
+    public class PostFetcher extends AsyncTask<Void, Void, String> {
+        private static final String TAG = "PostFetcher";
+        public static final String SERVER_URL = "http://vps165185.ovh.net/challenges/";
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                //Create an HTTP client
+                HttpClient client = new DefaultHttpClient();
+                HttpGet get = new HttpGet(SERVER_URL);
+                get.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
+
+                //Perform the request and check the status code
+                HttpResponse response = client.execute(get);
+                StatusLine statusLine = response.getStatusLine();
+                if (statusLine.getStatusCode() == 200) {
+                    HttpEntity entity = response.getEntity();
+                    InputStream content = entity.getContent();
+
+                    try {
+                        //Read the server response and attempt to parse it as JSON
+                        Reader reader = new InputStreamReader(content);
+
+                        Gson gson = new Gson();
+                        JsonResultGetChallenges resp = gson.fromJson(reader, JsonResultGetChallenges.class);
+                        Log.d("maria", ""+ resp.getCount());
+                        content.close();
+
+                        // handleResult(res);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "Failed to parse JSON due to: " + ex);
+
+                    }
+                } else {
+                    Log.e(TAG, "Server responded with status code: " + statusLine.getStatusCode());
+
+                }
+            } catch (Exception ex) {
+                Log.e(TAG, "Failed to send HTTP POST request due to: " + ex);
+
+            }
+            return null;
+        }
     }
 }
