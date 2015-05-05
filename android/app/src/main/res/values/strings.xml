@@ -16,7 +16,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_profile_view">ProfileViewActivity</string>
-    
+
+    <string name="challenge_view_title">Challenge description</string>
+    <string name="main_view_title">ChallengeLyon</string>
+    <string name="realisation_upload_view_title">Play Challenge</string>
+
     <string-array name="tabs">
         <item>Hot</item>
         <item>New</item>

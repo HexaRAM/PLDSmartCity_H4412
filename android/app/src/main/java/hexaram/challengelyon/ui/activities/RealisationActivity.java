@@ -113,8 +113,8 @@ public class RealisationActivity extends ActionBarActivity {
         });
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle(R.string.realisation_upload_view_title);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)

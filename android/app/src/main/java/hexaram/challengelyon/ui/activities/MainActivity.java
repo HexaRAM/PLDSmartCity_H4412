@@ -50,6 +50,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         setContentView(R.layout.activity_main_appbar);
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle(R.string.main_view_title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
