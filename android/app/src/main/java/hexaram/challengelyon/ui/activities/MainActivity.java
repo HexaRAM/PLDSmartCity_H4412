@@ -31,6 +31,7 @@ import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
 import hexaram.challengelyon.ui.fragments.ProfileViewFragment;
+import hexaram.challengelyon.ui.fragments.ValidationFragment;
 import hexaram.challengelyon.ui.listeners.MyLocationListener;
 import hexaram.challengelyon.ui.tabs.SlidingTabLayout;
 
@@ -147,13 +148,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch(position) {
                 case 0:
                     return HotFragment.newInstance(challengeList);
+                case 1:
+                    return ValidationFragment.newInstance(challengeList);
             }
             return temp;
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 2;
         }
 
         @Override
