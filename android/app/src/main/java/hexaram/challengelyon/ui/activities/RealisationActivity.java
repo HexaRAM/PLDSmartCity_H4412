@@ -32,8 +32,11 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -135,8 +138,8 @@ public class RealisationActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        PostFetcher req = new PostFetcher();
-        req.execute();
+        //PostFetcher req = new PostFetcher();
+        //req.execute();
 
         UserGet user = new UserGet();
         user.execute();
@@ -255,7 +258,15 @@ public class RealisationActivity extends ActionBarActivity {
                 get.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
 
                 //Perform the request and check the status code
-                HttpResponse response = client.execute(get);
+                ResponseHandler<String> responseHandler=new BasicResponseHandler();
+                String responseBody = client.execute(get, responseHandler);
+                JSONObject responseS=new JSONObject(responseBody);
+                //User u = new User(responseS.getString("url"), responseS.getString("email"), responseS.getInt("ranking"));
+                //Log.d("json", u.getUsername());
+                Log.d("testtt", responseS.getString("email"));
+
+
+                /*HttpResponse response = client.execute(get);
                 StatusLine statusLine = response.getStatusLine();
                 if (statusLine.getStatusCode() == 200) {
                     HttpEntity entity = response.getEntity();
@@ -270,6 +281,8 @@ public class RealisationActivity extends ActionBarActivity {
 
 
 
+
+
                         content.close();
 
                     } catch (Exception ex) {
@@ -279,7 +292,7 @@ public class RealisationActivity extends ActionBarActivity {
                 } else {
                     Log.e(TAG, "Server responded with status code: " + statusLine.getStatusCode());
 
-                }
+                }*/
             } catch (Exception ex) {
                 Log.e(TAG, "Failed to send request due to: " + ex);
 
