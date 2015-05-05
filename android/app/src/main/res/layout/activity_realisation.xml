@@ -16,6 +16,7 @@
        android:paddingRight="@dimen/activity_horizontal_margin"
        android:paddingTop="@dimen/activity_vertical_margin"
        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/scroll_shit"
        >
 
     <LinearLayout
@@ -78,6 +79,18 @@
             android:background="@color/colorPrimaryLight"
             android:clickable="true"
             android:layout_alignParentRight="true"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Map"
+            android:id="@+id/open_map"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimaryLight"
+            android:clickable="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/submit_challenge"
+            android:layout_toStartOf="@+id/submit_challenge" />
+
 
     </RelativeLayout>
     </LinearLayout>

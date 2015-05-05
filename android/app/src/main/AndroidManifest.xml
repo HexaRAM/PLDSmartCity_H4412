@@ -54,6 +54,12 @@
             android:value="AIzaSyDYT95uE2lKZ0XFn7UkyRPSwr1qTDr0fVk" />
 
 
+
+        <activity android:name="hexaram.challengelyon.ui.activities.MapsActivity"
+            android:label="@string/title_activity_maps">
+
+        </activity>
     </application>
 
 </manifest>
+

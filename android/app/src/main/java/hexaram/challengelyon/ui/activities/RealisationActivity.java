@@ -27,6 +27,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
+import hexaram.challengelyon.ui.fragments.MyMapFragment;
 
 public class RealisationActivity extends ActionBarActivity {
 
@@ -34,6 +35,7 @@ public class RealisationActivity extends ActionBarActivity {
     FloatingActionButton bUpload;
     Button bSubmit;
     Button bBack;
+    Button bMap; // This is Shit to delete
     ImageView photo;
     Toolbar toolbar;
 
@@ -42,6 +44,8 @@ public class RealisationActivity extends ActionBarActivity {
     private final String CHALLENGE_PARAM_ID = "challenge";
     private final int UPLOAD_ACTION = 945;
     private final int VALIDATE_ACTION = 946;
+
+    MyMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class RealisationActivity extends ActionBarActivity {
         bUpload.setColorPressedResId(R.color.colorPrimaryLight);
         bUpload.setIcon(R.drawable.ic_add_circle_red600_48dp);
 
-
+        mapFragment = MyMapFragment.newInstance();
 
         bUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +72,7 @@ public class RealisationActivity extends ActionBarActivity {
 
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent,945);
+                startActivityForResult(photoPickerIntent, 945);
 
 
             }
@@ -101,6 +105,15 @@ public class RealisationActivity extends ActionBarActivity {
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
 
+            }
+        });
+
+        bMap = (Button) findViewById(R.id.open_map);
+        bMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RealisationActivity.this, RealisationActivity.class);
+                //startActivityForResult(intent, REALISATION_CHALLENGE);
             }
         });
 
