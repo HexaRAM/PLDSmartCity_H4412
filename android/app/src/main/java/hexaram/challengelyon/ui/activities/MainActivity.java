@@ -22,6 +22,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.support.v4.app.FragmentTransaction;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.google.gson.JsonObject;
@@ -41,6 +45,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONTokener;
 
 import java.io.BufferedInputStream;
@@ -50,6 +55,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -124,7 +130,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             @Override
             protected void onPostExecute(ArrayList<Challenge> list) {
                 super.onPostExecute(list);
-                Log.d("LIST", ""+list.get(0).getTitle());
+                //Log.d("LIST", ""+list.get(0).getTitle());
                 //updateUser(u);
             }
 
@@ -140,8 +146,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     urlConnection.setRequestMethod("GET");
                     urlConnection.setRequestProperty("Authorization", "token " + prefs.getString("token", ""));
                     InputStream stream = urlConnection.getInputStream();
+                    System.out.println(stream);
                     JSonParser parser = new JSonParser();
-                    ArrayList<Challenge> list = new ArrayList<Challenge>();
+                    ArrayList<Challenge> list = new ArrayList<>();
                     list = parser.parseChallenges(stream);
                     urlConnection.disconnect();
                     return list;
