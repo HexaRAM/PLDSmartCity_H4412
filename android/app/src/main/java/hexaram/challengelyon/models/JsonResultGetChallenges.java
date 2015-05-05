@@ -14,7 +14,7 @@ public class JsonResultGetChallenges {
     protected List<Challenge> results;
 
     public int getCount(){
-        Log.d("hey next", "" + results.toString());
+        Log.d("hey next", "" + previous.toString());
         return count;
     }
     public List<Challenge> getResults() {

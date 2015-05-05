@@ -35,6 +35,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -45,6 +46,7 @@ import java.util.List;
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
 import hexaram.challengelyon.models.JsonResultGetChallenges;
+import hexaram.challengelyon.models.User;
 
 public class RealisationActivity extends ActionBarActivity {
 
@@ -135,6 +137,9 @@ public class RealisationActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         PostFetcher req = new PostFetcher();
         req.execute();
+
+        UserGet user = new UserGet();
+        user.execute();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -188,7 +193,7 @@ public class RealisationActivity extends ActionBarActivity {
         return cursor.getString(column_index);
     }
     public class PostFetcher extends AsyncTask<Void, Void, String> {
-        private static final String TAG = "Log";
+        private static final String TAG = "Log req";
         public static final String SERVER_URL = "http://vps165185.ovh.net/challenges/";
 
         @Override
@@ -210,10 +215,60 @@ public class RealisationActivity extends ActionBarActivity {
                         //Read the server response and attempt to parse it as JSON
 
 
+
+
+
+                        BufferedReader reader =  new BufferedReader(new InputStreamReader(content));
                         Gson gson = new Gson();
-                        Reader reader = new InputStreamReader(content);
                         JsonResultGetChallenges resp = gson.fromJson(reader, JsonResultGetChallenges.class);
-                        Log.d("maria", ""+ resp.getCount());
+                        Log.d("maria ", ""+ resp.getCount());
+
+
+
+                        content.close();
+
+                    } catch (Exception ex) {
+                        Log.e(TAG, "Failed to parse JSON due to: " + ex);
+
+                    }
+                } else {
+                    Log.e(TAG, "Server responded with status code: " + statusLine.getStatusCode());
+
+                }
+            } catch (Exception ex) {
+                Log.e(TAG, "Failed to send request due to: " + ex);
+
+            }
+            return null;
+        }
+    }
+    public class UserGet extends AsyncTask<Void, Void, String> {
+        private static final String TAG = "USer";
+        public static final String SERVER_URL = "http://vps165185.ovh.net/users/1/";
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                //Create an HTTP client
+                HttpClient client = new DefaultHttpClient();
+                HttpGet get = new HttpGet(SERVER_URL);
+                get.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
+
+                //Perform the request and check the status code
+                HttpResponse response = client.execute(get);
+                StatusLine statusLine = response.getStatusLine();
+                if (statusLine.getStatusCode() == 200) {
+                    HttpEntity entity = response.getEntity();
+                    InputStream content = entity.getContent();
+
+                    try {
+                        //Read the server response and attempt to parse it as JSON
+                        BufferedReader reader =  new BufferedReader(new InputStreamReader(content));
+                        Gson gson = new Gson();
+                        User resp = gson.fromJson(reader, User.class);
+                        Log.d("maria user", ""+ resp.getUsername());
+
+
 
                         content.close();
 
