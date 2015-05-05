@@ -63,6 +63,7 @@ import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
 import hexaram.challengelyon.ui.fragments.ProfileViewFragment;
 import hexaram.challengelyon.ui.tabs.SlidingTabLayout;
+import hexaram.challengelyon.utils.JSonParser.JSonParser;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
@@ -118,9 +119,39 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         mSlide = (SlidingTabLayout)findViewById(R.id.tabs);
         mSlide.setViewPager(viewPager);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String token = prefs.getString("token","no_token");
-        Log.d("TOKEN", token);
+
+        AsyncTask<Void, Void, ArrayList<Challenge>> task = new AsyncTask<Void, Void,ArrayList<Challenge>>() {
+            @Override
+            protected void onPostExecute(ArrayList<Challenge> list) {
+                super.onPostExecute(list);
+                Log.d("LIST", ""+list.get(0).getTitle());
+                //updateUser(u);
+            }
+
+            @Override
+            protected ArrayList<Challenge>  doInBackground(Void... params) {
+                HttpURLConnection urlConnection;
+                //J'envoie la requete au serveur
+                try {
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                    String token = prefs.getString("token","no_token");
+                    URL challengeURL = new URL("http://vps165185.ovh.net/challenges");
+                    urlConnection = (HttpURLConnection) challengeURL.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.setRequestProperty("Authorization", "token " + prefs.getString("token", ""));
+                    InputStream stream = urlConnection.getInputStream();
+                    JSonParser parser = new JSonParser();
+                    ArrayList<Challenge> list = new ArrayList<Challenge>();
+                    list = parser.parseChallenges(stream);
+                    urlConnection.disconnect();
+                    return list;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+        task.execute();
 
 
 
@@ -128,7 +159,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 
 
-    }
+
+
+}
 
 
     @Override

@@ -30,6 +30,8 @@ public class ProfileViewActivity extends ActionBarActivity {
         textItemNbPlayed = (TextView) findViewById(R.id.profile_view_nbPlayed);
         textItemScore = (TextView) findViewById(R.id.profile_view_score);
         textItemRank = (TextView) findViewById(R.id.profile_view_rank);
+
+
     }
 
 
