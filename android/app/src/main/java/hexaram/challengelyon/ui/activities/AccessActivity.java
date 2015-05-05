@@ -50,18 +50,15 @@ public class AccessActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_access);
         textUserEmail = (EditText) findViewById(R.id.login_view_userEmail);
-        userEmail = textUserEmail.getText().toString();
-        Log.d("mail ", userEmail);
-
         textUserPassword = (EditText) findViewById(R.id.login_view_userPassword);
-        userPassword = textUserPassword.getText().toString();
-        Log.d("password ", userPassword);
 
         bLogin = (Button) findViewById(R.id.login_view_buttonLogin);
         bRegister = (Button) findViewById(R.id.login_view_buttonInscription);
 
         bLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                userEmail = textUserEmail.getText().toString();
+                userPassword = textUserPassword.getText().toString();
                 /*
                 // Perform action on click
                 //TODO
@@ -107,6 +104,7 @@ public class AccessActivity extends ActionBarActivity {
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("token", s);
                             editor.apply();
+                            startActivity(new Intent(AccessActivity.this, MainActivity.class));
 
                         }
                     }
@@ -122,6 +120,7 @@ public class AccessActivity extends ActionBarActivity {
                             urlConnection.setDoOutput(true);
 
                             DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
+
                             os.writeBytes(("email=" + URLEncoder.encode(userEmail, "UTF-8") + "&password=" + URLEncoder.encode(userPassword, "UTF-8")));
                             os.flush();
                             os.close();
