@@ -35,15 +35,16 @@ class ChallengeSerializer(serializers.ModelSerializer):
     #category = CategorySerializer()
     #type = TypeSerializer()
     metavalidation = MetaValidationSerializer()
+    play = serializers.HyperlinkedIdentityField(view_name='challenge-play')
 
     class Meta:
         model = Challenge
-        fields = ('url', 'title', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz')
+        fields = ('url', 'play', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz')
 
 class ChallengeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
-        fields = ('url', 'title', 'description')
+        fields = ('url', 'title', 'summary')
 
 class HotChallengeSerializer(ChallengeSerializer):
     pass
@@ -76,10 +77,11 @@ class ChallengePlayedSerializer(serializers.ModelSerializer):
     challenge = ChallengeSerializer(read_only=True)
     validationitem = ValidationItemSerializer(read_only=True)
     user = UserSerializer(read_only=True)
+    submit = serializers.HyperlinkedIdentityField(view_name='challengeplayed-submit')
 
     class Meta:
         model = Challengeplayed
-        fields = ('url', 'challenge', 'user', 'score', 'validated', 'validationitem')
+        fields = ('url', 'submit', 'challenge', 'user', 'score', 'validated', 'validationitem')
 
 class ChallengePlayedListSerializer(serializers.ModelSerializer):
     challenge = ChallengeListSerializer(read_only=True)
@@ -128,5 +130,10 @@ class LocationChallengePlayedSerializer(serializers.ModelSerializer):
         model = LocationChallengePlayed
         fields = ('longitude', 'latitude', 'name', 'validationitem')
 
-class ToValidateSerializer(serializers.ModelSerializer):
-    pass
+class ToValidateSerializer(ChallengePlayedListSerializer):
+    validate = serializers.HyperlinkedIdentityField(view_name='challengeplayed-validate')
+    unvalidate = serializers.HyperlinkedIdentityField(view_name='challengeplayed-unvalidate')
+
+    class Meta:
+        model = Challengeplayed
+        fields = ('validate', 'unvalidate', 'challenge', 'validated')

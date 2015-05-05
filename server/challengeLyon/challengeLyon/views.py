@@ -22,25 +22,6 @@ class ValidationItemViewSet(viewsets.ModelViewSet):
     queryset = Validationitem.objects.all()
     serializer_class = ValidationItemSerializer
 
-    # TODO : TO REMOVE
-    # @detail_route(methods=['GET','POST'])
-    # def addPicture(self, request, pk):
-    #     if request.method == "GET":
-    #         queryset = Picture.objects.filter(validationitem__challengeplayed__id=pk)
-    #         seria = PictureSerializer(queryset, context={'request': request}, many=True)
-    #         self.queryset = queryset
-    #         return Response(seria.data)
-
-    #     if request.method == "POST":
-    #         validationitem = self.get_object()
-    #         serializer = PictureSerializer(data=request.DATA, files=request.FILES)
-    #         if serializer.is_valid():
-    #             picture = serializer.save()
-    #             validationitem.pictures.add(picture)
-    #             return Response({'status': 'picture uploaded'})
-    #         else:
-    #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class ChallengeViewSet(viewsets.ModelViewSet):
     queryset = Challenge.objects.all()
     serializer_class = ChallengeSerializer
@@ -69,8 +50,10 @@ class ChallengePlayedViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        query = Challengeplayed.objects.all()
-        challengeplayed = get_object_or_404(query, pk=pk)
+        try:
+            challengeplayed = Challengeplayed.objects.filter(user=request.user).get(pk=pk)
+        except:
+            return Response({'status':'Challenge inconnu (ou pas le vôtre :p)'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = ChallengePlayedSerializer(challengeplayed, read_only=True, context={'request': request})
         return Response(serializer.data)
 
@@ -78,27 +61,52 @@ class ChallengePlayedViewSet(viewsets.ViewSet):
     def submit(self, request, pk=None):
         if pk is not None:
             try:
-                challengeplayed = Challengeplayed.objects.get(id=pk)
-                challengeplayed.validationitem.submitted = True
-                challengeplayed.validationitem.save()
-                return Response({'status': 'Soumis à validation !'})
+                challengeplayed = Challengeplayed.objects.filter(user=request.user).get(id=pk)
             except:
-                return Response({'status':'Unknown challenge'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'status':'Challenge inconnu (ou pas le vôtre :p)'}, status=status.HTTP_400_BAD_REQUEST)
+            challengeplayed.validationitem.submitted = True
+            try:
+                challengeplayed.validationitem.save()
+            except:
+                return Response({'status':'Déjà existant'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status': 'Soumis à validation !'})
         else:
-            return Response({'status':'Unknown id'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status':'ID inconnu'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # @detail_route(methods=['get'])
-    # def validate(self, request, pk=None):
-    #     if pk is not None:
-    #         try:
-    #             challengeplayed = Challengeplayed.objects.get(id=pk)
-    #             challengeplayed.validate()
-    #             challengeplayed.save()
-    #             return Response({'status': 'challenge validated'})
-    #         except:
-    #             return Response("Wrong Challenge Played", status=status.HTTP_400_BAD_REQUEST)
-    #     else:
-    #         return Response("Unknown id", status=status.HTTP_400_BAD_REQUEST)
+    # TODO : add validation when votes reach a score above 10
+    @detail_route(methods=['GET'])        
+    def validate(self, request, pk=None):
+        if pk is not None:
+            try:
+                challengeplayed = Challengeplayed.objects.exclude(user=request.user).get(id=pk)
+            except:
+                return Response({'status':'Challenge inconnu (ou le vôtre :p)'}, status=status.HTTP_400_BAD_REQUEST)
+            if not challengeplayed.toValidate():
+                return Response({'status':'This challenge doesn\'t need to be voted'}, status=status.HTTP_400_BAD_REQUEST)
+            validation = Validation(user=request.user, validationitem=challengeplayed.validationitem, vote=1)
+            try:
+                validation.save()
+            except:
+                return Response({'status':'Déjà voté'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status': 'Soumis à validation !'})
+        return Response({'status':'ID inconnu'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @detail_route(methods=['GET'])
+    def unvalidate(self, request, pk=None):
+        if pk is not None:
+            try:
+                challengeplayed = Challengeplayed.objects.exclude(user=request.user).get(id=pk)
+            except:
+                return Response({'status':'Challenge inconnu (ou le vôtre :p)'}, status=status.HTTP_400_BAD_REQUEST)
+            if not challengeplayed.toValidate():
+                return Response({'status':'This challenge doesn\'t need to be voted.'}, status=status.HTTP_400_BAD_REQUEST)
+            validation = Validation(user=request.user, validationitem=challengeplayed.validationitem, vote=-1)
+            try:
+                validation.save()
+            except:
+                return Response({'status':'Déjà voté'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status': 'Soumis à validation !'})
+        return Response({'status':'ID inconnu'}, status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=['GET', 'POST'])
     def picture(self, request, pk):
@@ -144,9 +152,13 @@ class PictureChallengePlayedViewSet(viewsets.ModelViewSet):
     serializer_class = PictureChallengePlayedSerializer
 
 
-class ToValidateViewSet(viewsets.ModelViewSet):
+class ToValidateViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ToValidateSerializer
 
     def get_queryset(self):
-        challengesplayed = Challengeplayed.objects.filter(validationitem.submitted == True).filter(validated == False).filter(user != self.request.get('user'))
+        context = self.get_serializer_context()
+        request = context['request']
+        user = request.user
+
+        challengesplayed = Challengeplayed.objects.filter(validationitem__submitted= True).filter(validated = False).exclude(user = user).exclude(validationitem__users = user)
         return challengesplayed

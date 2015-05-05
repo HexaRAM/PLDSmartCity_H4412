@@ -9,6 +9,8 @@ from challengeLyon.views import *
 
 # TODO : changer tous les services qui contiennent un attribut users (overload la méthode perform_create et attribuer users avec request.user)
 
+# TODO : add validation when votes reach a score above 10
+
 # TODO : cron qui tourne tous les soirs pour supprimer les fichiers images qui ne sont plus liés dans la DB
 
 router = routers.DefaultRouter()
