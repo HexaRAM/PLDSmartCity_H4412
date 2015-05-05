@@ -24,4 +24,5 @@
         <item>Ranking</item>
     </string-array>
     <string name="title_activity_realisation">RealisationActivity</string>
+    <string name="title_activity_challenge_view">ChallengeViewActivity</string>
 </resources>

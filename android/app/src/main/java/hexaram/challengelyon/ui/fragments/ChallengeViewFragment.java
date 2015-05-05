@@ -30,8 +30,8 @@ public class ChallengeViewFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_challenge_view, container, false);
-        Bundle args = this.getArguments();
+        View rootView = inflater.inflate(R.layout.activity_challenge_view, container, false);
+       /* Bundle args = this.getArguments();
         TextView textCreatorName = (TextView) rootView.findViewById(R.id.challenge_view_creator);
         TextView textDescription = (TextView) rootView.findViewById(R.id.challenge_view_description);
         TextView textTitle = (TextView) rootView.findViewById(R.id.challenge_view_title);
@@ -49,7 +49,7 @@ public class ChallengeViewFragment extends Fragment {
         textEndTime.setText(challenge.getEndtime());
         textCategory.setText(challenge.getCategory().getName());
         textScore.setText(challenge.getReward());
-        textValidation.setText(challenge.getValidation());
+        textValidation.setText(challenge.getValidation());*/
         return rootView;
     }
 

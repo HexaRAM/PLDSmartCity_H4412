@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
+import hexaram.challengelyon.ui.activities.ChallengeViewActivity;
 import hexaram.challengelyon.ui.activities.MainActivity;
 import hexaram.challengelyon.ui.activities.RealisationActivity;
 import hexaram.challengelyon.ui.adapter.ChallengeAdapter;
@@ -73,17 +76,27 @@ public class HotFragment extends Fragment {
         challengeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Challenge c = (Challenge) parent.getItemAtPosition(position);
-                Intent intent = new Intent(getActivity(), RealisationActivity.class);
-                intent.putExtra(CHALLENGE_PARAM, c.getTitle());
-               // String transitionName = getString(R.string.challenge_details_transition);
-                /*ActivityOptionsCompat options =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
-                                view,   // The view which starts the transition
-                                transitionName    // The transitionName of the view we’re transitioning to
-                        );*/
-                //ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-                startActivity(intent);
+
+               Challenge c = (Challenge) parent.getItemAtPosition(position);
+               Intent intent = new Intent(getActivity(), ChallengeViewActivity.class);
+               intent.putExtra(CHALLENGE_PARAM, c.getTitle());
+               startActivity(intent);
+
+                /*FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                Fragment newFragment = ChallengeViewFragment.newInstance(c);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+// Replace whatever is in the fragment_container view with this fragment,
+// and add the transaction to the back stack
+                transaction.replace(R.id.drawer_layout, newFragment);
+                transaction.addToBackStack(null);
+
+// Commit the transaction
+                transaction.commit();
+*/
+
             }
         });
         return rootView;

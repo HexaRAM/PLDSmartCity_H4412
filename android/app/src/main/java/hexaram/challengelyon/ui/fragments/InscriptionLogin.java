@@ -23,7 +23,7 @@ public class InscriptionLogin {
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_challenge_view, container, false);
+        View rootView = inflater.inflate(R.layout.activity_challenge_view, container, false);
         EditText textUserEmail = (EditText) rootView.findViewById(R.id.inscription_view_userEmail);
         CharSequence userEmail = textUserEmail.getText();
 

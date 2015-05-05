@@ -14,8 +14,8 @@
 
     <!-- Custom Toolbar -->
     <style name="customToolBar" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:textColorPrimary">#F00</item>
-        <item name="android:textColorSecondary">#00F</item>
+        <item name="android:textColorPrimary">@color/colorTextIcons</item>
+        <item name="android:textColorSecondary">@color/colorTextIcons</item>
     </style>
 
 </resources>
