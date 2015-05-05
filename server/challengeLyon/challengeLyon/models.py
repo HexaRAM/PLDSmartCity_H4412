@@ -71,22 +71,7 @@ class ChallengeUser(AbstractBaseUser):
         return self.is_admin
 
 # Bloc Challenge
-class Location(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    name = models.CharField(max_length=127)
-
-    def __unicode__(self):
-        return u"%s [%s,%s]"%(self.name,self.longitude,self.latitude)
-
 from django.conf import settings
-
-class Picture(models.Model):
-    image = models.ImageField(upload_to = 'picture', default="upload.jpg") 
-    name = models.CharField(max_length=127, verbose_name="Nom du fichier")
-
-    def __unicode__(self):
-        return u"Image : %s"%self.name
 
 class Category(models.Model):
     name = models.CharField(max_length=45)
@@ -129,7 +114,6 @@ class Challenge(models.Model):
     type = models.ForeignKey(Type, verbose_name="Type")
     quizz = models.ForeignKey(Quizz, null=True, blank=True)
     metavalidation = models.ForeignKey(Metavalidation, null=True)
-    locations = models.ManyToManyField(Location, blank=True)
 
     def save(self, *args, **kwargs):
         self.clean()
@@ -189,8 +173,6 @@ class Answer(models.Model):
 # Bloc validation
 class Validationitem(models.Model):
     challengeplayed = models.OneToOneField(Challengeplayed)
-    locations = models.ManyToManyField(Location, blank=True)
-    pictures = models.ManyToManyField(Picture, blank=True)
     submitted = models.BooleanField(default=False)
     users = models.ManyToManyField(ChallengeUser, verbose_name="Validations", blank=True, through="Validation", through_fields=('validationitem','user',))
 
@@ -234,3 +216,45 @@ class Useranswer(models.Model):
     validationitem = models.ForeignKey(Validationitem)
     def __unicode__(self):
         return u"Réponse d'un utilisateur à la question %s : %s"%(self.question, self.answer)
+
+class PictureChallenge(models.Model):
+    image = models.ImageField(upload_to = 'challenge', default="upload.jpg") 
+    description = models.TextField(verbose_name="Description brève de la photo")
+    challenge = models.ForeignKey(Challenge)
+
+    def __unicode__(self):
+        return u"Image (%s) : %s"%(self.challenge, self.description)
+
+class PictureChallengePlayed(models.Model):
+    image = models.ImageField(upload_to = 'challengePlayed', default="upload.jpg")
+    description = models.TextField(verbose_name="Description brève de la photo")
+    validationitem = models.ForeignKey(Validationitem)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(PictureChallengePlayed, self).save(*args, **kwargs)
+
+    def clean(self):
+        if self.validationitem.submitted:
+            raise ValidationError('Impossible de rajouter une photo. Le challenge a été submit.')
+
+    def __unicode__(self):
+        return u"Image (%s) : %s"%(self.validationitem.challengeplayed, self.description)
+
+class LocationChallenge(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    name = models.CharField(max_length=127)
+    challenge = models.ForeignKey(Challenge)
+
+    def __unicode__(self):
+        return u"(Challenge %s) %s [%s,%s]"%(self.challenge.id, self.name,self.longitude,self.latitude)
+
+class LocationChallengePlayed(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    name = models.CharField(max_length=127)
+    validationitem = models.ForeignKey(Validationitem)
+
+    def __unicode__(self):
+        return u"(ChallengePlayed %s) %s [%s,%s]"%(self.validationitem.challengeplayed.id, self.name,self.longitude,self.latitude)

@@ -57,7 +57,7 @@ public class RealisationActivity extends ActionBarActivity {
         bUpload = (FloatingActionButton) findViewById(R.id.upload_photo);
         bUpload.setColorNormalResId(R.color.colorPrimaryDark);
         bUpload.setColorPressedResId(R.color.colorPrimaryLight);
-        bUpload.setIcon(R.drawable.ic_menu_add);
+        bUpload.setIcon(R.drawable.ic_add_circle_red600_48dp);
 
 
 
