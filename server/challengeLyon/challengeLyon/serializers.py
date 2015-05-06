@@ -96,13 +96,9 @@ class ChallengeSerializer(serializers.ModelSerializer):
         return challenge
 
 class ChallengeListSerializer(serializers.ModelSerializer):
-    played = serializers.SerializerMethodField()
     class Meta:
         model = Challenge
-        fields = ('url', 'title', 'summary', 'played')
-
-    def get_played(self, obj):
-        return Challengeplayed.objects.filter(challenge=obj, user=self.context['request'].user).exists()
+        fields = ('url', 'title', 'summary', 'description')
 
 class HotChallengeSerializer(ChallengeSerializer):
     pass
@@ -191,7 +187,17 @@ class LocationChallengePlayedSerializer(serializers.ModelSerializer):
 class ToValidateSerializer(ChallengePlayedListSerializer):
     validate = serializers.HyperlinkedIdentityField(view_name='challengeplayed-validate')
     unvalidate = serializers.HyperlinkedIdentityField(view_name='challengeplayed-unvalidate')
+    pictures = serializers.SerializerMethodField()
 
     class Meta:
         model = Challengeplayed
-        fields = ('validate', 'unvalidate', 'challenge', 'validated')
+        fields = ('validate', 'unvalidate', 'challenge', 'validated', 'pictures')
+
+    def get_pictures(self, obj):
+        images = PictureChallengePlayed.objects.filter(validationitem=obj.validationitem)
+        pictures = []
+        request = self.context['request']
+        for image in images:
+            url = request.build_absolute_uri(image.image.url)
+            pictures.append(url)
+        return pictures
