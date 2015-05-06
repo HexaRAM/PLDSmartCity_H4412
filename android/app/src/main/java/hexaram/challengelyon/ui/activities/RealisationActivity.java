@@ -133,10 +133,10 @@ public class RealisationActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
-        /*try {
-            //requestAPI req = new requestAPI(token);
-            //JSONObject response = req.getAllChallenges();
+        String token = "13e28143514cecdaac8387ce939052a0f6095bad";
+        try {
+            requestAPI req = new requestAPI(token);
+            JSONObject response = req.getAllChallenges();
             //JSONObject responseUser = req.getUser("2");
             //JSONObject responseAllToValidate = req.getChallengesToValidate();
             //JSONArray responseAllPlayed = req.getAllChallengesPlayed();
@@ -151,9 +151,10 @@ public class RealisationActivity extends ActionBarActivity {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
+        }
+        //catch (JSONException e) {
+         //   e.printStackTrace();
+        //}
 
         //UserGet user = new UserGet();
         //user.execute();

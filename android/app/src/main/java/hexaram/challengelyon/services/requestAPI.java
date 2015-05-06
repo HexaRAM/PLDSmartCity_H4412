@@ -1,10 +1,12 @@
 package hexaram.challengelyon.services;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -17,6 +19,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
+
+import hexaram.challengelyon.ui.activities.RealisationActivity;
 
 /**
  * Created by maria on 05/05/15.
@@ -205,7 +209,7 @@ public class requestAPI {
                 return mJsonObject;
             }
         }
-        /*private class TaskLogout extends AsyncTask<Void, Void, JSONObject> {
+        private class TaskLogout extends AsyncTask<Void, Void, JSONObject> {
             private JSONObject mJSONObjetT;
             private static final String TAG = "TaskChallenge";
             public String serverUrl = "http://vps165185.ovh.net/auth/logout" ;
@@ -219,28 +223,28 @@ public class requestAPI {
                     HttpPost httpPost = new HttpPost(serverUrl);
                     httpPost.addHeader("Authorization", "Token " + token);
 
+
+
                     //Perform the request and check the status code
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpPost, responseHandler);
 
-                    JSONObject response = new JSONObject(responseBody);
-                    mJSONObjetT = response;
-
-                    //Just for testing
-                    String fluxJson = "";
                     HttpResponse httpResponse = httpClient.execute(httpPost);
-                    HttpEntity entity = httpResponse.getEntity();
-                    fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
-                    Log.d("my JSON response", fluxJson);
-                    //end testing
+                    StatusLine statusLine = httpResponse.getStatusLine();
+
+                    if(statusLine.getStatusCode() == 200) {
+                        //Intent intent = new Intent(RealisationActivity.class);
+                        //startActivity(intent, REALISATION_CHALLENGE);
+                    }
+
+
 
                 } catch (Exception ex) {
                     Log.e(TAG, "Failed to send request due to: " + ex);
                 }
                 return null;
             }
-        }*/
+        }
 
         public requestAPI(String token)  {
             this.token = token;
@@ -283,9 +287,9 @@ public class requestAPI {
         }
 
         public JSONObject logout()  throws ExecutionException, InterruptedException {
-           // TaskLogout logMeOut = new TaskLogout();
-           // logMeOut.execute();
-           // mJsonObject = logMeOut.get();
+            TaskLogout logMeOut = new TaskLogout();
+            logMeOut.execute();
+            mJsonObject = logMeOut.get();
             return mJsonObject;
         }
 
