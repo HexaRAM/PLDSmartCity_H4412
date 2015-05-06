@@ -381,8 +381,11 @@ class Location:
 
         closestStationWithBikes_index = 0
 
-        if len(stations) > 0:
-            while stations[closestStationWithBikes_index].bikes_available == 0:
+        stations_number = len(stations)
+        if stations_number > 0:
+            while stations[closestStationWithBikes_index].bikes_available == 0 and closestStationWithBikes_index < stations_number:
                 closestStationWithBikes_index += 1
+            if closestStationWithBikes_index == stations_number:
+                return None
             return stations[closestStationWithBikes_index]
         return None
