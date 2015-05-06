@@ -42,6 +42,7 @@ import org.json.JSONObject;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
+import hexaram.challengelyon.models.Challenge;
 import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.services.requestAPI;
 
@@ -66,6 +67,7 @@ public class RealisationActivity extends ActionBarActivity {
         setContentView(R.layout.activity_realisation);
 
         Intent intent = getIntent();
+        Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
         String challengeID = intent.getStringExtra(CHALLENGE_PARAM_ID);
 
         context = getApplicationContext();

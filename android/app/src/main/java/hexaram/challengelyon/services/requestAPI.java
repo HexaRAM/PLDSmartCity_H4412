@@ -279,7 +279,7 @@ public class requestAPI {
             return mJsonObject;
         }
 
-        public JSONObject playChallenge(String url) throws ExecutionException, InterruptedException {
+        public JSONObject clickURL(String url) throws ExecutionException, InterruptedException {
             TaskPlayChallenge getChallengesPlayedById = new TaskPlayChallenge();
             getChallengesPlayedById.execute(url);
             mJsonObject = getChallengesPlayedById.get();
