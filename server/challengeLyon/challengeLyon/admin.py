@@ -16,10 +16,9 @@ admin.site.register(Challenge)
 admin.site.register(Challengeplayed)
 admin.site.register(Question)
 admin.site.register(Answer)
-admin.site.register(Location)
 admin.site.register(Validationitem)
 admin.site.register(Useranswer)
-admin.site.register(Picture)
+admin.site.register(Validation)
 
 
 class UserCreationForm(forms.ModelForm):

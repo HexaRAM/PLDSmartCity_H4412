@@ -2,13 +2,7 @@ package hexaram.challengelyon.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,27 +14,26 @@ import java.util.List;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
-import hexaram.challengelyon.ui.activities.ChallengeViewActivity;
-import hexaram.challengelyon.ui.activities.MainActivity;
-import hexaram.challengelyon.ui.activities.RealisationActivity;
+import hexaram.challengelyon.ui.activities.PictureValidationActivity;
 import hexaram.challengelyon.ui.adapter.ChallengeAdapter;
 
 
-public class HotFragment extends Fragment {
+public class ValidationFragment extends Fragment {
 
     protected ArrayList<Challenge> challengeList;
     protected ChallengeAdapter<Challenge> adapter;
     protected ListView challengeListView;
 
-    private final String CHALLENGE_PARAM = "challenge";
+    private final String CHALLENGE_PARAM_TITLE = "challenge_validation_title";
+    private final String CHALLENGE_PARAM_DESCRIPTION = "challenge_validation_description";
 
-    public HotFragment() {
+    public ValidationFragment() {
     }
 
-    public static HotFragment newInstance(ArrayList<Challenge> list) {
-        HotFragment challengeFragment = new HotFragment();
+    public static ValidationFragment newInstance(ArrayList<Challenge> list) {
+        ValidationFragment challengeFragment = new ValidationFragment();
         Bundle args = new Bundle();
-        args.putSerializable("Hot", list);
+        args.putSerializable("Validation", list);
         challengeFragment.setArguments(args);
         return challengeFragment;
     }
@@ -61,26 +54,28 @@ public class HotFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.challenge_list, container, false);
 
-        challengeList = (ArrayList<Challenge>) getArguments().getSerializable("Hot");
+        challengeList = (ArrayList<Challenge>) getArguments().getSerializable("Validation");
         if(challengeList == null) {
             challengeList = new ArrayList<>();
         }
-        getArguments().remove("Hot");
+        getArguments().remove("Validation");
         //Initialiser l'adapter
-            adapter = new ChallengeAdapter<>(getActivity(), R.layout.challenge_list_item, challengeList);
-            challengeListView = (ListView) rootView.findViewById(R.id.challenge_list);
-            //L'appliquer sur la listView
-            challengeListView.setAdapter(adapter);
+        adapter = new ChallengeAdapter<>(getActivity(), R.layout.challenge_list_item, challengeList);
+        challengeListView = (ListView) rootView.findViewById(R.id.challenge_list);
+        //L'appliquer sur la listView
+        challengeListView.setAdapter(adapter);
 
 
         challengeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               Challenge c = (Challenge) parent.getItemAtPosition(position);
-               Intent intent = new Intent(getActivity(), ChallengeViewActivity.class);
-               intent.putExtra(CHALLENGE_PARAM, c.getTitle());
-               startActivity(intent);
+                Challenge c = (Challenge) parent.getItemAtPosition(position);
+                Intent intent = new Intent(getActivity(), PictureValidationActivity.class);
+                //TODO: putExtra ID not TITLE/DESCRIPTION
+                intent.putExtra(CHALLENGE_PARAM_TITLE, c.getTitle());
+                intent.putExtra(CHALLENGE_PARAM_DESCRIPTION, c.getSummary());
+                startActivity(intent);
 
                 /*FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

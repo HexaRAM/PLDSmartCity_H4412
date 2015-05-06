@@ -8,16 +8,12 @@ from django.utils import timezone
 from django.utils.http import urlquote
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import (
 BaseUserManager, AbstractBaseUser
 )
 
-# TODO : créer une classe User qui hérite de celle ci-dessus et y ajouter les attributs supplémentaires dont on a besoin / à noter que Django gère les groupes !
-
-# note : pas besoin de class ranking, on ajoute un attribut score dans User
-
 # Custom User
-
 class ChallengeUserManager(BaseUserManager):
 
     def _create_user(self, email, password, is_admin, **extra_fields):
@@ -75,22 +71,7 @@ class ChallengeUser(AbstractBaseUser):
         return self.is_admin
 
 # Bloc Challenge
-class Location(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    name = models.CharField(max_length=127)
-
-    def __unicode__(self):
-        return u"%s [%s,%s]"%(self.name,self.longitude,self.latitude)
-
 from django.conf import settings
-
-class Picture(models.Model):
-    image = models.ImageField(upload_to = 'picture', default="upload.jpg") 
-    name = models.CharField(max_length=127, verbose_name="Nom du fichier")
-
-    def __unicode__(self):
-        return u"Image : %s"%self.name
 
 class Category(models.Model):
     name = models.CharField(max_length=45)
@@ -125,6 +106,7 @@ class Metavalidation(models.Model):
 
 class Challenge(models.Model):
     title = models.CharField(max_length=45)
+    summary = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     starttime = models.DateTimeField(blank=True, null=True, verbose_name="Date de début")
     endtime = models.DateTimeField(blank=True, null=True, verbose_name="Date de fin")
@@ -133,7 +115,14 @@ class Challenge(models.Model):
     type = models.ForeignKey(Type, verbose_name="Type")
     quizz = models.ForeignKey(Quizz, null=True, blank=True)
     metavalidation = models.ForeignKey(Metavalidation, null=True)
-    locations = models.ManyToManyField(Location, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(Challenge, self).save(*args, **kwargs)
+
+    def clean(self):
+        if self.metavalidation.quizz_validation and self.quizz is None:
+            raise ValidationError('Quizz manquant')
 
     def __unicode__(self):
         return u"%s [%s - %s]"%(self.title, self.category, self.type)
@@ -142,13 +131,27 @@ class Challengeplayed(models.Model):
     challenge = models.ForeignKey(Challenge)
     user = models.ForeignKey(ChallengeUser)
     score = models.IntegerField(default=0) # score gagnable du challenge lancé
+    validated = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
+        new = False
+        if self.id is None:
+            new = True
         super(Challengeplayed, self).save(*args, **kwargs)
-        if self.id is not None:
+        if new and self.id is not None:
             # objet créé et ajouté
             validation = Validationitem(challengeplayed=self)
             validation.save()
+            self.validationitem = validation
+            self.save()
+
+    def validate(self):
+        self.validated = True
+
+    def toValidate(self):
+        if not self.validated and self.validationitem.submitted:
+            return True
+        return False 
 
     def __unicode__(self):
         return u"%s lancé par %s [score : %s]"%(self.challenge, self.user, self.score)
@@ -175,14 +178,43 @@ class Answer(models.Model):
 
 # Bloc validation
 class Validationitem(models.Model):
-    challengeplayed = models.ForeignKey(Challengeplayed)
-    locations = models.ManyToManyField(Location, blank=True)
-    pictures = models.ManyToManyField(Picture, blank=True)
+    challengeplayed = models.OneToOneField(Challengeplayed)
     submitted = models.BooleanField(default=False)
-    users = models.ManyToManyField(ChallengeUser, verbose_name="Validations", blank=True)
+    users = models.ManyToManyField(ChallengeUser, verbose_name="Validations", blank=True, through="Validation", through_fields=('validationitem','user',))
 
     def __unicode__(self):
         return u"Validation du challenge %s"%(self.challengeplayed.challenge)
+
+class Validation(models.Model):
+    validationitem = models.ForeignKey(Validationitem)
+    user = models.ForeignKey(ChallengeUser)
+    vote = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('user', 'validationitem')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(Validation, self).save(*args, **kwargs)
+
+    def clean(self):
+        if not self.validationitem.submitted:
+            raise ValidationError('Impossible de voter. Le challenge n\'a pas été validé.')
+
+    def __unicode__(self):
+        return u"%s a voté %s pour le challenge %s"%(self.user, self.vote, self.validationitem.challengeplayed.challenge)
+
+    def changeVote(self, value=0):
+        self.vote = value
+
+    def upvote(self):
+        self.changeVote(1)
+
+    def downvote(self):
+        self.changeVote(-1)
+
+    def removeVote(self):
+        self.changeVote(0)
 
 class Useranswer(models.Model):
     question = models.ForeignKey(Question)
@@ -191,42 +223,44 @@ class Useranswer(models.Model):
     def __unicode__(self):
         return u"Réponse d'un utilisateur à la question %s : %s"%(self.question, self.answer)
 
+class PictureChallenge(models.Model):
+    image = models.ImageField(upload_to = 'challenge', default="upload.jpg") 
+    description = models.TextField(verbose_name="Description brève de la photo")
+    challenge = models.ForeignKey(Challenge)
 
+    def __unicode__(self):
+        return u"Image (%s) : %s"%(self.challenge, self.description)
 
-# Serializers class
+class PictureChallengePlayed(models.Model):
+    image = models.ImageField(upload_to = 'challengePlayed', default="upload.jpg")
+    description = models.TextField(verbose_name="Description brève de la photo")
+    validationitem = models.ForeignKey(Validationitem)
 
-from rest_framework import serializers
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(PictureChallengePlayed, self).save(*args, **kwargs)
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChallengeUser
-        fields = ('url', 'email', 'ranking')
+    def clean(self):
+        if self.validationitem.submitted:
+            raise ValidationError('Impossible de rajouter une photo. Le challenge a été submit.')
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ('name', 'reward')
+    def __unicode__(self):
+        return u"Image (%s) : %s"%(self.validationitem.challengeplayed, self.description)
 
-class ChallengeSerializer(serializers.ModelSerializer):
-    starttime = serializers.DateTimeField()
-    endtime = serializers.DateTimeField()
-    creator = UserSerializer(read_only=True)
+class LocationChallenge(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    name = models.CharField(max_length=127)
+    challenge = models.ForeignKey(Challenge)
 
-    class Meta:
-        model = Challenge
-        fields = ('url', 'title', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz', 'locations')
+    def __unicode__(self):
+        return u"(Challenge %s) %s [%s,%s]"%(self.challenge.id, self.name,self.longitude,self.latitude)
 
-class PictureSerializer(serializers.ModelSerializer):
-    def validate_image(self, value):
-        """
-        Check image size
-        """
-        if value.size > settings.MEDIA_MAX_SIZE:
-            max_size_o = int(settings.MEDIA_MAX_SIZE)
-            max_size_mo = settings.MEDIA_MAX_SIZE/1024/1024
-            raise serializers.ValidationError(u"L'image est trop lourde (maximum %s mo [%s o])"%(max_size_mo, max_size_o))
-        return value
+class LocationChallengePlayed(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    name = models.CharField(max_length=127)
+    validationitem = models.ForeignKey(Validationitem)
 
-    class Meta:
-        model = Picture
-        fields = ('url', 'image', 'name')
+    def __unicode__(self):
+        return u"(ChallengePlayed %s) %s [%s,%s]"%(self.validationitem.challengeplayed.id, self.name,self.longitude,self.latitude)

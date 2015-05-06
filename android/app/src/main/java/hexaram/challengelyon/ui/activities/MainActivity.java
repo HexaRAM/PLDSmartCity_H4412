@@ -1,9 +1,16 @@
 package hexaram.challengelyon.ui.activities;
 
+
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -26,16 +33,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
+
 import com.google.gson.JsonObject;
-import com.koushikdutta.async.AsyncServer;
-import com.koushikdutta.async.http.server.AsyncHttpServer;
-import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
-import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
-import com.koushikdutta.async.http.server.HttpServerRequestCallback;
-import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.future.ResponseFuture;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -68,6 +67,8 @@ import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
 import hexaram.challengelyon.ui.fragments.ProfileViewFragment;
+import hexaram.challengelyon.ui.fragments.ValidationFragment;
+import hexaram.challengelyon.ui.listeners.MyLocationListener;
 import hexaram.challengelyon.ui.tabs.SlidingTabLayout;
 import hexaram.challengelyon.utils.JSonParser.JSonParser;
 
@@ -232,13 +233,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch(position) {
                 case 0:
                     return HotFragment.newInstance(challengeList);
+                case 1:
+                    return ValidationFragment.newInstance(challengeList);
             }
             return temp;
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 2;
         }
 
         @Override

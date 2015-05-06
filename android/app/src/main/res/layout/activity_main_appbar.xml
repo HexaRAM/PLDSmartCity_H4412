@@ -29,19 +29,19 @@
              android:id="@+id/pager"
              android:layout_width="match_parent"
              android:layout_height="0dp"
-            android:layout_weight="1"
+             android:layout_weight="1"
 
-             />
+        />
 
-        <fragment
-            android:id="@+id/fragment_navigation_drawer"
-            android:layout_width="@dimen/nav_drawer_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:layout="@layout/fragment_navigation_drawer"
-            android:name="hexaram.challengelyon.ui.fragments.NavigationDrawerFragment"
-            tools:layout="@layout/fragment_navigation_drawer">
-        </fragment>
+            <fragment
+                android:id="@+id/fragment_navigation_drawer"
+                android:layout_width="@dimen/nav_drawer_width"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout="@layout/fragment_navigation_drawer"
+                android:name="hexaram.challengelyon.ui.fragments.NavigationDrawerFragment"
+                tools:layout="@layout/fragment_navigation_drawer">
+            </fragment>
     </android.support.v4.widget.DrawerLayout>
 
 </LinearLayout>

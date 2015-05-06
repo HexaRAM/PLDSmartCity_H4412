@@ -19,13 +19,14 @@
     
     <string-array name="tabs">
         <item>Hot</item>
-        <item>New</item>
         <item>To Validate</item>
-        <item>Ranking</item>
     </string-array>
-    <string name="title_activity_access">AccessActivity</string>
 
+    <string name="title_activity_access">AccessActivity</string>
     <string name="no_login">Identifiants incorrects</string>
     <string name="login_ok">Connexion réussie</string>
+    <string name="title_activity_realisation">RealisationActivity</string>
+    <string name="title_activity_challenge_view">ChallengeViewActivity</string>
+    <string name="title_activity_picture_validation">PictureValidationActivity</string>
 
 </resources>

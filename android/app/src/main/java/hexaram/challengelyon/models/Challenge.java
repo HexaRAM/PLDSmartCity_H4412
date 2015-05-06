@@ -13,6 +13,7 @@ public class Challenge implements Serializable {
     protected String description;
     protected String title;
     protected String summary;
+    protected String play;
     protected String starttime;
     protected String endtime;
     protected User creator;
@@ -32,9 +33,10 @@ public class Challenge implements Serializable {
         this.category = reward;
     }
 
-    public Challenge(String url, String title, String description, String starttime, String endtime, User creator, int category, int type, String quizz, Metavalidation metavalidation) throws ParseException {
+    public Challenge(String url, String play, String title, String description, String starttime, String endtime, User creator, int category, int type, Metavalidation metavalidation, String quizz) throws ParseException {
         this.title = title;
         this.summary = summary;
+        this.play = play;
         this.creator = creator;
         this.starttime = starttime;
         this.endtime = endtime;
