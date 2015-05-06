@@ -181,11 +181,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 User creator = new User(user.getString("url"), user.getString("email"), user.getInt("ranking"));
                 Log.d("mail", user.getString("email")+" "+user.getString("ranking"));
                 String category = r.getString("category");
+
                 String type = r.getString("type");
                 JSONObject metavalidation = r.getJSONObject("metavalidation");
                 Metavalidation meta = new Metavalidation(metavalidation.getBoolean("picture_validation"), metavalidation.getBoolean("quizz_validation"), metavalidation.getBoolean("location_validation"));
                 String quizz = r.getString("quizz");
                 Challenge c = new Challenge(url,play,title,summary,description,starttime,endtime,creator,category,type,meta,quizz);
+                int reward = r.getInt("reward");
+                c.setReward(reward);
                 boolean played = r.getBoolean("played");
                 if(played) {
 
@@ -209,11 +212,17 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 String description = challenge.getString("description");
                 Boolean validated = r.getBoolean("validated");
                 JSONArray pics = r.getJSONArray("pictures");
+
+
+
                 String pictures ="";
                 if(pics.length()!=0) {
                     pictures = r.getJSONArray("pictures").getString(0);
                 }
                 ToValidate tv = new ToValidate(validate, unvalidate, url, title, summary, description, validated, pictures);
+                int reward = req.clickURL(url).getInt("reward");
+                tv.setReward(reward);
+
                 toValidateList.add(tv);
             }
         } catch (ExecutionException e) {
