@@ -35,6 +35,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -133,8 +134,10 @@ public class RealisationActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         try {
             requestAPI req = new requestAPI();
-            JSONObject response = req.getMyJSONObjet();
-            Log.d("email", response.getString("email"));
+            JSONObject response = req.getAllChallenges();
+            JSONArray results = response.getJSONArray("results");
+
+            Log.d("url", results.getJSONObject(0).getString("url"));
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -197,5 +200,5 @@ public class RealisationActivity extends ActionBarActivity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
-   
+
 }
