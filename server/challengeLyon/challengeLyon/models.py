@@ -106,6 +106,7 @@ class Metavalidation(models.Model):
 
 class Challenge(models.Model):
     title = models.CharField(max_length=45)
+    summary = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     starttime = models.DateTimeField(blank=True, null=True, verbose_name="Date de début")
     endtime = models.DateTimeField(blank=True, null=True, verbose_name="Date de fin")
@@ -146,6 +147,11 @@ class Challengeplayed(models.Model):
 
     def validate(self):
         self.validated = True
+
+    def toValidate(self):
+        if not self.validated and self.validationitem.submitted:
+            return True
+        return False 
 
     def __unicode__(self):
         return u"%s lancé par %s [score : %s]"%(self.challenge, self.user, self.score)

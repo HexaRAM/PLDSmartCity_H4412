@@ -8,6 +8,7 @@
         retour = appel de l'URL
         pictures = retour['validationitem']['picturechallengeplayed_set']
     ```
-- Submit un challenge en cours : `GET /challenngePlayed/<id>/submit`
-
+- Submit un challenge en cours : `GET /challengePlayed/<id>/submit`
 - Lister les challenges à valider : `GET /toValidate/`
+    - Valider un challenge : `GET /challengePlayed/<id>/validate/`
+    - Ne pas valider un challenge : `GET /challengePlayed/<id>/unvalidate/`
