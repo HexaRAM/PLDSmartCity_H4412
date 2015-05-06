@@ -259,6 +259,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             requestAPI req = new requestAPI(token);
                             try {
                                 JSONObject responseLogout = req.logout();
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString("token", "logout");
+                                editor.apply();
                             } catch (ExecutionException e) {
                                 e.printStackTrace();
                             } catch (InterruptedException e) {

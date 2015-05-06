@@ -53,13 +53,15 @@ public class AccessActivity extends ActionBarActivity {
         bLogin = (Button) findViewById(R.id.login_view_buttonLogin);
         bRegister = (Button) findViewById(R.id.login_view_buttonInscription);
 
+
+
         bLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 userEmail = textUserEmail.getText().toString();
                 userPassword = textUserPassword.getText().toString();
                 /*
                 // Perform action on click
-                //TODO
+
                 Ion.with(getApplicationContext())
                         .load(API_HOST+"/login")
                         .setLogging("MyLogs", Log.DEBUG)
@@ -152,6 +154,23 @@ public class AccessActivity extends ActionBarActivity {
         });
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AccessActivity.this);
+        if(prefs.contains("token")) {
+            String token = prefs.getString("token","no_token");
+            if(token.equals("logout") == false) {
+                startActivity(new Intent(AccessActivity.this, MainActivity.class));
+                Log.d("connected","redirect");
+            }
+
+        }
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
