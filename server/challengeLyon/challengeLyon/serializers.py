@@ -31,6 +31,9 @@ class MetaValidationSerializer(serializers.ModelSerializer):
 class ChallengeSerializer(serializers.ModelSerializer):
     creator = UserSerializer(read_only=True)
     category = serializers.SlugRelatedField(slug_field='name', queryset=Category.objects.all())
+    reward = serializers.SerializerMethodField()
+    #category = serializers.SerializerMethodField()
+    #category = CategorySerializer()
     type = serializers.SlugRelatedField(slug_field='name', queryset=Type.objects.all())
     metavalidation = MetaValidationSerializer()
     play = serializers.HyperlinkedIdentityField(view_name='challenge-play', read_only=True)
@@ -38,10 +41,18 @@ class ChallengeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Challenge
-        fields = ('url', 'play', 'played', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz')
+        fields = ('url', 'play', 'played', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'reward', 'type', 'metavalidation', 'quizz')
 
     def get_played(self, obj):
         return Challengeplayed.objects.filter(challenge=obj, user=self.context['request'].user).exists()
+
+    # def get_category(self, obj):
+    #     category = obj.category
+    #     return category.serialize()
+
+    def get_reward(self, obj):
+        return obj.category.reward
+            
 
     def computeMetaValidation(self, metadata):
         data_keys = ["picture_validation", "quizz_validation", "location_validation"]
