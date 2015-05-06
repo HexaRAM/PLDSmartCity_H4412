@@ -3,12 +3,22 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/category"
+        android:layout_width="219dp"
+        android:layout_height="181dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/photo_only_lyon"
+        android:paddingRight="16dp"
+        android:paddingTop="4dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Email:"
         android:layout_marginTop="70dp"
-        android:layout_marginLeft="15dp" />
+        android:layout_marginLeft="15dp"
+        android:fontFamily="sans-serif-light"/>
 
     <EditText
         android:id="@+id/login_view_userEmail"
@@ -23,7 +33,8 @@
         android:layout_height="wrap_content"
         android:text="Mot de passe:"
         android:layout_marginTop="25dp"
-        android:layout_marginLeft="15dp" />
+        android:layout_marginLeft="15dp"
+        android:fontFamily="sans-serif-light"/>
 
     <EditText
         android:id="@+id/login_view_userPassword"
@@ -33,23 +44,20 @@
         android:layout_marginLeft="15dp"
         android:ems="10"
         />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log in"
-        android:id="@+id/login_view_buttonLogin"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:background="#ff35d0c1"
-        android:clickable="true" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/login_view_buttonLogin"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Inscription"
-        android:id="@+id/login_view_buttonInscription"
+        android:text="Log in"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:background="#ff3032ff"
-        android:clickable="true" />
+        android:background="@color/colorPrimary"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/colorTextIcons"
+        android:clickable="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        />
 </LinearLayout>
