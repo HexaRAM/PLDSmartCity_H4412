@@ -25,6 +25,7 @@ public class User implements Serializable {
         this.email = email;
         this.ranking = ranking;
     }
+    public User () {}
 
     public String getAddress() {
         return address;
