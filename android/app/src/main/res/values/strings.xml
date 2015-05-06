@@ -26,7 +26,14 @@
         <item>Hot</item>
         <item>To Validate</item>
     </string-array>
+
+    <string name="title_activity_access">AccessActivity</string>
+    <string name="no_login">Identifiants incorrects</string>
+    <string name="login_ok">Connexion réussie</string>
+    <string name="no_upload">Echec de l\'upload</string>
+    <string name="upload_ok">Challenge soumis</string>
     <string name="title_activity_realisation">RealisationActivity</string>
     <string name="title_activity_challenge_view">ChallengeViewActivity</string>
     <string name="title_activity_picture_validation">PictureValidationActivity</string>
+
 </resources>

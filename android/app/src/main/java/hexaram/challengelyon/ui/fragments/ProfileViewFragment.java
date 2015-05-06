@@ -1,6 +1,8 @@
 package hexaram.challengelyon.ui.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -11,8 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
+
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.User;
+import hexaram.challengelyon.services.requestAPI;
 
 /**
  * Created by William on 28/04/2015.
@@ -22,13 +30,11 @@ public class ProfileViewFragment extends Fragment {
     User user;
     DrawerLayout mDrawerLayout;
 
-    ImageView imageItem;
+
     TextView textItemName;
-    TextView textItemMail;
-    TextView textItemAddress;
-    TextView textItemNbPlayed;
+
     TextView textItemScore;
-    TextView textItemRank;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,8 +46,10 @@ public class ProfileViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile_view, container, false);
 
+
         textItemName = (TextView) rootView.findViewById(R.id.profile_author_text);
         textItemScore = (TextView) rootView.findViewById(R.id.profile_score_text);
+
 
     Log.d("Profile","Lauchend");
         /*Bundle args = this.getArguments();
@@ -62,12 +70,7 @@ public class ProfileViewFragment extends Fragment {
     public void setUp(User user, DrawerLayout drawerLayout){
         this.user = user;
         textItemName.setText(user.getUsername());
-        textItemMail.setText(user.getMail());
-        textItemAddress.setText(user.getAddress());
-        textItemNbPlayed.setText(user.getNbPlayed());
         textItemScore.setText(user.getScore());
-        textItemRank.setText(user.getRank());
-
         mDrawerLayout = drawerLayout;
     }
 
