@@ -50,9 +50,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJSONObjetT = response;
 
                 } catch (Exception ex) {
@@ -78,9 +80,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJSONObjetT = response;
 
                 } catch (Exception ex) {
@@ -106,9 +110,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJSONObjetT = response;
 
                 } catch (Exception ex) {
@@ -134,9 +140,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONArray response = new JSONArray(responseBody);
+                    JSONArray response = new JSONArray(fluxJson);
                     mJSONArray = response;
 
                 } catch (Exception ex) {
@@ -163,9 +171,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJsonObject = response;
 
 
@@ -219,9 +229,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJSONObjetT = response;
 
                 } catch (Exception ex) {
