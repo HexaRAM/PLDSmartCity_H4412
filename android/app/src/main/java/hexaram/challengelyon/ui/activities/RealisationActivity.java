@@ -133,24 +133,27 @@ public class RealisationActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        String token = "1a7d6b30a23da000c84d287f8f7fd0152412a9f9";
-        try {
-            requestAPI req = new requestAPI(token);
+        String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+        /*try {
+            //requestAPI req = new requestAPI(token);
             //JSONObject response = req.getAllChallenges();
             //JSONObject responseUser = req.getUser("2");
             //JSONObject responseAllToValidate = req.getChallengesToValidate();
             //JSONArray responseAllPlayed = req.getAllChallengesPlayed();
-            JSONObject responsePlayChallenge = req.playChallenge("http://vps165185.ovh.net/challenges/3/play/");
+            //JSONObject responsePlayChallenge = req.playChallenge("http://vps165185.ovh.net/challenges/3/play/");
+            //JSONObject responseLogout = req.logout();
+
 
             //Log.d("user", responseUser.getString("email"));
-            Log.d("challenge", responsePlayChallenge.getString("status"));
+            //Log.d("challenge", responsePlayChallenge.getString("status"));
+           // Log.d("logout mess",responseLogout.getString("detail"));
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
 
         //UserGet user = new UserGet();
         //user.execute();
