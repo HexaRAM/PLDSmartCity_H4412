@@ -39,11 +39,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.services.requestAPI;
+import hexaram.challengelyon.utils.MultipartUtility;
 
 public class RealisationActivity extends ActionBarActivity {
 
@@ -59,6 +62,7 @@ public class RealisationActivity extends ActionBarActivity {
     private final String CHALLENGE_PARAM_ID = "challenge";
     private final int UPLOAD_ACTION = 945;
     private final int VALIDATE_ACTION = 946;
+    String imageFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +106,38 @@ public class RealisationActivity extends ActionBarActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
-                                //TODO Appel à l'API pour enrigestrer l'image
+                                 AsyncTask<String, Void, List<String>> task = new AsyncTask<String, Void, List<String>>() {
+                                    @Override
+                                    protected void onPostExecute(List<String> response) {
+                                        super.onPostExecute(response);
+                                        if(response == null)
+                                        {
+                                            //Toast.makeText(getActivity(), getResources().getString(R.string.no_creation), Toast.LENGTH_SHORT).show();
+                                        }
+                                        else{
+                                            System.out.println(response.get(0));
+                                        }
+
+                                    }
+
+                                    @Override
+                                    protected List<String> doInBackground(String... params) {
+                                        try {
+                                            MultipartUtility multipart = new MultipartUtility("http://vps165185.ovh.net/picturesChallengePlayed/", "UTF-8", "Token 9cd348ec7010d544cc74a44311ea22ff5b7dc02a");
+                                            multipart.addFormField("description","petite description");
+                                            multipart.addFormField("validationitem","2");
+                                             multipart.addFilePart("image", new File(imageFile));
+
+                                            List<String> response = multipart.finish();
+                                            return response;
+                                        }catch(Exception e)
+                                        {
+                                            e.printStackTrace();
+                                            return null;
+                                        }
+                                    }
+                                };
+                                task.execute(imageFile);
 
                                 setResult(RealisationActivity.RESULT_OK);
                                 finish();
@@ -132,7 +167,7 @@ public class RealisationActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        String token = "1a7d6b30a23da000c84d287f8f7fd0152412a9f9";
+        String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
         try {
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
@@ -163,6 +198,7 @@ public class RealisationActivity extends ActionBarActivity {
                 Uri selectedImageUri = data.getData();
                 Log.d("MyTag", selectedImageUri+"");
                 String filestring = getPath(selectedImageUri);
+                imageFile = filestring;
                 BitmapFactory.Options options2 = new BitmapFactory.Options();
                 Bitmap thumbnail = BitmapFactory.decodeFile(filestring, options2);
                 photo.setImageBitmap(thumbnail);
