@@ -265,3 +265,124 @@ class LocationChallengePlayed(models.Model):
 
     def __unicode__(self):
         return u"(ChallengePlayed %s) %s [%s,%s]"%(self.validationitem.challengeplayed.id, self.name,self.longitude,self.latitude)
+
+
+
+### Own Model
+from math import radians, cos, sin, asin, sqrt
+import requests
+
+class Station:
+    URL = "https://download.data.grandlyon.com/ws/rdata/jcd_jcdecaux.jcdvelov/all.json"
+    FIELDS = ["lat", "lng", "available_bikes", "available_bike_stands", "name", "number"]
+
+    def __init__(self, lat, lng, bikes, bikes_stands, name, number):
+        try:
+            self.lat = float(lat)
+            self.lng = float(lng)
+            self.bikes_available = int(bikes)
+            self.bikes_stands = int(bikes_stands)
+        except:
+            self.bikes_available = 0
+            self.bikes_stands = 0
+            print u"Impossible de créer la station"
+        self.distance_from_user = 0
+        self.name = name
+        self.number = number
+
+    def serialize(self):
+        return {
+            'id': self.number,
+            'nom': self.name,
+            'latitude': self.lat,
+            'longitude': self.lng,
+            'velos_disponibles': self.bikes_available,
+            'velos_posables': self.bikes_stands,
+            'distance': {
+                'km': self.distance_from_user,
+                'm': self.distance_from_user*1000
+            }
+        }
+
+    @staticmethod
+    def getData():
+        # call webservices
+        r = requests.get(Station.URL)
+        result = r.json()
+
+        # get fields
+        fields = result['fields']
+
+        # get indexes
+        indexes = {}
+        for field in Station.FIELDS:
+            indexes[field] = -1
+            ret = [i for i,value in enumerate(fields) if value == field]
+            if len(ret) > 0:
+                indexes[field] = ret[0]
+
+        # get values
+        values = result['values']
+        #print indexes
+
+        stations = []
+
+        for station in values:
+            param = [station[indexes[i]] for i in Station.FIELDS]
+            #print param
+            current_station = Station(*param)
+            #print u"%s"%current_station
+            stations.append(current_station)
+
+        return stations
+
+    def __unicode__(self):
+        return self.toString()
+
+    def __str__(self):
+        return self.toString()
+
+    def __repr__(self):
+        return self.toString()
+
+    def toString(self):
+        return u"%s [%s,%s] --> %s km (%s vélos disponibles)"%(self.name, self.lat, self.lng, self.distance_from_user, self.bikes)
+
+
+    def getDistance(self, loc):
+        """
+        Calculate distance between 2 locations
+        """
+        lat1, lon1, lat2, lon2 = map(radians, [self.lat, self.lng, loc.lat, loc.lng]) # convert degrees to radians
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+        c = 2*asin(sqrt(a))
+        km = 6367*c
+        self.distance_from_user = km
+        return km
+
+class Location:
+    def __init__(self, lat, lng):
+        try:
+            self.lat = float(lat)
+            self.lng = float(lng)
+        except:
+            print u"Impossible de créer la localisation"
+
+    def getClosestStation(self):
+        stations = Station.getData()
+
+        for station in stations:
+            km = station.getDistance(self)
+            #print u"%s"%km
+
+        stations = sorted(stations, key=lambda station: station.distance_from_user)
+
+        closestStationWithBikes_index = 0
+
+        if len(stations) > 0:
+            while stations[closestStationWithBikes_index].bikes_available == 0:
+                closestStationWithBikes_index += 1
+            return stations[closestStationWithBikes_index]
+        return None

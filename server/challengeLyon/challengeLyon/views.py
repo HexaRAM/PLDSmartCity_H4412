@@ -7,7 +7,7 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, api_view
 from django.conf import settings
 from challengeLyon.models import *
 from challengeLyon.serializers import *
@@ -176,3 +176,24 @@ class ToValidateViewSet(viewsets.ReadOnlyModelViewSet):
 
         challengesplayed = Challengeplayed.objects.filter(validationitem__submitted= True).filter(validated = False).exclude(user = user).exclude(validationitem__users = user)
         return challengesplayed
+
+# Own Views
+
+@api_view(['GET'])
+def getClosestStation(request):
+    location = None
+    try:
+        latitude = request.query_params['latitude']
+        longitude = request.query_params['longitude']
+        location = Location(latitude, longitude)
+    except:
+        print request.data.values()
+        return Response({"status": "Impossible de créer la localisation à partir des paramètres reçus."}, status=status.HTTP_400_BAD_REQUEST)
+    station = None
+    try:
+        station = location.getClosestStation()
+    except:
+        return Response({"status": "Impossible d'obtenir la station la plus proche"}, status=status.HTTP_400_BAD_REQUEST)
+    if station is None:
+        return Response({"status": "Aucune station plus proche"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"status":"ok", "result": station.serialize()})
