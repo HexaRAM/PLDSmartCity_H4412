@@ -138,10 +138,11 @@ public class RealisationActivity extends ActionBarActivity {
             //JSONObject response = req.getAllChallenges();
             //JSONObject responseUser = req.getUser("2");
             //JSONObject responseAllToValidate = req.getChallengesToValidate();
-            JSONArray responseAllPlayed = req.getAllChallengesPlayed();
+            //JSONArray responseAllPlayed = req.getAllChallengesPlayed();
+            JSONObject responsePlayChallenge = req.playChallenge("http://vps165185.ovh.net/challenges/3/play/");
 
             //Log.d("user", responseUser.getString("email"));
-            Log.d("challenge", responseAllPlayed.getJSONObject(0).getString("challenge"));
+            Log.d("challenge", responsePlayChallenge.getString("status"));
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

@@ -181,6 +181,38 @@ public class requestAPI {
             }
         }
 
+        private class TaskPlayChallenge extends AsyncTask <String, Void, JSONObject> {
+            private JSONObject mJSONObject;
+            private static final String TAG = "TaskChallToValidate";
+            public String serverUrl = "";
+
+            @Override
+            protected JSONObject doInBackground(String... params) {
+                String url = params[0];
+                serverUrl = url;
+                try {
+                    //Create an HTTP client
+                    HttpClient httpClient = new DefaultHttpClient();
+                    HttpGet httpGet = new HttpGet(serverUrl);
+
+                    httpGet.addHeader("Authorization", "Token " + token);
+
+                    //Perform the request and check the status code
+                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
+
+                    String responseBody = httpClient.execute(httpGet, responseHandler);
+
+                    JSONObject response = new JSONObject(responseBody);
+                    mJsonObject = response;
+
+
+                } catch (Exception ex) {
+                    Log.e(TAG, "Failed to send request: " + ex);
+                }
+                return mJsonObject;
+            }
+        }
+
         public requestAPI(String token)  {
             this.token = token;
         }
@@ -214,7 +246,12 @@ public class requestAPI {
             return mJsonObject;
         }
 
-
+        public JSONObject playChallenge(String url) throws ExecutionException, InterruptedException {
+            TaskPlayChallenge getChallengesPlayedById = new TaskPlayChallenge();
+            getChallengesPlayedById.execute(url);
+            mJsonObject = getChallengesPlayedById.get();
+            return mJsonObject;
+        }
 
 
 
