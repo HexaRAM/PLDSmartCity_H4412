@@ -1,18 +1,17 @@
 package hexaram.challengelyon.ui.activities;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,9 +23,26 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
-import hexaram.challengelyon.models.Challenge;
+import hexaram.challengelyon.models.User;
+import hexaram.challengelyon.services.requestAPI;
 
 public class RealisationActivity extends ActionBarActivity {
 
@@ -115,6 +131,20 @@ public class RealisationActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        try {
+            requestAPI req = new requestAPI();
+            JSONObject response = req.getMyJSONObjet();
+            Log.d("email", response.getString("email"));
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //UserGet user = new UserGet();
+        //user.execute();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -167,4 +197,125 @@ public class RealisationActivity extends ActionBarActivity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+    /*public class PostFetcher extends AsyncTask<Void, Void, String> {
+        private static final String TAG = "Heeeyyyyyyy";
+        public static final String SERVER_URL = "http://vps165185.ovh.net/users/1";
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                //Create an HTTP client
+                HttpClient client = new DefaultHttpClient();
+                HttpGet get = new HttpGet(SERVER_URL);
+                get.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
+
+                //Perform the request and check the status code
+                HttpResponse response = client.execute(get);
+                StatusLine statusLine = response.getStatusLine();
+
+
+                /*ResponseHandler<String> responseHandler=new BasicResponseHandler();
+                String responseBody = client.execute(get, responseHandler);
+                JSONObject responseS=new JSONObject(responseBody);
+                JSONArray resultList =  responseS.getJSONArray("results");
+                String play = resultList.getJSONObject(0).getString("play");
+                Log.d("Maria",play);
+                String fluxJson ="";*/
+
+               /* if (statusLine.getStatusCode() == 200) {
+                    HttpEntity entity = response.getEntity();
+                    //InputStream content = entity.getContent();
+                    if(entity!=null) {
+                        fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
+                        fluxJson = "{" + "\"userR\"" + ": " + fluxJson + "}";
+                        Log.d("Tuuuuup",fluxJson);
+                    }
+
+                    try {
+                        //Read the server response and attempt to parse it as JSON
+
+
+
+
+
+                        //BufferedReader reader =  new BufferedReader(new InputStreamReader(content));
+                        Gson gson = new Gson();
+
+                        UserR u = new UserR();
+                        u  = (UserR) gson.fromJson(fluxJson, UserR.class);
+                        Log.d("maria ", ""+ u.url);
+
+
+
+                        //content.close();
+
+                    } catch (Exception ex) {
+                        Log.e(TAG, "Failed to parse JSON due to: " + ex);
+
+                    }
+                } else {
+                    Log.e(TAG, "Server responded with status code: " + statusLine.getStatusCode());
+
+                }
+            } catch (Exception ex) {
+                Log.e(TAG, "Failed to send request due to: " + ex);
+
+            }
+            return null;
+        }
+    }
+    public class UserGet extends AsyncTask<Void, Void, String> {
+        private static final String TAG = "USer";
+        public static final String SERVER_URL = "http://vps165185.ovh.net/users/1/";
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                //Create an HTTP client
+                HttpClient client = new DefaultHttpClient();
+                HttpGet get = new HttpGet(SERVER_URL);
+                get.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
+
+                //Perform the request and check the status code
+                ResponseHandler<String> responseHandler=new BasicResponseHandler();
+                String responseBody = client.execute(get, responseHandler);
+                JSONObject responseS=new JSONObject(responseBody);
+
+
+                Gson gson = new Gson();
+                User resp = gson.fromJson(String.valueOf(responseS), User.class);
+                Log.d("maria user", ""+ resp.getUsername());
+                //User u = new User(responseS.getString("url"), responseS.getString("email"), responseS.getInt("ranking"));
+                //Log.d("json", u.getUsername());
+                Log.d("testtt", responseS.getString("email"));
+
+
+                /*HttpResponse response = client.execute(get);
+                StatusLine statusLine = response.getStatusLine();
+                if (statusLine.getStatusCode() == 200) {
+                    HttpEntity entity = response.getEntity();
+                    InputStream content = entity.getContent();
+
+                    try {
+                        //Read the server response and attempt to parse it as JSON
+                        BufferedReader reader =  new BufferedReader(new InputStreamReader(content));
+                        Gson gson = new Gson();
+                        User resp = gson.fromJson(reader, User.class);
+                        Log.d("maria user", ""+ resp.getUsername());
+
+
+
+
+
+                        content.close();
+
+                    } catch (Exception ex) {
+                        Log.e(TAG, "Failed to parse JSON due to: " + ex);
+
+                    }
+                } else {
+                    Log.e(TAG, "Server responded with status code: " + statusLine.getStatusCode());
+
+                }*/
+
 }
