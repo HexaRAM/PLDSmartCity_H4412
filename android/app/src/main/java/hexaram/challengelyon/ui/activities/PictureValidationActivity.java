@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
@@ -96,7 +98,18 @@ public class PictureValidationActivity extends ActionBarActivity implements View
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
-                            //TODO Appel à l'API pour log out
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(PictureValidationActivity.this);
+                            String token = prefs.getString("token","no_token");
+                            requestAPI req = new requestAPI(token);
+                            try {
+                                JSONObject responseLogout = req.logout();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            Intent intent = new Intent(PictureValidationActivity.this, AccessActivity.class);
+                            startActivity(intent);
 
 
                         }

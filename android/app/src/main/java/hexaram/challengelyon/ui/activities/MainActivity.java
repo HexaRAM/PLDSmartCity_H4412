@@ -1,6 +1,7 @@
 package hexaram.challengelyon.ui.activities;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.StrictMode;
@@ -71,6 +72,7 @@ import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
 import hexaram.challengelyon.ui.fragments.ProfileViewFragment;
 import hexaram.challengelyon.ui.fragments.ValidationFragment;
+import hexaram.challengelyon.ui.fragments.ViewLogin;
 import hexaram.challengelyon.ui.listeners.MyLocationListener;
 import hexaram.challengelyon.ui.tabs.SlidingTabLayout;
 import hexaram.challengelyon.utils.JSonParser.JSonParser;
@@ -247,8 +249,18 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
-                            //TODO Appel à l'API pour log out
-
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                            String token = prefs.getString("token","no_token");
+                            requestAPI req = new requestAPI(token);
+                            try {
+                                JSONObject responseLogout = req.logout();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            Intent intent = new Intent(MainActivity.this, AccessActivity.class);
+                            startActivity(intent);
 
 
                         }
