@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
 import hexaram.challengelyon.models.Metavalidation;
+import hexaram.challengelyon.models.ToValidate;
 import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.services.requestAPI;
 import hexaram.challengelyon.ui.fragments.HotFragment;
@@ -51,6 +52,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     ViewPager viewPager;
     private SlidingTabLayout mSlide;
     ArrayList<Challenge> challengeList = new ArrayList<>();
+    ArrayList<ToValidate> toValidateList = new ArrayList<>();
     private User user;
 
     @Override
@@ -65,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         /**
          * Get User info from server TO DO
          */
-        user = new User("Villeurbanne","hexaram","hexaram@insa-lyon.fr");
+        user = new User("Hurle","imel",3);
 
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar, user);
@@ -85,10 +87,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         mSlide = (SlidingTabLayout)findViewById(R.id.tabs);
         mSlide.setViewPager(viewPager);
 
-        /** Get challenge list from server **/
+
         try {
+            /** HOT CHALLENGE LIST**/
             //TODO : get user TOKEN !
-            String token = "1a7d6b30a23da000c84d287f8f7fd0152412a9f9";
+            String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");
@@ -104,7 +107,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 String description = r.getString("description");
                 String starttime = r.getString("starttime");
                 String endtime = r.getString("endtime");
-                User creator = new User(r.getJSONObject("creator").getString("url"));
+                JSONObject user = r.getJSONObject("creator");
+                User creator = new User(user.getString("url"), user.getString("email"), user.getInt("ranking"));
+                Log.d("mail", user.getString("email")+" "+user.getString("ranking"));
                 int category = r.getInt("category");
                 int type = r.getInt("type");
                 JSONObject metavalidation = r.getJSONObject("metavalidation");
@@ -112,6 +117,29 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 String quizz = r.getString("quizz");
                 Challenge c = new Challenge(url,play,title,summary,description,starttime,endtime,creator,category,type,meta,quizz);
                 challengeList.add(c);
+            }
+            /** TO VALIDATE LIST**/
+            response = req.getChallengesToValidate();
+            results = response.getJSONArray("results");
+            Log.d("count", ""+response.getInt("count"));
+            count = response.getInt("count");
+            for (int i = 0; i<count; i++){
+                JSONObject r = results.getJSONObject(i);
+                String validate = r.getString("validate");
+                String unvalidate = r.getString("unvalidate");
+                JSONObject challenge = r.getJSONObject("challenge");
+                String url = challenge.getString("url");
+                String title = challenge.getString("title");
+                String summary = challenge.getString("summary");
+                String description = challenge.getString("description");
+                Boolean validated = r.getBoolean("validated");
+                JSONArray pics = r.getJSONArray("pictures");
+                String pictures ="";
+                if(pics.length()!=0) {
+                    pictures = r.getJSONArray("pictures").getString(0);
+                }
+                ToValidate tv = new ToValidate(validate, unvalidate, url, title, summary, description, validated, pictures);
+                toValidateList.add(tv);
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -186,7 +214,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 case 0:
                     return HotFragment.newInstance(challengeList);
                 case 1:
-                    return ValidationFragment.newInstance(challengeList);
+                    return ValidationFragment.newInstance(toValidateList);
             }
             return temp;
         }

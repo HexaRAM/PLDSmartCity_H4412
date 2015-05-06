@@ -91,7 +91,7 @@ public class Challenge implements Serializable {
     }
 
     public String getCreator() {
-        return creator.getUsername();
+        return creator.getMail();
     }
 
     public int getCategory() {

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import hexaram.challengelyon.R;
+import hexaram.challengelyon.models.ToValidate;
 
 public class PictureValidationActivity extends ActionBarActivity implements View.OnClickListener {
     TextView titleChallengeValidation;
@@ -27,9 +28,7 @@ public class PictureValidationActivity extends ActionBarActivity implements View
         setContentView(R.layout.activity_picture_validation);
 
         Intent intent = getIntent();
-        //TODO: get challenge(played) ID
-        String challengeTitle = intent.getStringExtra(CHALLENGE_PARAM_TITLE);
-        String challengeDescription = intent.getStringExtra(CHALLENGE_PARAM_DESCRIPTION);
+        ToValidate tv = (ToValidate)intent.getSerializableExtra("tovalidate");
         //TODO: get challenge ID from Intent <= ValidationFragment. => get title, description, photo with challenge_ID
         titleChallengeValidation = (TextView) findViewById(R.id.title_challenge_validation);
         descriptionChallengeValidation = (TextView) findViewById(R.id.description_challenge_validation);
@@ -38,8 +37,8 @@ public class PictureValidationActivity extends ActionBarActivity implements View
         bValidateChallenge = (Button) findViewById(R.id.button_validate_challenge);
         bInvalidateChallenge = (Button) findViewById(R.id.button_invalidate_challenge);
 
-        titleChallengeValidation.setText(challengeTitle);
-        descriptionChallengeValidation.setText(challengeDescription);
+        titleChallengeValidation.setText(tv.getTitle());
+        descriptionChallengeValidation.setText(tv.getSummary());
         bValidateChallenge.setOnClickListener(this);
         bInvalidateChallenge.setOnClickListener(this);
     }
