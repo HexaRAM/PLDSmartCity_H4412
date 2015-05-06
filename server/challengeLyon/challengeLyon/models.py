@@ -80,6 +80,12 @@ class Category(models.Model):
     def __unicode__(self):
         return u"Catégorie : %s"%self.name
 
+    def serialize(self):
+        return {
+            'name': self.name,
+            'reward': self.reward
+        }
+
     class Meta:
         verbose_name_plural = "Categories"
 
