@@ -111,4 +111,12 @@ public class Challenge implements Serializable {
     public String getDescription() {
         return description;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getPlay() {
+        return play;
+    }
 }
