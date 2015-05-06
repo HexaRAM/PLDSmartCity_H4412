@@ -177,16 +177,32 @@ public class RealisationActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-     /*   int id = item.getItemId();
+        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.log_out) {
+            new AlertDialog.Builder(RealisationActivity.this)
+                    .setTitle("Log out")
+                    .setMessage("Do you want to log out?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            //TODO Appel à l'API pour log out
+
+
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //do nothing
+
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
             return true;
         }
-
-        return super.onOptionsItemSelected(item);*/
-        onBackPressed();
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private String getPath(Uri uri) {

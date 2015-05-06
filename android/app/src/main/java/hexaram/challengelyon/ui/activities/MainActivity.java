@@ -115,7 +115,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
-                            //TODO Appel à l'API pour enrigestrer l'image
+                            //TODO Appel à l'API pour log out
+
+
 
                         }
                     })
