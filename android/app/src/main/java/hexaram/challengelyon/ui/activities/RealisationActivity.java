@@ -5,11 +5,13 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.ActionBarActivity;
@@ -25,11 +27,14 @@ import android.widget.ImageView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
+import hexaram.challengelyon.services.requestAPI;
 import hexaram.challengelyon.utils.MultipartUtility;
 import hexaram.challengelyon.models.Challenge;
 
@@ -229,10 +234,18 @@ public class RealisationActivity extends ActionBarActivity {
                     .setMessage("Do you want to log out?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-
-                            //TODO Appel à l'API pour log out
-
-
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(RealisationActivity.this);
+                            String token = prefs.getString("token","no_token");
+                            requestAPI req = new requestAPI(token);
+                            try {
+                                JSONObject responseLogout = req.logout();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            Intent intent = new Intent(RealisationActivity.this, AccessActivity.class);
+                            startActivity(intent);
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
