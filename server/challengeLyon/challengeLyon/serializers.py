@@ -34,10 +34,14 @@ class ChallengeSerializer(serializers.ModelSerializer):
     #type = TypeSerializer()
     metavalidation = MetaValidationSerializer()
     play = serializers.HyperlinkedIdentityField(view_name='challenge-play', read_only=True)
+    played = serializers.SerializerMethodField()
 
     class Meta:
         model = Challenge
-        fields = ('url', 'play', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz')
+        fields = ('url', 'play', 'played', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz')
+
+    def get_played(self, obj):
+        return Challengeplayed.objects.filter(challenge=obj, user=self.context['request'].user).exists()
 
     def computeMetaValidation(self, metadata):
         data_keys = ["picture_validation", "quizz_validation", "location_validation"]
@@ -73,7 +77,6 @@ class ChallengeSerializer(serializers.ModelSerializer):
             else:
                 raise ValidationError("Aucun quizz associé au challenge.")
 
-
         challenge = Challenge(
             title=validated_data['title'],
             summary=validated_data['summary'],
@@ -95,7 +98,7 @@ class ChallengeSerializer(serializers.ModelSerializer):
 class ChallengeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
-        fields = ('url', 'title', 'summary')
+        fields = ('url', 'title', 'summary', 'description')
 
 class HotChallengeSerializer(ChallengeSerializer):
     pass
@@ -184,7 +187,17 @@ class LocationChallengePlayedSerializer(serializers.ModelSerializer):
 class ToValidateSerializer(ChallengePlayedListSerializer):
     validate = serializers.HyperlinkedIdentityField(view_name='challengeplayed-validate')
     unvalidate = serializers.HyperlinkedIdentityField(view_name='challengeplayed-unvalidate')
+    pictures = serializers.SerializerMethodField()
 
     class Meta:
         model = Challengeplayed
-        fields = ('validate', 'unvalidate', 'challenge', 'validated')
+        fields = ('validate', 'unvalidate', 'challenge', 'validated', 'pictures')
+
+    def get_pictures(self, obj):
+        images = PictureChallengePlayed.objects.filter(validationitem=obj.validationitem)
+        pictures = []
+        request = self.context['request']
+        for image in images:
+            url = request.build_absolute_uri(image.image.url)
+            pictures.append(url)
+        return pictures

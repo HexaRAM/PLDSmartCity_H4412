@@ -13,6 +13,11 @@ from challengeLyon.models import *
 from challengeLyon.serializers import *
 
 from django.db.models import Count
+from django.utils import timezone
+
+
+
+
 
 class ValidationViewSet(generics.CreateAPIView, viewsets.GenericViewSet):
     queryset = Validation.objects.all()
@@ -35,6 +40,15 @@ class ChallengeViewSet(viewsets.ModelViewSet):
                     score = request.data.get('score')
 
                 challenge = Challenge.objects.get(id=pk)
+
+                if challenge.starttime is not None:
+                    if challenge.starttime > timezone.now():
+                        return Response({'status':"Ce challenge n'est pas encore actif. Date de début : %s"%challenge.starttime}, status=status.HTTP_400_BAD_REQUEST)
+
+                if challenge.endtime is not None:
+                    if challenge.endtime < timezone.now():
+                        return Response({'status':"Ce challenge n'est plus actif depuis le %s"%challenge.endtime}, status=status.HTTP_400_BAD_REQUEST)
+
                 challengeplayed = Challengeplayed(challenge=challenge, user=request.user, score=score)
                 challengeplayed.save()
                 return Response({'status': 'Good Luck !'})
