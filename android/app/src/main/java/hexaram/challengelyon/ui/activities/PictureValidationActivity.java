@@ -76,7 +76,7 @@ public class PictureValidationActivity extends ActionBarActivity implements View
             Intent intent = new Intent(PictureValidationActivity.this, MainActivity.class);
             startActivity(intent);
         }
-        //Bitton invalidate Challenge
+        //Button invalidate Challenge
         if(v.getId()==R.id.button_invalidate_challenge)
         {
             //TODO: web service invalidate challenge
