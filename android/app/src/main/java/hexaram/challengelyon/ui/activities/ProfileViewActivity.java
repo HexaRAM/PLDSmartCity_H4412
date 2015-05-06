@@ -25,13 +25,8 @@ public class ProfileViewActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_profile_view);
-        imageItem = (ImageView) findViewById(R.id.profile_view_picture);
-        textItemName = (TextView) findViewById(R.id.profile_view_username);
-        textItemMail = (TextView) findViewById(R.id.profile_view_mail);
-        textItemAddress = (TextView) findViewById(R.id.profile_view_address);
-        textItemNbPlayed = (TextView) findViewById(R.id.profile_view_nbPlayed);
-        textItemScore = (TextView) findViewById(R.id.profile_view_score);
-        textItemRank = (TextView) findViewById(R.id.profile_view_rank);
+        textItemName = (TextView) findViewById(R.id.profile_author_text);
+        textItemScore = (TextView) findViewById(R.id.profile_score_text);
     }
 
 
