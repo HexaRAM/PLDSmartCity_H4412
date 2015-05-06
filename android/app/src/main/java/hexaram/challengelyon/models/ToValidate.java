@@ -15,6 +15,7 @@ public class ToValidate implements Serializable{
     protected String description;
     protected Boolean validated;
     protected String pictures;
+    private int reward;
 
     public ToValidate(String validate, String unvalidate, String url, String title, String summary, String description, Boolean validated, String pictures) {
         this.validate = validate;
@@ -26,6 +27,9 @@ public class ToValidate implements Serializable{
         this.validated = validated;
         this.pictures = pictures;
 
+    }
+    public void setReward(int reward) {
+        this.reward = reward;
     }
 
     public String getValidate() {
@@ -58,5 +62,9 @@ public class ToValidate implements Serializable{
 
     public String getPictures() {
         return pictures;
+    }
+
+    public int getReward() {
+        return reward;
     }
 }
