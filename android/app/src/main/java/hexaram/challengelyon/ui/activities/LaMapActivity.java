@@ -1,5 +1,7 @@
 package hexaram.challengelyon.ui.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -13,14 +15,27 @@ public class LaMapActivity extends ActionBarActivity implements MyMapFragment.On
 
     MyMapFragment laMap;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_la_map);
-
         laMap = MyMapFragment.newInstance();
+        laMap.setContext(this);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container,laMap ).commit();
+        new AlertDialog.Builder(LaMapActivity.this)
+                .setTitle("Submit challenge")
+                .setMessage("Selectionne ta destination sur la carte")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

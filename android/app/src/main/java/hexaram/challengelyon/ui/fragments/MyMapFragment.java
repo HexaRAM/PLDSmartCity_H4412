@@ -1,17 +1,26 @@
 package hexaram.challengelyon.ui.fragments;
 
 import android.app.Activity;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import hexaram.challengelyon.R;
 
@@ -25,9 +34,14 @@ import hexaram.challengelyon.R;
  */
 public class MyMapFragment extends Fragment implements OnMapReadyCallback {
 
-    SupportMapFragment s_mapFragment;
+
+
+    private SupportMapFragment s_mapFragment;
     private OnFragmentInteractionListener mListener;
-    GoogleMap map;
+    private GoogleMap map;
+    Context mapActivityContext;
+    Marker destinationMarker;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -42,9 +56,16 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
         return fragment;
     }
 
+    public void setContext(Context activityContext){
+        mapActivityContext = activityContext;
+    }
+
     public MyMapFragment() {
         // Required empty public constructor
     }
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,8 +90,26 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
             getChildFragmentManager().beginTransaction().replace(R.id.map_container, s_mapFragment).commit();
         }
         s_mapFragment.getMapAsync(this);
+
+
     }
 
+        public void zoomToCurrentLocation(){
+            LocationManager locationManager = (LocationManager) mapActivityContext.getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+            if (location != null)
+            {
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to current location
+                        .zoom(15)                   // Sets the zoom
+                        .bearing(90)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                map.setMyLocationEnabled(true);
+            }
+        }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -98,6 +137,27 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        zoomToCurrentLocation();
+
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng clickedLatLng) {
+                if (destinationMarker == null){
+                    destinationMarker = map.addMarker(new MarkerOptions()
+                            .position(clickedLatLng)
+                            .title("Destination choisie")
+                            .draggable(true));
+                }else{
+                    destinationMarker.remove();
+                    destinationMarker = map.addMarker(new MarkerOptions()
+                            .position(clickedLatLng)
+                            .title("Destination choisie")
+                            .draggable(true));
+                }
+
+            }
+        });
     }
 
     /**
@@ -113,6 +173,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    public GoogleMap getMyMap(){
+        return map;
     }
 
 }

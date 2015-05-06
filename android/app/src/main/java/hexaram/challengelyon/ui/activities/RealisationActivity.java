@@ -7,14 +7,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,9 +23,8 @@ import android.widget.ImageView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import hexaram.challengelyon.R;
-import hexaram.challengelyon.models.Challenge;
 
-public class RealisationActivity extends ActionBarActivity {
+public class RealisationActivity extends ActionBarActivity  {
 
 
     FloatingActionButton bUpload;
@@ -36,6 +32,7 @@ public class RealisationActivity extends ActionBarActivity {
     Button bBack;
     ImageView photo;
     Toolbar toolbar;
+
 
     Context context;
 
@@ -167,4 +164,6 @@ public class RealisationActivity extends ActionBarActivity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+
+
 }
