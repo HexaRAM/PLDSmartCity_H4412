@@ -1,9 +1,16 @@
 package hexaram.challengelyon.ui.activities;
 
 
-
 import android.os.AsyncTask;
 import android.os.StrictMode;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -86,6 +93,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         setContentView(R.layout.activity_main_appbar);
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle(R.string.main_view_title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -110,6 +118,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         //Set up Tabbar
         mSlide = (SlidingTabLayout)findViewById(R.id.tabs);
+        mSlide.setDistributeEvenly(true);
         mSlide.setViewPager(viewPager);
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         // String token = prefs.getString("token","no_token");
@@ -230,8 +239,27 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Toast.makeText(this, R.string.toast_params, Toast.LENGTH_SHORT).show();
+        if (id == R.id.log_out) {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Log out")
+                    .setMessage("Do you want to log out?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            //TODO Appel à l'API pour log out
+
+
+
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //do nothing
+
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
             return true;
         }
 

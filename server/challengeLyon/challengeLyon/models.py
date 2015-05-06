@@ -132,6 +132,7 @@ class Challengeplayed(models.Model):
     user = models.ForeignKey(ChallengeUser)
     score = models.IntegerField(default=0) # score gagnable du challenge lancé
     validated = models.BooleanField(default=False)
+    starttime = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name="Date de lancement du challenge")
 
     def save(self, *args, **kwargs):
         new = False

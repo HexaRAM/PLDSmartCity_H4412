@@ -3,6 +3,7 @@ package hexaram.challengelyon.ui.activities;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,14 +27,23 @@ public class ChallengeViewActivity extends ActionBarActivity {
     Button bTakeChallenge;
     Button bBack;
 
+    Toolbar toolbar;
+
     private static final int REALISATION_CHALLENGE = 900;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge_view);
+
         Intent intent = getIntent();
         Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
+
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle(R.string.challenge_view_title);
+        setSupportActionBar(toolbar);
+
         textCreatorName = (TextView) findViewById(R.id.challenge_view_creator);
         textDescription = (TextView) findViewById(R.id.challenge_view_description);
         textTitle = (TextView) findViewById(R.id.challenge_view_title);
@@ -63,7 +73,7 @@ public class ChallengeViewActivity extends ActionBarActivity {
         });
 
         textDescription.setText(challenge.getDescription());
-        textCreatorName.setText(challenge.getCreator());
+        //textCreatorName.setText(challenge.getCreator());
         textTitle.setText(challenge.getTitle());
         textStartTime.setText(challenge.getStarttime());
         textEndTime.setText(challenge.getEndtime());

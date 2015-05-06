@@ -23,29 +23,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
-import hexaram.challengelyon.models.User;
-import hexaram.challengelyon.services.requestAPI;
+
 import hexaram.challengelyon.utils.MultipartUtility;
 
 public class RealisationActivity extends ActionBarActivity {
@@ -168,7 +153,9 @@ public class RealisationActivity extends ActionBarActivity {
         });
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle(R.string.realisation_upload_view_title);
         setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
         /*try {
@@ -193,8 +180,6 @@ public class RealisationActivity extends ActionBarActivity {
             e.printStackTrace();
         }*/
 
-        //UserGet user = new UserGet();
-        //user.execute();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -228,16 +213,32 @@ public class RealisationActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-     /*   int id = item.getItemId();
+        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.log_out) {
+            new AlertDialog.Builder(RealisationActivity.this)
+                    .setTitle("Log out")
+                    .setMessage("Do you want to log out?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            //TODO Appel à l'API pour log out
+
+
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //do nothing
+
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
             return true;
         }
-
-        return super.onOptionsItemSelected(item);*/
-        onBackPressed();
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private String getPath(Uri uri) {
