@@ -132,8 +132,9 @@ public class RealisationActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        String token = "1a7d6b30a23da000c84d287f8f7fd0152412a9f9";
         try {
-            requestAPI req = new requestAPI();
+            requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");
 

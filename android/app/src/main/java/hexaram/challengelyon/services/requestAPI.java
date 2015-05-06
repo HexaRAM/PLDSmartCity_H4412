@@ -28,6 +28,7 @@ import hexaram.challengelyon.models.User;
  */
 public class requestAPI {
         private JSONObject mJsonObject ;
+        private String token;
         private class TaskGetUser extends AsyncTask <Void, Void, JSONObject> {
             private JSONObject mJSONObjetT;
             private static final String TAG = "Get user log";
@@ -63,18 +64,19 @@ public class requestAPI {
                 return mJSONObjetT;
             }
         }
-    private class TaskChallenge extends AsyncTask <Void, Void, JSONObject> {
+    private class TaskChallenge extends AsyncTask <String, Void, JSONObject> {
         private JSONObject mJSONObjetT;
         private static final String TAG = "Get user log";
         public String serverUrl = "http://vps165185.ovh.net/challenges" ;
 
         @Override
-        protected JSONObject doInBackground(Void... params) {
+        protected JSONObject doInBackground(String... params) {
+            String token = params[0];
             try {
                 //Create an HTTP client
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet(serverUrl);
-                httpGet.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
+                httpGet.addHeader("Authorization", "Token " + token);
 
                 //Perform the request and check the status code
                 ResponseHandler<String> responseHandler = new BasicResponseHandler();
@@ -98,25 +100,20 @@ public class requestAPI {
             return mJSONObjetT;
         }
     }
-        public requestAPI(String url, String token, String type) {
-            TaskGetUser getMyUser = new TaskGetUser();
-            getMyUser.execute();
 
+        public requestAPI(String token)  {
+            this.token = token;
         }
-        public requestAPI() throws ExecutionException, InterruptedException {
 
-
-        }
         public JSONObject getAllChallenges() throws ExecutionException, InterruptedException {
             TaskChallenge getAll = new TaskChallenge();
-            getAll.execute();
+            getAll.execute(token);
             mJsonObject = getAll.get();
             return mJsonObject;
         }
 
         public JSONObject getMyJSONObjet() {
             return mJsonObject;
-
         }
 
 
