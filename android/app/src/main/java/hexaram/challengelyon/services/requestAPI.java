@@ -29,18 +29,22 @@ import hexaram.challengelyon.models.User;
 public class requestAPI {
         private JSONObject mJsonObject ;
         private String token;
-        private class TaskGetUser extends AsyncTask <Void, Void, JSONObject> {
+        private class TaskGetUser extends AsyncTask <String, Void, JSONObject> {
             private JSONObject mJSONObjetT;
             private static final String TAG = "Get user log";
-            public String serverUrl = "http://vps165185.ovh.net/users/1" ;
+            public String serverUrl = "http://vps165185.ovh.net/users/" ;
 
             @Override
-            protected JSONObject doInBackground(Void... params) {
+            protected JSONObject doInBackground(String... params) {
+                String token = params[0];
+                String id = params[1];
+                serverUrl += id;
                 try {
                     //Create an HTTP client
+
                     HttpClient httpClient = new DefaultHttpClient();
                     HttpGet httpGet = new HttpGet(serverUrl);
-                    httpGet.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
+                    httpGet.addHeader("Authorization", "Token " + token);
 
                     //Perform the request and check the status code
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
@@ -109,6 +113,13 @@ public class requestAPI {
             TaskChallenge getAll = new TaskChallenge();
             getAll.execute(token);
             mJsonObject = getAll.get();
+            return mJsonObject;
+        }
+
+        public JSONObject getUser(String id) throws ExecutionException, InterruptedException {
+            TaskGetUser getUser = new TaskGetUser();
+            getUser.execute(token,id);
+            mJsonObject = getUser.get();
             return mJsonObject;
         }
 

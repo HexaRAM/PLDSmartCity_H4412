@@ -136,8 +136,9 @@ public class RealisationActivity extends ActionBarActivity {
         try {
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
+            JSONObject responseUser = req.getUser("2");
             JSONArray results = response.getJSONArray("results");
-
+            Log.d("user", responseUser.getString("email"));
             Log.d("url", results.getJSONObject(0).getString("url"));
         } catch (ExecutionException e) {
             e.printStackTrace();
