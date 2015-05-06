@@ -73,7 +73,6 @@ class ChallengeSerializer(serializers.ModelSerializer):
             else:
                 raise ValidationError("Aucun quizz associé au challenge.")
 
-
         challenge = Challenge(
             title=validated_data['title'],
             summary=validated_data['summary'],
