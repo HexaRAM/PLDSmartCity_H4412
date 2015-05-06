@@ -1,7 +1,9 @@
 package hexaram.challengelyon.ui.activities;
 
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -29,7 +31,6 @@ public class ChallengeViewActivity extends ActionBarActivity {
     TextView textDescription;
     TextView textTitle;
     TextView textStartTime;
-    TextView textEndTime;
     TextView textCategory;
     TextView textValidation;
     TextView textScore;
@@ -48,17 +49,24 @@ public class ChallengeViewActivity extends ActionBarActivity {
         //Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setTitle(R.string.challenge_view_title);
-
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_36dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         setSupportActionBar(toolbar);
+
         final Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
-        textCreatorName = (TextView) findViewById(R.id.challenge_view_creator);
-        textDescription = (TextView) findViewById(R.id.challenge_view_description);
-        textTitle = (TextView) findViewById(R.id.challenge_view_title);
-        textStartTime = (TextView) findViewById(R.id.challenge_view_starttime);
-        textEndTime = (TextView) findViewById(R.id.challenge_view_endtime);
-        textCategory = (TextView) findViewById(R.id.challenge_view_category);
-        textValidation = (TextView) findViewById(R.id.challenge_view_validation);
-        textScore = (TextView) findViewById(R.id.challenge_view_reward);
+
+        textCreatorName = (TextView) findViewById(R.id.challenge_list_item_author_text);
+        textDescription = (TextView) findViewById(R.id.challenge_list_item_description_text);
+        textTitle = (TextView) findViewById(R.id.challenge_list_item_title_text);
+        textStartTime = (TextView) findViewById(R.id.challenge_list_item_availability_text);
+        textCategory = (TextView) findViewById(R.id.challenge_list_item_category_text);
+        textValidation = (TextView) findViewById(R.id.challenge_list_item_validation_text);
+        textScore = (TextView) findViewById(R.id.challenge_list_item_points_text);
 
         bTakeChallenge = (Button) findViewById(R.id.take_challenge);
         bTakeChallenge.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +89,9 @@ public class ChallengeViewActivity extends ActionBarActivity {
             }
         });
 
+
+
+        /*
         bBack = (Button) findViewById(R.id.back_button);
         bBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,13 +99,12 @@ public class ChallengeViewActivity extends ActionBarActivity {
                 setResult(RealisationActivity.RESULT_OK);
                 finish();
             }
-        });
+        });*/
 
         textDescription.setText(challenge.getDescription());
         textCreatorName.setText(challenge.getCreator());
         textTitle.setText(challenge.getTitle());
-        textStartTime.setText(challenge.getStarttime());
-        textEndTime.setText(challenge.getEndtime());
+        textStartTime.setText(challenge.getStarttime()+" - "+challenge.getEndtime());
         textCategory.setText(""+challenge.getCategory());
         textScore.setText(""+challenge.getReward());
         textValidation.setText(challenge.getValidation());
@@ -114,7 +124,6 @@ public class ChallengeViewActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -148,7 +157,13 @@ public class ChallengeViewActivity extends ActionBarActivity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             return true;
-        }
+        } else
+            //the number is the ID didn't find a better solution in order to solve this problem
+            if(id == 16908332){
+                Log.d("MyTag","clicked_onOptions");
+                this.finish();
+            }
+
 
         return super.onOptionsItemSelected(item);
     }

@@ -44,6 +44,7 @@ public class requestAPI {
 
                     HttpClient httpClient = new DefaultHttpClient();
                     HttpGet httpGet = new HttpGet(serverUrl);
+
                     httpGet.addHeader("Authorization", "Token " + token);
                     httpGet.addHeader("content-type","application/json;charset=utf-8");
 

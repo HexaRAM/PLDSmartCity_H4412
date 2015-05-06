@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:text="Title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="bold"
+        android:textSize="@dimen/abc_text_size_title_material"/>
 
     <TextView
         android:id="@+id/challenge_list_item_summary"
@@ -22,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:text="Summary"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:fontFamily="sans-serif-medium"
+         />
 
     <TextView
         android:id="@+id/challenge_list_item_reward"
@@ -30,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:text="Reward"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:fontFamily="sans-serif-medium"
+         />
 
 </LinearLayout>

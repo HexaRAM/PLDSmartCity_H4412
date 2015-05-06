@@ -30,13 +30,11 @@ public class ProfileViewFragment extends Fragment {
     User user;
     DrawerLayout mDrawerLayout;
 
-    ImageView imageItem;
+
     TextView textItemName;
-    TextView textItemMail;
-    TextView textItemAddress;
-    TextView textItemNbPlayed;
+
     TextView textItemScore;
-    TextView textItemRank;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,15 +46,11 @@ public class ProfileViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile_view, container, false);
 
-        imageItem = (ImageView) rootView.findViewById(R.id.profile_view_picture);
-        textItemName = (TextView) rootView.findViewById(R.id.profile_view_username);
-        textItemMail = (TextView) rootView.findViewById(R.id.profile_view_mail);
-        textItemAddress = (TextView) rootView.findViewById(R.id.profile_view_address);
-        textItemNbPlayed = (TextView) rootView.findViewById(R.id.profile_view_nbPlayed);
-        textItemScore = (TextView) rootView.findViewById(R.id.profile_view_score);
-        textItemRank = (TextView) rootView.findViewById(R.id.profile_view_rank);
 
-        
+        textItemName = (TextView) rootView.findViewById(R.id.profile_author_text);
+        textItemScore = (TextView) rootView.findViewById(R.id.profile_score_text);
+
+
     Log.d("Profile","Lauchend");
         /*Bundle args = this.getArguments();
         ImageView imageItem = (ImageView) rootView.findViewById(R.id.profile_view_picture);
@@ -76,12 +70,7 @@ public class ProfileViewFragment extends Fragment {
     public void setUp(User user, DrawerLayout drawerLayout){
         this.user = user;
         textItemName.setText(user.getUsername());
-        textItemMail.setText(user.getMail());
-        textItemAddress.setText(user.getAddress());
-        textItemNbPlayed.setText(user.getNbPlayed());
         textItemScore.setText(user.getScore());
-        textItemRank.setText(user.getRank());
-
         mDrawerLayout = drawerLayout;
     }
 

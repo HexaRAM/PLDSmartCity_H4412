@@ -12,172 +12,401 @@
     <ScrollView
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        >
+    >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/challenge_view_title"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingBottom="20dp"
+                android:paddingTop="16dp"
+                >
+
+                <TextView
+                    android:id="@+id/challenge_list_item_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:text="Titre"
+                    android:fontFamily="sans-serif-light" />
+
+                <TextView
+                    android:id="@+id/challenge_list_item_title_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:text="Quentin Lemaire's Challenge"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/abc_text_size_title_material"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="20dp"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/cbPicView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_person_grey600_36dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="4dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/challenge_list_item_author"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:text="Mail auteur"
+                            android:fontFamily="sans-serif-light" />
+
+                        <TextView
+                            android:id="@+id/challenge_list_item_author_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:text="quentin.lemaire@insa-lyon.fr"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            <View
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="TITLE"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/colorPrimaryText"
-                android:gravity="center" />
-            <TextView
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="20dp"/>
+
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_access_alarms_grey600_36dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="4dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/challenge_list_item_availability"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="Availability of challenge"
+                        android:fontFamily="sans-serif-light" />
+
+                    <TextView
+                        android:id="@+id/challenge_list_item_availability_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="06 Mai 2015 - 08 Mai 2015"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="5dp"
-                android:text="By: "
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:gravity="right"/>
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="20dp"/>
 
-            <TextView
-                android:id="@+id/challenge_view_creator"
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_description_grey600_36dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="4dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/challenge_list_item_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="Description"
+                        android:fontFamily="sans-serif-light" />
+
+                    <TextView
+                        android:id="@+id/challenge_list_item_description_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="This is the description of Quentin Lemaire's extraordinary challenge"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="author"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="0dp"
-                android:gravity="right"/>
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="20dp"/>
 
-            <TextView
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_folder_grey600_36dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="4dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/challenge_list_item_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="Categorie"
+                        android:fontFamily="sans-serif-light" />
+
+                    <TextView
+                        android:id="@+id/challenge_list_item_category_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="Sport"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="0dp"
-                android:text="Challenge valable du: "
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:gravity="center"/>
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="20dp"/>
 
-            <TextView
-                android:id="@+id/challenge_view_starttime"
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10 Mai 2014"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_gravity="center" />
+                android:paddingTop="8dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
 
-            <TextView
+                >
+
+                <ImageView
+                    android:id="@+id/validation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_check_box_grey600_36dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="4dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/challenge_list_item_validation"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="Validation"
+                        android:fontFamily="sans-serif-light" />
+
+                    <TextView
+                        android:id="@+id/challenge_list_item_validation_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="Geolocalisation"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="0dp"
-                android:text="jusqu'au: "
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:gravity="center"/>
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="20dp"/>
 
-            <TextView
-                android:id="@+id/challenge_view_endtime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10 Juin 2014"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="0dp"
-                android:layout_gravity="center" />
 
-            <TextView
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
-                android:text="Description: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:paddingTop="8dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
 
-            <TextView
-                android:id="@+id/challenge_view_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Challenge description ..."
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginBottom="20dp"/>
+                >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
-                android:text="Catégorie: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                <ImageView
+                    android:id="@+id/points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_attach_money_grey600_36dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="4dp"/>
 
-            <TextView
-                android:id="@+id/challenge_view_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="category"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginBottom="20dp"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
-                android:text="Validation: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <TextView
+                        android:id="@+id/challenge_list_item_points"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="Points"
+                        android:fontFamily="sans-serif-light" />
 
-            <TextView
-                android:id="@+id/challenge_view_validation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="validation mode"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginBottom="20dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
-                android:text="Points: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <TextView
+                        android:id="@+id/challenge_list_item_points_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:text="300"
+                        android:fontFamily="sans-serif-medium"
+                        android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/challenge_view_reward"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="points"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginBottom="20dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Back"
-                    android:id="@+id/back_button"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="40dp"
-                    android:background="@color/colorPrimaryLight"
-                    android:clickable="true"
-                    android:layout_alignParentLeft="true"/>
 
                 <Button
-                    android:layout_width="wrap_content"
+                    android:id="@+id/take_challenge"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="Pass Challenge"
-                    android:id="@+id/take_challenge"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="40dp"
                     android:background="@color/colorPrimary"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/colorTextIcons"
                     android:clickable="true"
+                    android:layout_marginTop="30dp"
                     android:layout_marginBottom="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
                     />
             </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

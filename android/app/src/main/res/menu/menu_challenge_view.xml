@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="hexaram.challengelyon.ui.activities.ChallengeViewActivity">
 
+
     <item android:id="@+id/log_out"
         android:title="@string/log_out"
         android:orderInCategory="200"

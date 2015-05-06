@@ -41,10 +41,7 @@ public class ChallengeAdapter<T> extends ArrayAdapter{
 
 
             if (challenge.getPlayed())
-                convertView.setBackgroundColor(Color.GRAY);
-
-
-
+                convertView.setBackgroundColor(getContext().getResources().getColor(R.color.colorDivider));
 
             // Lookup view for data population
             TextView textItemTitle = (TextView) convertView.findViewById(R.id.challenge_list_item_title);
@@ -71,8 +68,12 @@ public class ChallengeAdapter<T> extends ArrayAdapter{
 
             textItemTitle.setText(challenge.getTitle());
             textItemSummary.setText(challenge.getSummary());
-            textItemReward.setText("");
+
+            textItemReward.setText("100");
+
         }
+
+
         // Return the completed view to render on screen
         return convertView;
     }

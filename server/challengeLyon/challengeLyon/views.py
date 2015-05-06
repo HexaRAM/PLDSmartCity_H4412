@@ -7,7 +7,7 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, api_view
 from django.conf import settings
 from challengeLyon.models import *
 from challengeLyon.serializers import *
@@ -35,11 +35,11 @@ class ChallengeViewSet(viewsets.ModelViewSet):
     def play(self, request, pk=None):
         if pk is not None:
             try:
-                score = 0
-                if request.data.get('score') is not None:
-                    score = request.data.get('score')
-
                 challenge = Challenge.objects.get(id=pk)
+
+                score = challenge.category.reward
+
+                #print u"Vous jouez le challenge %s pour %s point(s)."%(challenge, score)
 
                 if challenge.starttime is not None:
                     if challenge.starttime > timezone.now():
@@ -102,7 +102,15 @@ class ChallengePlayedViewSet(viewsets.ViewSet):
                 validation.save()
             except:
                 return Response({'status':'Déjà voté'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({'status': 'Soumis à validation !'})
+            score = challengeplayed.validationitem.get_score()
+            if score > Challengeplayed.LIMIT_TO_VALIDATE:
+                # winner
+                challengeplayed.validate()
+                challengeplayed.save()
+                user = challengeplayed.user
+                user.ranking += challengeplayed.score
+                user.save()
+            return Response({'status': 'Vote enregistré !'})
         return Response({'status':'ID inconnu'}, status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=['GET'])
@@ -119,7 +127,7 @@ class ChallengePlayedViewSet(viewsets.ViewSet):
                 validation.save()
             except:
                 return Response({'status':'Déjà voté'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({'status': 'Soumis à validation !'})
+            return Response({'status': 'Vote enregistré !'})
         return Response({'status':'ID inconnu'}, status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=['GET', 'POST'])
@@ -176,3 +184,23 @@ class ToValidateViewSet(viewsets.ReadOnlyModelViewSet):
 
         challengesplayed = Challengeplayed.objects.filter(validationitem__submitted= True).filter(validated = False).exclude(user = user).exclude(validationitem__users = user)
         return challengesplayed
+
+# Own Views
+
+@api_view(['GET'])
+def getClosestStation(request):
+    location = None
+    try:
+        latitude = request.query_params['latitude']
+        longitude = request.query_params['longitude']
+        location = Location(latitude, longitude)
+    except:
+        return Response({"status": "Impossible de créer la localisation à partir des paramètres reçus."}, status=status.HTTP_400_BAD_REQUEST)
+    station = None
+    try:
+        station = location.getClosestStation()
+    except:
+        return Response({"status": "Impossible d'obtenir la station la plus proche"}, status=status.HTTP_400_BAD_REQUEST)
+    if station is None:
+        return Response({"status": "Aucune station plus proche"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"status":"ok", "result": station.serialize()})
