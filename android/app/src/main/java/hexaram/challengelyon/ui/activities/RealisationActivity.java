@@ -45,7 +45,6 @@ public class RealisationActivity extends ActionBarActivity {
 
     FloatingActionButton bUpload;
     Button bSubmit;
-    Button bBack;
     ImageView photo;
     Toolbar toolbar;
 
@@ -69,6 +68,17 @@ public class RealisationActivity extends ActionBarActivity {
         //String challengeID = intent.getStringExtra(CHALLENGE_PARAM_ID);
 
         context = getApplicationContext();
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle(R.string.realisation_upload_view_title);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_36dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        setSupportActionBar(toolbar);
 
         photo = (ImageView) findViewById(R.id.uploaded_photo);
         bUpload = (FloatingActionButton) findViewById(R.id.upload_photo);
@@ -159,18 +169,7 @@ public class RealisationActivity extends ActionBarActivity {
             }
         });
 
-        bBack = (Button) findViewById(R.id.back_button);
-        bBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
-        toolbar.setTitle(R.string.realisation_upload_view_title);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
 
         /*try {
@@ -235,7 +234,6 @@ public class RealisationActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.log_out) {
             new AlertDialog.Builder(RealisationActivity.this)
