@@ -124,9 +124,12 @@ public class RealisationActivity extends ActionBarActivity {
                                     protected List<String> doInBackground(String... params) {
                                         try {
                                             MultipartUtility multipart = new MultipartUtility("http://vps165185.ovh.net/picturesChallengePlayed/", "UTF-8", "Token 9cd348ec7010d544cc74a44311ea22ff5b7dc02a");
+                                            multipart.addFilePart("image", new File(imageFile));
+
                                             multipart.addFormField("description","petite description");
                                             multipart.addFormField("validationitem","2");
-                                             multipart.addFilePart("image", new File(imageFile));
+
+
 
                                             List<String> response = multipart.finish();
                                             return response;
@@ -171,7 +174,7 @@ public class RealisationActivity extends ActionBarActivity {
         try {
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
-            JSONObject responseUser = req.getUser("2");
+            JSONObject responseUser = req.getUser("3");
             JSONObject responseAllToValidate = req.getChallengesToValidate();
             JSONArray results = responseAllToValidate.getJSONArray("results");
             Log.d("user", responseUser.getString("email"));
