@@ -34,10 +34,14 @@ class ChallengeSerializer(serializers.ModelSerializer):
     #type = TypeSerializer()
     metavalidation = MetaValidationSerializer()
     play = serializers.HyperlinkedIdentityField(view_name='challenge-play', read_only=True)
+    played = serializers.SerializerMethodField()
 
     class Meta:
         model = Challenge
-        fields = ('url', 'play', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz')
+        fields = ('url', 'play', 'played', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz')
+
+    def get_played(self, obj):
+        return Challengeplayed.objects.filter(challenge=obj, user=self.context['request'].user).exists()
 
     def computeMetaValidation(self, metadata):
         data_keys = ["picture_validation", "quizz_validation", "location_validation"]
@@ -92,9 +96,13 @@ class ChallengeSerializer(serializers.ModelSerializer):
         return challenge
 
 class ChallengeListSerializer(serializers.ModelSerializer):
+    played = serializers.SerializerMethodField()
     class Meta:
         model = Challenge
-        fields = ('url', 'title', 'summary')
+        fields = ('url', 'title', 'summary', 'played')
+
+    def get_played(self, obj):
+        return Challengeplayed.objects.filter(challenge=obj, user=self.context['request'].user).exists()
 
 class HotChallengeSerializer(ChallengeSerializer):
     pass
