@@ -39,7 +39,7 @@ public class requestAPI {
                     //Create an HTTP client
                     HttpClient httpClient = new DefaultHttpClient();
                     HttpGet httpGet = new HttpGet(serverUrl);
-                    httpGet.addHeader("Authorization", "Token 1a7d6b30a23da000c84d287f8f7fd0152412a9f9");
+                    httpGet.addHeader("Authorization", "Token 9cd348ec7010d544cc74a44311ea22ff5b7dc02a");
 
                     //Perform the request and check the status code
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
