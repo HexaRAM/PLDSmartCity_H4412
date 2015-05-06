@@ -19,12 +19,15 @@ public class User implements Serializable {
         this.address = address;
         this.username = username;
         this.email = mail;
+
     }
+
     public User(String url, String email, int ranking) throws ParseException {
         this.url = url;
         this.email = email;
         this.ranking = ranking;
     }
+    public User () {}
 
     public String getAddress() {
         return address;
