@@ -1,10 +1,10 @@
 package hexaram.challengelyon.ui.activities;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +30,7 @@ public class ChallengeViewActivity extends ActionBarActivity {
     Toolbar toolbar;
 
     private static final int REALISATION_CHALLENGE = 900;
-
+    private static final int MAP_VIEW = 901;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,9 +53,16 @@ public class ChallengeViewActivity extends ActionBarActivity {
         bTakeChallenge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bTakeChallenge.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
-                Intent intent = new Intent(ChallengeViewActivity.this, RealisationActivity.class);
-                startActivityForResult(intent, REALISATION_CHALLENGE);
+                if(1==1){ // TODO : replace with if challenge category requires a map
+                    bTakeChallenge.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                    Intent intent = new Intent(ChallengeViewActivity.this, LaMapActivity.class);
+                    startActivityForResult(intent, MAP_VIEW);
+                }
+                else {
+                    bTakeChallenge.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                    Intent intent = new Intent(ChallengeViewActivity.this, RealisationActivity.class);
+                    startActivityForResult(intent, REALISATION_CHALLENGE);
+                }
             }
         });
 
