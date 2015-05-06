@@ -25,6 +25,11 @@ public class User implements Serializable {
         this.email = email;
         this.ranking = ranking;
     }
+
+    public User(String url) {
+        this.url = url;
+    }
+
     public User () {}
 
     public String getAddress() {

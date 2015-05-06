@@ -59,6 +59,21 @@ public class Challenge implements Serializable {
 
     }
 
+    public Challenge(String url, String play, String title, String summary, String description, String starttime, String endtime, User creator, int category, int type, Metavalidation metavalidation, String quizz) {
+        this.url = url;
+        this.play = play;
+        this.title = title;
+        this.summary = summary;
+        this.description = description;
+        this.starttime = starttime;
+        this.endtime = endtime;
+        this.creator = creator;
+        this.category = category;
+        this.type = type;
+        this.metavalidation = metavalidation;
+        this.quizz = quizz;
+    }
+
     public String getTitle() {
        return title;
     }
@@ -93,5 +108,7 @@ public class Challenge implements Serializable {
 
     public String getValidation() { return metavalidation.toString(); }
 
-
+    public String getDescription() {
+        return description;
+    }
 }

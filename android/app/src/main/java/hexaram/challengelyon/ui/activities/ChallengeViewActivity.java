@@ -32,7 +32,8 @@ public class ChallengeViewActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge_view);
-
+        Intent intent = getIntent();
+        Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
         textCreatorName = (TextView) findViewById(R.id.challenge_view_creator);
         textDescription = (TextView) findViewById(R.id.challenge_view_description);
         textTitle = (TextView) findViewById(R.id.challenge_view_title);
@@ -61,15 +62,14 @@ public class ChallengeViewActivity extends ActionBarActivity {
             }
         });
 
-        Challenge challenge = new Challenge("title","summary",1);
-        /*textDescription.setText(challenge.getSummary());
+        textDescription.setText(challenge.getDescription());
         textCreatorName.setText(challenge.getCreator());
         textTitle.setText(challenge.getTitle());
         textStartTime.setText(challenge.getStarttime());
         textEndTime.setText(challenge.getEndtime());
-        textCategory.setText(challenge.getCategory().getName());
-        textScore.setText(challenge.getReward());
-        textValidation.setText(challenge.getValidation());*/
+        textCategory.setText(""+challenge.getCategory());
+        textScore.setText(""+challenge.getReward());
+        textValidation.setText(challenge.getValidation());
     }
 
 
