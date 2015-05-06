@@ -1,5 +1,9 @@
 # Liste des services
 
+[Lien vers les webservices](http://vps165185.ovh.net/)
+
+De nombreuses informations et la liste exhaustive des services de base (récupération des informations du modèle) sont présentes sur cette page.
+
 ## Core
 
 - Jouer un challenge : `GET /challenges/<id>/play`
