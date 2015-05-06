@@ -22,12 +22,20 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.support.v4.app.FragmentTransaction;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
+import hexaram.challengelyon.models.Metavalidation;
 import hexaram.challengelyon.models.User;
+import hexaram.challengelyon.services.requestAPI;
 import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
 import hexaram.challengelyon.ui.fragments.ProfileViewFragment;
@@ -66,15 +74,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         ProfileViewFragment profile = (ProfileViewFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         profile.setUp(user,(DrawerLayout) findViewById(R.id.drawer_layout));
         Log.d("Tag","OKKKKKK");*/
-        /**
-        * Get Challenge List from server TO DO !
-         */
-        Challenge c1 = new Challenge("Challenge1", "Le premier challenge", 100);
-        Challenge c2 = new Challenge("Challenge2", "Le deuxième challenge", 200);
-        Challenge c3 = new Challenge("Challenge3", "Le troisième challenge c'est la foliiiiie", 1000);
-        challengeList.add(c1);
-        challengeList.add(c2);
-        challengeList.add(c3);
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -85,6 +84,42 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //Set up Tabbar
         mSlide = (SlidingTabLayout)findViewById(R.id.tabs);
         mSlide.setViewPager(viewPager);
+
+        /** Get challenge list from server **/
+        try {
+            requestAPI req = new requestAPI();
+            JSONObject response = req.getAllChallenges();
+            JSONArray results = response.getJSONArray("results");
+            Log.d("count", ""+response.getInt("count"));
+            Log.d("url", results.getJSONObject(0).getString("url"));
+            int count = response.getInt("count");
+            for (int i = 0; i<count; i++){
+                JSONObject r = results.getJSONObject(i);
+                String url = r.getString("url");
+                String play = r.getString("play");
+                String title = r.getString("title");
+                String summary = r.getString("summary");
+                String description = r.getString("description");
+                String starttime = r.getString("starttime");
+                String endtime = r.getString("endtime");
+                User creator = new User(r.getJSONObject("creator").getString("url"));
+                int category = r.getInt("category");
+                int type = r.getInt("type");
+                JSONObject metavalidation = r.getJSONObject("metavalidation");
+                Metavalidation meta = new Metavalidation(metavalidation.getBoolean("picture_validation"), metavalidation.getBoolean("quizz_validation"), metavalidation.getBoolean("location_validation"));
+                String quizz = r.getString("quizz");
+                Challenge c = new Challenge(url,play,title,summary,description,starttime,endtime,creator,category,type,meta,quizz);
+                challengeList.add(c);
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 

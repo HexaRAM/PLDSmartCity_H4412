@@ -132,19 +132,7 @@ public class RealisationActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        try {
-            requestAPI req = new requestAPI();
-            JSONObject response = req.getAllChallenges();
-            JSONArray results = response.getJSONArray("results");
 
-            Log.d("url", results.getJSONObject(0).getString("url"));
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         //UserGet user = new UserGet();
         //user.execute();
