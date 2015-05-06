@@ -34,7 +34,7 @@ public class ChallengeAdapter<T> extends ArrayAdapter{
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.challenge_list_item, parent, false);
         }
-        
+
         // Lookup view for data population
         TextView textItemTitle = (TextView) convertView.findViewById(R.id.challenge_list_item_title);
         TextView textItemSummary = (TextView) convertView.findViewById(R.id.challenge_list_item_summary);
