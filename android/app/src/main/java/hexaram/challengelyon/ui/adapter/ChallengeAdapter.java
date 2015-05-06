@@ -1,6 +1,8 @@
 package hexaram.challengelyon.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
+import hexaram.challengelyon.models.ToValidate;
 
 /**
  * Created by William on 29/04/2015.
@@ -28,19 +31,49 @@ public class ChallengeAdapter<T> extends ArrayAdapter{
 
 
         // Get the data item for this position
-        Challenge challenge = (Challenge) getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.challenge_list_item, parent, false);
-        }
-        // Lookup view for data population
-        TextView textItemTitle = (TextView) convertView.findViewById(R.id.challenge_list_item_title);
-        TextView textItemSummary = (TextView) convertView.findViewById(R.id.challenge_list_item_summary);
-        TextView textItemReward = (TextView) convertView.findViewById(R.id.challenge_list_item_reward);
+        try {
+            Challenge challenge = (Challenge) getItem(position);
 
-        textItemTitle.setText(challenge.getTitle());
-        textItemSummary.setText(challenge.getSummary());
-        textItemReward.setText(""+challenge.getReward());
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.challenge_list_item, parent, false);
+            }
+
+
+            if (challenge.getPlayed())
+                convertView.setBackgroundColor(getContext().getResources().getColor(R.color.colorDivider));
+
+            // Lookup view for data population
+            TextView textItemTitle = (TextView) convertView.findViewById(R.id.challenge_list_item_title);
+            TextView textItemSummary = (TextView) convertView.findViewById(R.id.challenge_list_item_summary);
+            TextView textItemReward = (TextView) convertView.findViewById(R.id.challenge_list_item_reward);
+
+            textItemTitle.setText(challenge.getTitle());
+            textItemSummary.setText(challenge.getSummary());
+            textItemReward.setText("" + challenge.getReward());
+
+        }
+        catch(ClassCastException e){
+            Log.d("HEY", "BINGO !");
+            ToValidate challenge = (ToValidate) getItem(position);
+
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.challenge_list_item, parent, false);
+            }
+            // Lookup view for data population
+            TextView textItemTitle = (TextView) convertView.findViewById(R.id.challenge_list_item_title);
+            TextView textItemSummary = (TextView) convertView.findViewById(R.id.challenge_list_item_summary);
+            TextView textItemReward = (TextView) convertView.findViewById(R.id.challenge_list_item_reward);
+
+            textItemTitle.setText(challenge.getTitle());
+            textItemSummary.setText(challenge.getSummary());
+
+            textItemReward.setText("100");
+
+        }
+
+
         // Return the completed view to render on screen
         return convertView;
     }

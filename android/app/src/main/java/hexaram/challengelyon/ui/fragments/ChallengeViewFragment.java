@@ -47,7 +47,7 @@ public class ChallengeViewFragment extends Fragment {
         textTitle.setText(challenge.getTitle());
         textStartTime.setText(challenge.getStarttime());
         textEndTime.setText(challenge.getEndtime());
-        textCategory.setText(challenge.getCategory().getName());
+       // textCategory.setText(challenge.getCategory().getName());
         textScore.setText(challenge.getReward());
         textValidation.setText(challenge.getValidation());*/
         return rootView;

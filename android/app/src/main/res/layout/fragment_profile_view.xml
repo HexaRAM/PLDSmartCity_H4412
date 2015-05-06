@@ -16,79 +16,56 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_person_grey600_48dp"
             android:layout_marginBottom="20dp" />
 
         <TextView
-            android:id="@+id/profile_view_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:text="Name"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:id="@+id/profile_view_mail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:id="@+id/profile_item_author"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
             android:text="Mail"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:fontFamily="sans-serif-light"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="20dp"/>
 
         <TextView
-            android:id="@+id/profile_view_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:text="Address"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:id="@+id/profile_author_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="quentin.lemaire@insa-lyon.fr"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="bold"
+            android:layout_marginBottom="40dp"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Challenges réussis :"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Score"
+            android:fontFamily="sans-serif-light"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"/>
 
         <TextView
-            android:id="@+id/profile_view_nbPlayed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/profile_score_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
-            android:layout_gravity="right"
-            android:text="nbPlayed"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Score :"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/profile_view_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_gravity="right"
-            android:text="score"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rank :"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/profile_view_rank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_gravity="right"
-            android:text="rank"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_horizontal"
+            android:text="250"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 </ScrollView>
