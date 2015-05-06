@@ -171,21 +171,27 @@ public class RealisationActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
-        try {
-            requestAPI req = new requestAPI(token);
-            JSONObject response = req.getAllChallenges();
-            JSONObject responseUser = req.getUser("3");
-            JSONObject responseAllToValidate = req.getChallengesToValidate();
-            JSONArray results = responseAllToValidate.getJSONArray("results");
-            Log.d("user", responseUser.getString("email"));
-            Log.d("unvalidate", results.getJSONObject(0).getString("unvalidate"));
+        /*try {
+            //requestAPI req = new requestAPI(token);
+            //JSONObject response = req.getAllChallenges();
+            //JSONObject responseUser = req.getUser("2");
+            //JSONObject responseAllToValidate = req.getChallengesToValidate();
+            //JSONArray responseAllPlayed = req.getAllChallengesPlayed();
+            //JSONObject responsePlayChallenge = req.playChallenge("http://vps165185.ovh.net/challenges/3/play/");
+            //JSONObject responseLogout = req.logout();
+
+
+            //Log.d("user", responseUser.getString("email"));
+            //Log.d("challenge", responsePlayChallenge.getString("status"));
+           // Log.d("logout mess",responseLogout.getString("detail"));
+>>>>>>> 45fb2276a4852ccf7fcf45bba490463469502adc
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
 
         //UserGet user = new UserGet();
         //user.execute();
