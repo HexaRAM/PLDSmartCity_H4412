@@ -132,12 +132,15 @@ public class RealisationActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        String token = "1a7d6b30a23da000c84d287f8f7fd0152412a9f9";
         try {
-            requestAPI req = new requestAPI();
+            requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
-            JSONArray results = response.getJSONArray("results");
-
-            Log.d("url", results.getJSONObject(0).getString("url"));
+            JSONObject responseUser = req.getUser("2");
+            JSONObject responseAllToValidate = req.getChallengesToValidate();
+            JSONArray results = responseAllToValidate.getJSONArray("results");
+            Log.d("user", responseUser.getString("email"));
+            Log.d("unvalidate", results.getJSONObject(0).getString("unvalidate"));
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
