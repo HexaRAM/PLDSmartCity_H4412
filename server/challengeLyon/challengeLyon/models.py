@@ -128,6 +128,7 @@ class Challenge(models.Model):
         return u"%s [%s - %s]"%(self.title, self.category, self.type)
 
 class Challengeplayed(models.Model):
+    LIMIT_TO_VALIDATE = 2
     challenge = models.ForeignKey(Challenge)
     user = models.ForeignKey(ChallengeUser)
     score = models.IntegerField(default=0) # score gagnable du challenge lancé
@@ -184,7 +185,7 @@ class Validationitem(models.Model):
     users = models.ManyToManyField(ChallengeUser, verbose_name="Validations", blank=True, through="Validation", through_fields=('validationitem','user',))
 
     def get_score(self):
-        validations = self.validation_set
+        validations = self.validation_set.all()
         score = 0
         for validation in validations:
             score += validation.vote

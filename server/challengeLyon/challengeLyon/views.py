@@ -35,11 +35,11 @@ class ChallengeViewSet(viewsets.ModelViewSet):
     def play(self, request, pk=None):
         if pk is not None:
             try:
-                score = 0
-                if request.data.get('score') is not None:
-                    score = request.data.get('score')
-
                 challenge = Challenge.objects.get(id=pk)
+
+                score = challenge.category.reward
+
+                #print u"Vous jouez le challenge %s pour %s point(s)."%(challenge, score)
 
                 if challenge.starttime is not None:
                     if challenge.starttime > timezone.now():
@@ -102,7 +102,15 @@ class ChallengePlayedViewSet(viewsets.ViewSet):
                 validation.save()
             except:
                 return Response({'status':'Déjà voté'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({'status': 'Soumis à validation !'})
+            score = challengeplayed.validationitem.get_score()
+            if score > Challengeplayed.LIMIT_TO_VALIDATE:
+                # winner
+                challengeplayed.validate()
+                challengeplayed.save()
+                user = challengeplayed.user
+                user.ranking += challengeplayed.score
+                user.save()
+            return Response({'status': 'Vote enregistré !'})
         return Response({'status':'ID inconnu'}, status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=['GET'])
@@ -119,7 +127,7 @@ class ChallengePlayedViewSet(viewsets.ViewSet):
                 validation.save()
             except:
                 return Response({'status':'Déjà voté'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({'status': 'Soumis à validation !'})
+            return Response({'status': 'Vote enregistré !'})
         return Response({'status':'ID inconnu'}, status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=['GET', 'POST'])
@@ -187,7 +195,6 @@ def getClosestStation(request):
         longitude = request.query_params['longitude']
         location = Location(latitude, longitude)
     except:
-        print request.data.values()
         return Response({"status": "Impossible de créer la localisation à partir des paramètres reçus."}, status=status.HTTP_400_BAD_REQUEST)
     station = None
     try:
