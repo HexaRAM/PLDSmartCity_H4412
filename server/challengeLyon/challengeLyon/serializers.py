@@ -29,17 +29,68 @@ class MetaValidationSerializer(serializers.ModelSerializer):
         fields = ('picture_validation', 'quizz_validation', 'location_validation')
 
 class ChallengeSerializer(serializers.ModelSerializer):
-    starttime = serializers.DateTimeField()
-    endtime = serializers.DateTimeField()
     creator = UserSerializer(read_only=True)
     #category = CategorySerializer()
     #type = TypeSerializer()
     metavalidation = MetaValidationSerializer()
-    play = serializers.HyperlinkedIdentityField(view_name='challenge-play')
+    play = serializers.HyperlinkedIdentityField(view_name='challenge-play', read_only=True)
 
     class Meta:
         model = Challenge
         fields = ('url', 'play', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz')
+
+    def computeMetaValidation(self, metadata):
+        data_keys = ["picture_validation", "quizz_validation", "location_validation"]
+        datas = {}
+
+        for (key, value) in metadata.iteritems():
+            datas[key] = value
+
+        metavalidation = None
+        try:
+            metavalidation, created = Metavalidation.objects.get_or_create(**datas)
+        except:
+            pass
+
+        return metavalidation
+
+    def create(self, validated_data):
+        metavalidation = self.computeMetaValidation(validated_data['metavalidation'])
+
+        if metavalidation is None:
+            raise ValidationError("Impossible de récupérer les informations relatives au challenge (metavalidation)")
+
+        try:
+            metavalidation.save()
+        except Exception as e:
+            raise ValidationError("Impossible de sauvegarder la metavalidation")
+
+        quizz = None
+        if metavalidation.quizz_validation:
+            if hasattr(validated_data, 'quizz'):
+                quizz = Quizz(validated_data['quizz']) # to change
+                quizz.save()
+            else:
+                raise ValidationError("Aucun quizz associé au challenge.")
+
+
+        challenge = Challenge(
+            title=validated_data['title'],
+            summary=validated_data['summary'],
+            description=validated_data['description'],
+            starttime=validated_data['starttime'],
+            endtime=validated_data['endtime'],
+            creator=self.context['request'].user,
+            category=validated_data['category'],
+            type=validated_data['type'],
+            metavalidation=metavalidation,
+            quizz=quizz
+        )
+        try:
+            challenge.save()
+        except:
+            raise ValidationError("Impossible de sauvegarder le challenge")
+        return challenge
 
 class ChallengeListSerializer(serializers.ModelSerializer):
     class Meta:
