@@ -186,6 +186,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 Metavalidation meta = new Metavalidation(metavalidation.getBoolean("picture_validation"), metavalidation.getBoolean("quizz_validation"), metavalidation.getBoolean("location_validation"));
                 String quizz = r.getString("quizz");
                 Challenge c = new Challenge(url,play,title,summary,description,starttime,endtime,creator,category,type,meta,quizz);
+                boolean played = r.getBoolean("played");
+                if(played) {
+
+                    c.setPlayed();
+                }
                 challengeList.add(c);
             }
             /** TO VALIDATE LIST**/

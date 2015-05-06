@@ -23,6 +23,7 @@ public class Challenge implements Serializable {
     protected String type;
     protected String quizz;
     protected Metavalidation metavalidation;
+    protected boolean played = false;
 
     public Challenge(String title, String summary, User creator) {
         this.title = title;
@@ -120,5 +121,11 @@ public class Challenge implements Serializable {
 
     public String getPlay() {
         return play;
+    }
+
+    public boolean getPlayed(){return played;}
+
+    public void setPlayed() {
+        played = true;
     }
 }
