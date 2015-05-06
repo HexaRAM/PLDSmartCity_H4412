@@ -15,6 +15,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -105,41 +106,80 @@ public class requestAPI {
         }
     }
         private class TaskChallengesToValidate extends AsyncTask <String, Void, JSONObject> {
-        private JSONObject mJSONObjetT;
-        private static final String TAG = "TaskChallToValidate";
-        public String serverUrl = "http://vps165185.ovh.net/toValidate/" ;
+            private JSONObject mJSONObjetT;
+            private static final String TAG = "TaskChallToValidate";
+            public String serverUrl = "http://vps165185.ovh.net/toValidate/" ;
 
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            String token = params[0];
-            try {
-                //Create an HTTP client
-                HttpClient httpClient = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(serverUrl);
-                httpGet.addHeader("Authorization", "Token " + token);
+            @Override
+            protected JSONObject doInBackground(String... params) {
+                String token = params[0];
+                try {
+                    //Create an HTTP client
+                    HttpClient httpClient = new DefaultHttpClient();
+                    HttpGet httpGet = new HttpGet(serverUrl);
 
-                //Perform the request and check the status code
-                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                    httpGet.addHeader("Authorization", "Token " + token);
 
-                String responseBody = httpClient.execute(httpGet, responseHandler);
+                    //Perform the request and check the status code
+                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                JSONObject response = new JSONObject(responseBody);
-                mJSONObjetT = response;
+                    String responseBody = httpClient.execute(httpGet, responseHandler);
 
-                //Just for testing
-                String fluxJson = "";
-                HttpResponse httpResponse = httpClient.execute(httpGet);
-                HttpEntity entity = httpResponse.getEntity();
-                fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
-                Log.d("my JSON response", fluxJson);
-                //end testing
+                    JSONObject response = new JSONObject(responseBody);
+                    mJSONObjetT = response;
 
-            } catch (Exception ex) {
-                Log.e(TAG, "Failed to send request: " + ex);
+                    //Just for testing
+                    String fluxJson = "";
+                    HttpResponse httpResponse = httpClient.execute(httpGet);
+                    HttpEntity entity = httpResponse.getEntity();
+                    fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
+                    Log.d("my JSON response", fluxJson);
+                    //end testing
+
+                } catch (Exception ex) {
+                    Log.e(TAG, "Failed to send request: " + ex);
+                }
+                return mJSONObjetT;
             }
-            return mJSONObjetT;
-        }
     }
+        private class TaskChallengesPlayed extends AsyncTask <String, Void, JSONArray> {
+            private JSONArray mJSONArray;
+            private static final String TAG = "TaskChallToValidate";
+            public String serverUrl = "http://vps165185.ovh.net/challengePlayed/";
+
+            @Override
+            protected JSONArray doInBackground(String... params) {
+                String token = params[0];
+                try {
+                    //Create an HTTP client
+                    HttpClient httpClient = new DefaultHttpClient();
+                    HttpGet httpGet = new HttpGet(serverUrl);
+
+                    httpGet.addHeader("Authorization", "Token " + token);
+
+                    //Perform the request and check the status code
+                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
+
+                    String responseBody = httpClient.execute(httpGet, responseHandler);
+
+                    JSONArray response = new JSONArray(responseBody);
+                    mJSONArray = response;
+
+                    //TODO remove comments when all done
+                    //Just for testing
+                    String fluxJson = "";
+                    HttpResponse httpResponse = httpClient.execute(httpGet);
+                    HttpEntity entity = httpResponse.getEntity();
+                    fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
+                    Log.d("my JSON response", fluxJson);
+                    //end testing
+
+                } catch (Exception ex) {
+                    Log.e(TAG, "Failed to send request: " + ex);
+                }
+                return mJSONArray;
+            }
+        }
 
         public requestAPI(String token)  {
             this.token = token;
@@ -159,6 +199,14 @@ public class requestAPI {
             return mJsonObject;
         }
 
+        public JSONArray getAllChallengesPlayed() throws ExecutionException, InterruptedException {
+            TaskChallengesPlayed getChallengesPlayed = new TaskChallengesPlayed();
+            getChallengesPlayed.execute(token);
+            JSONArray mJSONArray;
+            mJSONArray = getChallengesPlayed.get();
+            return mJSONArray;
+        }
+
         public JSONObject getUser(String id) throws ExecutionException, InterruptedException {
             TaskGetUser getUser = new TaskGetUser();
             getUser.execute(token,id);
@@ -167,9 +215,6 @@ public class requestAPI {
         }
 
 
-        public JSONObject getMyJSONObjet() {
-            return mJsonObject;
-        }
 
 
 
