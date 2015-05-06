@@ -198,7 +198,14 @@ def getClosestStation(request):
         return Response({"status": "Impossible de créer la localisation à partir des paramètres reçus."}, status=status.HTTP_400_BAD_REQUEST)
     station = None
     try:
-        station = location.getClosestStation()
+        arrivee = False
+        try:
+            request.query_params['arrivee']
+            arrivee = True
+        except:
+            pass
+
+        station = location.getClosestStation(arrivee)
     except:
         return Response({"status": "Impossible d'obtenir la station la plus proche"}, status=status.HTTP_400_BAD_REQUEST)
     if station is None:

@@ -384,7 +384,7 @@ class Location:
         except:
             print u"Impossible de créer la localisation"
 
-    def getClosestStation(self):
+    def getClosestStation(self, arrivee):
         stations = Station.getData()
 
         for station in stations:
@@ -397,7 +397,14 @@ class Location:
 
         stations_number = len(stations)
         if stations_number > 0:
-            while stations[closestStationWithBikes_index].bikes_available == 0 and closestStationWithBikes_index < stations_number:
+
+            attributeToWatch = "bikes_available"
+            if arrivee:
+                attributeToWatch = "bikes_stands"
+
+            #print u"Valeur intéressante [%s]:%s"%(attributeToWatch, getattr(stations[closestStationWithBikes_index],attributeToWatch))
+
+            while getattr(stations[closestStationWithBikes_index],attributeToWatch) == 0 and closestStationWithBikes_index < stations_number:
                 closestStationWithBikes_index += 1
             if closestStationWithBikes_index == stations_number:
                 return None
