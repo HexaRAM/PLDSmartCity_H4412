@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="8dp"
+    android:paddingBottom="12dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    >
 
     <TextView
         android:id="@+id/challenge_list_item_title"
@@ -9,7 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:text="Title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="bold"
+        android:textSize="@dimen/abc_text_size_title_material"/>
 
     <TextView
         android:id="@+id/challenge_list_item_summary"
@@ -17,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:text="Summary"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:fontFamily="sans-serif-medium"
+         />
 
     <TextView
         android:id="@+id/challenge_list_item_reward"
@@ -25,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:text="Reward"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:fontFamily="sans-serif-medium"
+         />
 
 </LinearLayout>

@@ -1,6 +1,10 @@
 package hexaram.challengelyon.ui.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
@@ -85,18 +91,50 @@ public class PictureValidationActivity extends ActionBarActivity implements View
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.log_out) {
+            new AlertDialog.Builder(PictureValidationActivity.this)
+                    .setTitle("Log out")
+                    .setMessage("Do you want to log out?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(PictureValidationActivity.this);
+                            String token = prefs.getString("token","no_token");
+                            requestAPI req = new requestAPI(token);
+                            try {
+                                JSONObject responseLogout = req.logout();
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString("token", "logout");
+                                editor.apply();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            Intent intent = new Intent(PictureValidationActivity.this, AccessActivity.class);
+                            startActivity(intent);
+
+
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //do nothing
+
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View v) {
         //Button validate Challenge
-        //TODO : get user TOKEN !
-        String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(PictureValidationActivity.this);
+        String token = prefs.getString("token","no_token");
         requestAPI req = new requestAPI(token);
         if(v.getId()==R.id.button_validate_challenge)
         {

@@ -1,5 +1,4 @@
 package hexaram.challengelyon.models;
-
 import java.io.Serializable;
 import java.text.ParseException;
 
@@ -20,6 +19,7 @@ public class Challenge implements Serializable {
     protected String type;
     protected String quizz;
     protected Metavalidation metavalidation;
+    protected boolean played = false;
 
     public Challenge(String title, String summary, User creator) {
         this.title = title;
@@ -29,7 +29,7 @@ public class Challenge implements Serializable {
     public Challenge(String title, String summary, String reward) {
         this.title = title;
         this.summary = summary;
-        this.category = reward;
+
     }
 
     public Challenge(String url, String play, String title, String description, String starttime, String endtime, User creator, String category, String type, Metavalidation metavalidation, String quizz) throws ParseException {
@@ -74,7 +74,7 @@ public class Challenge implements Serializable {
     }
 
     public String getTitle() {
-       return title;
+        return title;
     }
 
     public String getStarttime() {
@@ -84,6 +84,7 @@ public class Challenge implements Serializable {
     public String getEndtime() {
         return starttime.toString();
     }
+
 
     public String getReward() {
         return category;
@@ -117,5 +118,11 @@ public class Challenge implements Serializable {
 
     public String getPlay() {
         return play;
+    }
+
+    public boolean getPlayed(){return played;}
+
+    public void setPlayed() {
+        played = true;
     }
 }

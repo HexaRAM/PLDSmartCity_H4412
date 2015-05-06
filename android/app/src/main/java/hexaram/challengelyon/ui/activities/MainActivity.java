@@ -1,8 +1,13 @@
 package hexaram.challengelyon.ui.activities;
 
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,12 +21,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
@@ -48,6 +68,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        StrictMode.ThreadPolicy policy = new
+        StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_appbar);
 
@@ -80,11 +103,44 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         mSlide.setDistributeEvenly(true);
         mSlide.setViewPager(viewPager);
 
+        /*AsyncTask<Void, Void, ArrayList<Challenge>> task = new AsyncTask<Void, Void,ArrayList<Challenge>>() {
+            @Override
+            protected void onPostExecute(ArrayList<Challenge> list) {
+                super.onPostExecute(list);
+                //Log.d("LIST", ""+list.get(0).getTitle());
+                //updateUser(u);
+            }
+
+            @Override
+            protected ArrayList<Challenge>  doInBackground(Void... params) {
+                HttpURLConnection urlConnection;
+                //J'envoie la requete au serveur
+                try {
+                    URL challengeURL = new URL("http://vps165185.ovh.net/challenges");
+                    urlConnection = (HttpURLConnection) challengeURL.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.setRequestProperty("Authorization", "token " + prefs.getString("token", ""));
+                    InputStream stream = urlConnection.getInputStream();
+                    System.out.println(stream);
+                    JSonParser parser = new JSonParser();
+                    ArrayList<Challenge> list = new ArrayList<>();
+                    list = parser.parseChallenges(stream);
+                    urlConnection.disconnect();
+                    return list;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+        task.execute();*/
 
         try {
             /** HOT CHALLENGE LIST**/
             //TODO : get user TOKEN !
-            String token = "da245e88375373c1b5bdf49f8a0b8f86fdeaecb9";
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+            String token = prefs.getString("token","no_token");
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");
@@ -109,6 +165,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 Metavalidation meta = new Metavalidation(metavalidation.getBoolean("picture_validation"), metavalidation.getBoolean("quizz_validation"), metavalidation.getBoolean("location_validation"));
                 String quizz = r.getString("quizz");
                 Challenge c = new Challenge(url,play,title,summary,description,starttime,endtime,creator,category,type,meta,quizz);
+                boolean played = r.getBoolean("played");
+                if(played) {
+
+                    c.setPlayed();
+                }
                 challengeList.add(c);
             }
             /** TO VALIDATE LIST**/
@@ -147,6 +208,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
 
 
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -169,7 +233,22 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
-                            //TODO Appel à l'API pour enrigestrer l'image
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                            String token = prefs.getString("token","no_token");
+                            requestAPI req = new requestAPI(token);
+                            try {
+                                JSONObject responseLogout = req.logout();
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString("token", "logout");
+                                editor.apply();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            Intent intent = new Intent(MainActivity.this, AccessActivity.class);
+                            startActivity(intent);
+
 
                         }
                     })
@@ -201,6 +280,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
     }
+
+
 
     /**
      * A {@link android.support.v4.app.FragmentPagerAdapter} that returns a fragment corresponding to
@@ -240,4 +321,52 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
     }
 
+    private void makePostRequest() {
+
+
+        HttpClient httpClient = new DefaultHttpClient();
+        // replace with your url
+        HttpPost httpPost = new HttpPost("http://vps165185.ovh.net/auth/login");
+
+
+        //Post Data
+        List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(2);
+        nameValuePair.add(new BasicNameValuePair("email", "cosmi@hexaram.com"));
+        nameValuePair.add(new BasicNameValuePair("password", "cosmi"));
+
+
+        //Encoding POST data
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+        } catch (UnsupportedEncodingException e) {
+            // log exception
+            e.printStackTrace();
+        }
+
+        //making POST request.
+        try {
+            HttpResponse response = httpClient.execute(httpPost);
+            // write response to log
+            Reader in = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+            StringBuilder builder= new StringBuilder();
+            char[] buf = new char[1000];
+            int l = 0;
+            while (l >= 0) {
+                builder.append(buf, 0, l);
+                l = in.read(buf);
+            }
+            JSONTokener tokener = new JSONTokener( builder.toString() );
+            Log.d("Http Post Response:", builder.toString());
+        } catch (ClientProtocolException e) {
+            // Log exception
+            e.printStackTrace();
+        } catch (IOException e) {
+            // Log exception
+            e.printStackTrace();
+        }
+
+    }
+
 }
+

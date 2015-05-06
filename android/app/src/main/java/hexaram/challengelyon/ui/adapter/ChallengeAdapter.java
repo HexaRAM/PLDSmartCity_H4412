@@ -1,6 +1,7 @@
 package hexaram.challengelyon.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,11 @@ public class ChallengeAdapter<T> extends ArrayAdapter{
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.challenge_list_item, parent, false);
             }
+
+
+            if (challenge.getPlayed())
+                convertView.setBackgroundColor(getContext().getResources().getColor(R.color.colorDivider));
+
             // Lookup view for data population
             TextView textItemTitle = (TextView) convertView.findViewById(R.id.challenge_list_item_title);
             TextView textItemSummary = (TextView) convertView.findViewById(R.id.challenge_list_item_summary);
@@ -62,8 +68,12 @@ public class ChallengeAdapter<T> extends ArrayAdapter{
 
             textItemTitle.setText(challenge.getTitle());
             textItemSummary.setText(challenge.getSummary());
-            textItemReward.setText("");
+
+            textItemReward.setText("100");
+
         }
+
+
         // Return the completed view to render on screen
         return convertView;
     }

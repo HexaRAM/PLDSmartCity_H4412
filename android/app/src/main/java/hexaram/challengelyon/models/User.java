@@ -16,6 +16,15 @@ public class User implements Serializable {
     protected String url;
 
 
+    public User(String address, String username, String mail) {
+        this.address = address;
+        this.username = username;
+        this.email = mail;
+
+    }
+
+
+
     public User(String url, String email, int ranking){
         this.url = url;
         this.email = email;
