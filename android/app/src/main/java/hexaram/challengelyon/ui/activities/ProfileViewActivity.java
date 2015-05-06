@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
@@ -40,6 +41,9 @@ public class ProfileViewActivity extends ActionBarActivity {
         textItemNbPlayed = (TextView) findViewById(R.id.profile_view_nbPlayed);
         textItemScore = (TextView) findViewById(R.id.profile_view_score);
         textItemRank = (TextView) findViewById(R.id.profile_view_rank);
+
+
+
 
 
     }

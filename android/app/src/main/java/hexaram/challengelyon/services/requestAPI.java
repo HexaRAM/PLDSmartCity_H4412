@@ -16,6 +16,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
@@ -44,22 +45,14 @@ public class requestAPI {
                     HttpClient httpClient = new DefaultHttpClient();
                     HttpGet httpGet = new HttpGet(serverUrl);
                     httpGet.addHeader("Authorization", "Token " + token);
+                    httpGet.addHeader("content-type","application/json;charset=utf-8");
 
-                    //Perform the request and check the status code
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
                     String responseBody = httpClient.execute(httpGet, responseHandler);
 
                     JSONObject response = new JSONObject(responseBody);
                     mJSONObjetT = response;
-
-                    //Just for testing
-                    String fluxJson = "";
-                    HttpResponse httpResponse = httpClient.execute(httpGet);
-                    HttpEntity entity = httpResponse.getEntity();
-                    fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
-                    Log.d("my JSON response", fluxJson);
-                    //end testing
 
                 } catch (Exception ex) {
                     Log.e(TAG, "Failed to send request due to: " + ex);
@@ -80,22 +73,14 @@ public class requestAPI {
                     HttpClient httpClient = new DefaultHttpClient();
                     HttpGet httpGet = new HttpGet(serverUrl);
                     httpGet.addHeader("Authorization", "Token " + token);
+                    httpGet.addHeader("Content-Type","application/json;charset=utf-8");
 
-                    //Perform the request and check the status code
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
                     String responseBody = httpClient.execute(httpGet, responseHandler);
 
                     JSONObject response = new JSONObject(responseBody);
                     mJSONObjetT = response;
-
-                    //Just for testing
-                    String fluxJson = "";
-                    HttpResponse httpResponse = httpClient.execute(httpGet);
-                    HttpEntity entity = httpResponse.getEntity();
-                    fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
-                    Log.d("my JSON response", fluxJson);
-                    //end testing
 
                 } catch (Exception ex) {
                     Log.e(TAG, "Failed to send request due to: " + ex);
@@ -118,21 +103,12 @@ public class requestAPI {
 
                     httpGet.addHeader("Authorization", "Token " + token);
 
-                    //Perform the request and check the status code
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
                     String responseBody = httpClient.execute(httpGet, responseHandler);
 
                     JSONObject response = new JSONObject(responseBody);
                     mJSONObjetT = response;
-
-                    //Just for testing
-                    String fluxJson = "";
-                    HttpResponse httpResponse = httpClient.execute(httpGet);
-                    HttpEntity entity = httpResponse.getEntity();
-                    fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
-                    Log.d("my JSON response", fluxJson);
-                    //end testing
 
                 } catch (Exception ex) {
                     Log.e(TAG, "Failed to send request: " + ex);
@@ -155,22 +131,12 @@ public class requestAPI {
 
                     httpGet.addHeader("Authorization", "Token " + token);
 
-                    //Perform the request and check the status code
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
                     String responseBody = httpClient.execute(httpGet, responseHandler);
 
                     JSONArray response = new JSONArray(responseBody);
                     mJSONArray = response;
-
-                    //TODO remove comments when all done
-                    //Just for testing
-                    String fluxJson = "";
-                    HttpResponse httpResponse = httpClient.execute(httpGet);
-                    HttpEntity entity = httpResponse.getEntity();
-                    fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
-                    Log.d("my JSON response", fluxJson);
-                    //end testing
 
                 } catch (Exception ex) {
                     Log.e(TAG, "Failed to send request: " + ex);
@@ -194,7 +160,6 @@ public class requestAPI {
 
                     httpGet.addHeader("Authorization", "Token " + token);
 
-                    //Perform the request and check the status code
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
                     String responseBody = httpClient.execute(httpGet, responseHandler);
@@ -225,17 +190,9 @@ public class requestAPI {
 
 
 
-                    //Perform the request and check the status code
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-
                     HttpResponse httpResponse = httpClient.execute(httpPost);
-                    StatusLine statusLine = httpResponse.getStatusLine();
-
-                    if(statusLine.getStatusCode() == 200) {
-                        //Intent intent = new Intent(RealisationActivity.class);
-                        //startActivity(intent, REALISATION_CHALLENGE);
-                    }
 
 
 
@@ -243,6 +200,33 @@ public class requestAPI {
                     Log.e(TAG, "Failed to send request due to: " + ex);
                 }
                 return null;
+            }
+        }
+        private class TaskGetUserByToken extends AsyncTask <String, Void, JSONObject> {
+            private JSONObject mJSONObjetT;
+            private static final String TAG = "TaskGetUser";
+            public String serverUrl = "http://vps165185.ovh.net/auth/me" ;
+
+            @Override
+            protected JSONObject doInBackground(String... params) {
+                String token = params[0];
+                try {
+
+                    HttpClient httpClient = new DefaultHttpClient();
+                    HttpGet httpGet = new HttpGet(serverUrl);
+                    httpGet.addHeader("Authorization", "Token " + token);
+
+                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
+
+                    String responseBody = httpClient.execute(httpGet, responseHandler);
+
+                    JSONObject response = new JSONObject(responseBody);
+                    mJSONObjetT = response;
+
+                } catch (Exception ex) {
+                    Log.e(TAG, "Failed to send request due to: " + ex);
+                }
+                return mJSONObjetT;
             }
         }
 
@@ -272,10 +256,13 @@ public class requestAPI {
             return mJSONArray;
         }
 
-        public JSONObject getUser(String id) throws ExecutionException, InterruptedException {
+        public JSONObject getUser() throws ExecutionException, InterruptedException, JSONException {
+            TaskGetUserByToken getUserByToken = new TaskGetUserByToken();
+            getUserByToken.execute(token);
+            mJsonObject = getUserByToken.get();
+            String idUser = mJsonObject.getString("id");
             TaskGetUser getUser = new TaskGetUser();
-            getUser.execute(token,id);
-            mJsonObject = getUser.get();
+            getUser.execute(token,idUser);
             return mJsonObject;
         }
 

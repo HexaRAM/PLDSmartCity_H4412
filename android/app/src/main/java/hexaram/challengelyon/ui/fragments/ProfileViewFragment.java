@@ -1,6 +1,8 @@
 package hexaram.challengelyon.ui.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -11,8 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
+
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.User;
+import hexaram.challengelyon.services.requestAPI;
 
 /**
  * Created by William on 28/04/2015.
@@ -47,6 +55,8 @@ public class ProfileViewFragment extends Fragment {
         textItemNbPlayed = (TextView) rootView.findViewById(R.id.profile_view_nbPlayed);
         textItemScore = (TextView) rootView.findViewById(R.id.profile_view_score);
         textItemRank = (TextView) rootView.findViewById(R.id.profile_view_rank);
+
+        
     Log.d("Profile","Lauchend");
         /*Bundle args = this.getArguments();
         ImageView imageItem = (ImageView) rootView.findViewById(R.id.profile_view_picture);
