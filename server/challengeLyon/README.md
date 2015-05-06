@@ -13,7 +13,7 @@
     - Valider un challenge : `GET /challengePlayed/<id>/validate/`
     - Ne pas valider un challenge : `GET /challengePlayed/<id>/unvalidate/`
 
-- Obtenir la station de Vélo'V la plus proche : `GET /getClosestStation/` avec latitude et longitude en paramètre
+- Obtenir la station de Vélo'V la plus proche pour prendre un vélo (avec des vélos disponibles) : `GET /getClosestStation/` avec `latitude` et `longitude` en paramètre
     - Exemple avec le département informatique : `/getClosestStation/?latitude=45.781869&longitude=4.872572`
     - Retour ordinaire :
     ```
@@ -28,3 +28,6 @@
         "id": "10102"
     }
     ```
+- Obtenir la station de Vélo'V la plus proche pour poser son vélo (avec des places de parking disponibles) : `GET /getClosestStation/` avec `latitude` `longitude` et `arrivee` en paramètre
+
+    - Exemple avec le département informatique : `http://vps165185.ovh.net/getClosestStation/?latitude=45.781869&longitude=4.872572&arrivee`
