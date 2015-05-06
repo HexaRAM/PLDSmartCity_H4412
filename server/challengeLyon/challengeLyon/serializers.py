@@ -30,7 +30,7 @@ class MetaValidationSerializer(serializers.ModelSerializer):
 
 class ChallengeSerializer(serializers.ModelSerializer):
     creator = UserSerializer(read_only=True)
-    #category = CategorySerializer()
+    category = serializers.SlugRelatedField(slug_field='name', queryset=Category.objects.all())
     #type = TypeSerializer()
     metavalidation = MetaValidationSerializer()
     play = serializers.HyperlinkedIdentityField(view_name='challenge-play', read_only=True)

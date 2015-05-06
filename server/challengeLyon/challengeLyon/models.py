@@ -183,6 +183,13 @@ class Validationitem(models.Model):
     submitted = models.BooleanField(default=False)
     users = models.ManyToManyField(ChallengeUser, verbose_name="Validations", blank=True, through="Validation", through_fields=('validationitem','user',))
 
+    def get_score(self):
+        validations = self.validation_set
+        score = 0
+        for validation in validations:
+            score += validation.vote
+        return score
+
     def __unicode__(self):
         return u"Validation du challenge %s"%(self.challengeplayed.challenge)
 
