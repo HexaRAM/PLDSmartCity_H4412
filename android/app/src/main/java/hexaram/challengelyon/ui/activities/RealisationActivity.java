@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
-
 import hexaram.challengelyon.utils.MultipartUtility;
+import hexaram.challengelyon.models.Challenge;
 
 public class RealisationActivity extends ActionBarActivity {
 
@@ -55,6 +55,7 @@ public class RealisationActivity extends ActionBarActivity {
         setContentView(R.layout.activity_realisation);
 
         Intent intent = getIntent();
+        Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
         String challengeID = intent.getStringExtra(CHALLENGE_PARAM_ID);
 
         context = getApplicationContext();
@@ -155,12 +156,17 @@ public class RealisationActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setTitle(R.string.realisation_upload_view_title);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+
         /*try {
             //requestAPI req = new requestAPI(token);
             //JSONObject response = req.getAllChallenges();
+
+        String token = "13e28143514cecdaac8387ce939052a0f6095bad";
+        try {
+            requestAPI req = new requestAPI(token);
+            JSONObject response = req.getAllChallenges();
             //JSONObject responseUser = req.getUser("2");
             //JSONObject responseAllToValidate = req.getChallengesToValidate();
             //JSONArray responseAllPlayed = req.getAllChallengesPlayed();
@@ -171,14 +177,15 @@ public class RealisationActivity extends ActionBarActivity {
             //Log.d("user", responseUser.getString("email"));
             //Log.d("challenge", responsePlayChallenge.getString("status"));
            // Log.d("logout mess",responseLogout.getString("detail"));
->>>>>>> 45fb2276a4852ccf7fcf45bba490463469502adc
+
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
+        }
+        //catch (JSONException e) {
+         //   e.printStackTrace();
+        //}*/
 
     }
 

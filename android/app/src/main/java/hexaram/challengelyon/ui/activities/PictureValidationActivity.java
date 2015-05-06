@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +13,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.concurrent.ExecutionException;
+
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.ToValidate;
+import hexaram.challengelyon.services.requestAPI;
+import hexaram.challengelyon.utils.ImageLoader;
 
 public class PictureValidationActivity extends ActionBarActivity implements View.OnClickListener {
     TextView titleChallengeValidation;
@@ -23,6 +28,7 @@ public class PictureValidationActivity extends ActionBarActivity implements View
     Button bInvalidateChallenge;
     private final String CHALLENGE_PARAM_TITLE = "challenge_validation_title";
     private final String CHALLENGE_PARAM_DESCRIPTION = "challenge_validation_description";
+    ToValidate tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +36,7 @@ public class PictureValidationActivity extends ActionBarActivity implements View
         setContentView(R.layout.activity_picture_validation);
 
         Intent intent = getIntent();
-        ToValidate tv = (ToValidate)intent.getSerializableExtra("tovalidate");
+        tv = (ToValidate)intent.getSerializableExtra("tovalidate");
         //TODO: get challenge ID from Intent <= ValidationFragment. => get title, description, photo with challenge_ID
         titleChallengeValidation = (TextView) findViewById(R.id.title_challenge_validation);
         descriptionChallengeValidation = (TextView) findViewById(R.id.description_challenge_validation);
@@ -40,9 +46,29 @@ public class PictureValidationActivity extends ActionBarActivity implements View
         bInvalidateChallenge = (Button) findViewById(R.id.button_invalidate_challenge);
 
         titleChallengeValidation.setText(tv.getTitle());
-        descriptionChallengeValidation.setText(tv.getSummary());
+        descriptionChallengeValidation.setText(tv.getDescription());
         bValidateChallenge.setOnClickListener(this);
         bInvalidateChallenge.setOnClickListener(this);
+
+        /**DISPLAY PICTURE !**/
+        // Loader image - will be shown before loading image
+        int loader = R.drawable.ic_launcher_android;
+
+        // Imageview to show
+        ImageView image = (ImageView) findViewById(R.id.photo_validation);
+
+        // Image url
+        String image_url = tv.getPictures();
+
+        // ImageLoader class instance
+        ImageLoader imgLoader = new ImageLoader(getApplicationContext());
+
+        // whenever you want to load an image from url
+        // call DisplayImage function
+        // url - image url to load
+        // loader - loader image, will be displayed before getting image
+        // image - ImageView
+        imgLoader.DisplayImage(image_url, loader, image);
     }
 
 
@@ -89,18 +115,31 @@ public class PictureValidationActivity extends ActionBarActivity implements View
     @Override
     public void onClick(View v) {
         //Button validate Challenge
+        //TODO : get user TOKEN !
+        String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+        requestAPI req = new requestAPI(token);
         if(v.getId()==R.id.button_validate_challenge)
         {
-            //TODO: web service validate challenge
-            Intent intent = new Intent(PictureValidationActivity.this, MainActivity.class);
-            startActivity(intent);
+            try {
+                req.clickURL(tv.getValidate());
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            finish();
         }
-        //Bitton invalidate Challenge
+        //Button invalidate Challenge
         if(v.getId()==R.id.button_invalidate_challenge)
         {
-            //TODO: web service invalidate challenge
-            Intent intent = new Intent(PictureValidationActivity.this, MainActivity.class);
-            startActivity(intent);
+            try {
+                req.clickURL(tv.getUnvalidate());
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            finish();
         }
     }
 }

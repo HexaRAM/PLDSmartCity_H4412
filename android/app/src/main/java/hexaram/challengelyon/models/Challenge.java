@@ -17,8 +17,8 @@ public class Challenge implements Serializable {
     protected String starttime;
     protected String endtime;
     protected User creator;
-    protected int category;
-    protected int type;
+    protected String category;
+    protected String type;
     protected String quizz;
     protected Metavalidation metavalidation;
 
@@ -30,10 +30,10 @@ public class Challenge implements Serializable {
     public Challenge(String title, String summary, int reward) {
         this.title = title;
         this.summary = summary;
-        this.category = reward;
+
     }
 
-    public Challenge(String url, String play, String title, String description, String starttime, String endtime, User creator, int category, int type, Metavalidation metavalidation, String quizz) throws ParseException {
+    public Challenge(String url, String play, String title, String description, String starttime, String endtime, User creator, String category, String type, Metavalidation metavalidation, String quizz) throws ParseException {
         this.title = title;
         this.summary = summary;
         this.play = play;
@@ -46,7 +46,7 @@ public class Challenge implements Serializable {
         this.metavalidation = metavalidation;
 
     }
-    public Challenge(String title, String summary, User creator, String starttime, String endtime, int category, int type, String quizz, Metavalidation metavalidation) {
+    public Challenge(String title, String summary, User creator, String starttime, String endtime, String category, String type, String quizz, Metavalidation metavalidation) {
         this.title = title;
         this.summary = summary;
         this.creator = creator;
@@ -59,7 +59,7 @@ public class Challenge implements Serializable {
 
     }
 
-    public Challenge(String url, String play, String title, String summary, String description, String starttime, String endtime, User creator, int category, int type, Metavalidation metavalidation, String quizz) {
+    public Challenge(String url, String play, String title, String summary, String description, String starttime, String endtime, User creator, String category, String type, Metavalidation metavalidation, String quizz) {
         this.url = url;
         this.play = play;
         this.title = title;
@@ -87,18 +87,18 @@ public class Challenge implements Serializable {
     }
 
     public int getReward() {
-        return category;
+        return 10;
     }
 
     public String getCreator() {
         return creator.getMail();
     }
 
-    public int getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
@@ -110,5 +110,13 @@ public class Challenge implements Serializable {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getPlay() {
+        return play;
     }
 }

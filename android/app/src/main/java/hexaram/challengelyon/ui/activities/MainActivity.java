@@ -177,8 +177,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 JSONObject user = r.getJSONObject("creator");
                 User creator = new User(user.getString("url"), user.getString("email"), user.getInt("ranking"));
                 Log.d("mail", user.getString("email")+" "+user.getString("ranking"));
-                int category = r.getInt("category");
-                int type = r.getInt("type");
+                String category = r.getString("category");
+                String type = r.getString("type");
                 JSONObject metavalidation = r.getJSONObject("metavalidation");
                 Metavalidation meta = new Metavalidation(metavalidation.getBoolean("picture_validation"), metavalidation.getBoolean("quizz_validation"), metavalidation.getBoolean("location_validation"));
                 String quizz = r.getString("quizz");
