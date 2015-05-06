@@ -85,7 +85,7 @@ public class ChallengeViewActivity extends ActionBarActivity {
         });
 
         textDescription.setText(challenge.getDescription());
-        //textCreatorName.setText(challenge.getCreator());
+        textCreatorName.setText(challenge.getCreator());
         textTitle.setText(challenge.getTitle());
         textStartTime.setText(challenge.getStarttime());
         textEndTime.setText(challenge.getEndtime());
