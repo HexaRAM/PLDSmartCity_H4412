@@ -22,7 +22,14 @@ import android.widget.ImageView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
+
 import hexaram.challengelyon.R;
+import hexaram.challengelyon.services.requestAPI;
+
 
 public class RealisationActivity extends ActionBarActivity  {
 
@@ -110,8 +117,22 @@ public class RealisationActivity extends ActionBarActivity  {
         });
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle(R.string.realisation_upload_view_title);
         setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        try {
+            requestAPI req = new requestAPI();
+            JSONObject response = req.getMyJSONObjet();
+            Log.d("email", response.getString("email"));
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -164,6 +185,4 @@ public class RealisationActivity extends ActionBarActivity  {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
-
-
 }
