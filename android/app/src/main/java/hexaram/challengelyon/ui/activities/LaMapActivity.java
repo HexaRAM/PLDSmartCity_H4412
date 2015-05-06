@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.ui.fragments.MyMapFragment;
@@ -14,14 +16,19 @@ import hexaram.challengelyon.ui.fragments.MyMapFragment;
 public class LaMapActivity extends ActionBarActivity implements MyMapFragment.OnFragmentInteractionListener{
 
     MyMapFragment laMap;
+    Button bSubmitDestination;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_la_map);
+
+        bSubmitDestination = (Button) findViewById(R.id.bSubmitDest);
+        bSubmitDestination.setVisibility(View.GONE);
         laMap = MyMapFragment.newInstance();
         laMap.setContext(this);
+        laMap.setButton(bSubmitDestination);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container,laMap ).commit();
         new AlertDialog.Builder(LaMapActivity.this)
                 .setTitle("Submit challenge")
@@ -33,6 +40,8 @@ public class LaMapActivity extends ActionBarActivity implements MyMapFragment.On
 
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
+
+
     }
 
 

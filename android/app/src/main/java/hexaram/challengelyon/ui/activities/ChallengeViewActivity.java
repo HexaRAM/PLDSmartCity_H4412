@@ -55,7 +55,8 @@ public class ChallengeViewActivity extends ActionBarActivity {
         bTakeChallenge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(1==1){ // TODO : replace with if challenge category requires a map
+                final String VELOV_CATEGORY = "Velo'V";
+                if(challenge.getCategory().contains(VELOV_CATEGORY)){
                     bTakeChallenge.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
                     Intent intent = new Intent(ChallengeViewActivity.this, LaMapActivity.class);
                     startActivityForResult(intent, MAP_VIEW);
@@ -63,7 +64,7 @@ public class ChallengeViewActivity extends ActionBarActivity {
                 else {
 
                     //TODO : GET TOKEN
-                    String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+                    String token = "da245e88375373c1b5bdf49f8a0b8f86fdeaecb9";
                     requestAPI req = new requestAPI(token);
                     try {
                         req.clickURL(challenge.getPlay());

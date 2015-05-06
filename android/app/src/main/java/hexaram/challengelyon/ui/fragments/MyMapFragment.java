@@ -2,6 +2,7 @@ package hexaram.challengelyon.ui.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -9,20 +10,34 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
+import hexaram.challengelyon.services.requestAPI;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +56,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
     Context mapActivityContext;
     Marker destinationMarker;
+    Button bSubmitDestination;
+    Polyline line;
 
 
     /**
@@ -59,6 +76,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     public void setContext(Context activityContext){
         mapActivityContext = activityContext;
     }
+    public void setButton(Button subButt) { bSubmitDestination = subButt;}
 
     public MyMapFragment() {
         // Required empty public constructor
@@ -72,6 +90,111 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        bSubmitDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng destinationPosition = destinationMarker.getPosition();
+                LocationManager locationManager = (LocationManager) mapActivityContext.getSystemService(Context.LOCATION_SERVICE);
+                Criteria criteria = new Criteria();
+                Location currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+
+                //todo tokeeeeennnnnennenenenenenenenennene!!
+                requestAPI req = new requestAPI("da245e88375373c1b5bdf49f8a0b8f86fdeaecb9");
+                try {
+                    /******* Velo a cote de position actuelle *********/
+                    JSONObject resp = req.getVelo("" + currentLocation.getLatitude(), "" + currentLocation.getLongitude());
+                    JSONObject result = resp.getJSONObject("result");
+                    String nom = result.getString("nom");
+                    int velos_disponibles = result.getInt("velos_disponibles");
+                    double longitude = result.getDouble("longitude");
+                    double latitude = result.getDouble("latitude");
+                    Log.d("lat ", String.valueOf(latitude));
+
+                    map.addMarker(new MarkerOptions()
+                            .position(new LatLng(latitude, longitude))
+                            .title("Station VeloV a votre proximite: ")
+                            .snippet(nom + "\n Velos disponibles : " + velos_disponibles)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_directions_bike_black_36dp_360)));
+
+                    /********** ***************************/
+
+                /********* Velo a cote destiation ***************/
+                    JSONObject respDest = req.getVelo("" + destinationPosition.latitude, "" + destinationPosition.longitude);
+                    JSONObject resultDest = respDest.getJSONObject("result");
+                    String nomDest = resultDest.getString("nom");
+                    int velos_posablesDest = resultDest.getInt("velos_posables");
+                    double longitudeDest = resultDest.getDouble("longitude");
+                    double latitudeDest = resultDest.getDouble("latitude");
+                    Log.d("lat dest ", String.valueOf(latitudeDest));
+                    map.addMarker(new MarkerOptions()
+                            .position(new LatLng(latitudeDest,longitudeDest))
+                            .title("Station VeloV a proximite de la destination: ")
+                            .snippet(nomDest + "\n Places disponibles : " + velos_posablesDest)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_directions_bike_black_36dp_360)));
+                    /**************** **************************/
+
+                    /******* Draw path *********/
+                    JSONObject respGoog = req.getGoogleDirection(latitude+","+longitude,latitudeDest+","+longitudeDest );
+                    JSONArray routeArray = respGoog.getJSONArray("routes");
+                    JSONObject routes = routeArray.getJSONObject(0);
+                    JSONObject overviewPolylines = routes
+                            .getJSONObject("overview_polyline");
+                    String encodedString = overviewPolylines.getString("points");
+                    List<LatLng> list = decodePoly(encodedString);
+
+                    for (int z = 0; z < list.size() - 1; z++) {
+                        LatLng src = list.get(z);
+                        LatLng dest = list.get(z + 1);
+                        line = map.addPolyline(new PolylineOptions()
+                                .add(new LatLng(src.latitude, src.longitude),
+                                        new LatLng(dest.latitude, dest.longitude))
+                                .width(5).color(Color.BLUE).geodesic(true));
+                    }
+
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    private List<LatLng> decodePoly(String encoded) {
+
+        List<LatLng> poly = new ArrayList<LatLng>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng((((double) lat / 1E5)),
+                    (((double) lng / 1E5)));
+            poly.add(p);
+        }
+
+        return poly;
     }
 
     @Override
@@ -103,7 +226,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to current location
                         .zoom(15)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
+                        .bearing(0)                // Sets the orientation of the camera to east
                         .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                         .build();                   // Creates a CameraPosition from the builder
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -143,6 +266,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onMapClick(LatLng clickedLatLng) {
+                bSubmitDestination.setVisibility(View.VISIBLE);
                 if (destinationMarker == null){
                     destinationMarker = map.addMarker(new MarkerOptions()
                             .position(clickedLatLng)

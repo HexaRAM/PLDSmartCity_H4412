@@ -3,18 +3,26 @@ package hexaram.challengelyon.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
 import hexaram.challengelyon.models.ToValidate;
+import hexaram.challengelyon.services.requestAPI;
 import hexaram.challengelyon.ui.activities.PictureValidationActivity;
 import hexaram.challengelyon.ui.adapter.ChallengeAdapter;
 
@@ -25,6 +33,7 @@ public class ValidationFragment extends Fragment {
     protected ArrayList<ToValidate> toValidateList = new ArrayList<>();
     protected ChallengeAdapter<ToValidate> adapter;
     protected ListView challengeListView;
+    protected SwipeRefreshLayout refreshLayout;
 
     private final String TOVALIDATE_PARAM = "tovalidate";
 
@@ -54,6 +63,17 @@ public class ValidationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.challenge_list, container, false);
+        refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+
+        /************ Refresh on scroll ***********/
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                refreshItems();
+            }
+        });
+        /********** End Refresh on Scroll ********/
 
 //        challengeList = (ArrayList<Challenge>) getArguments().getSerializable("Validation");
         toValidateList = (ArrayList<ToValidate>) getArguments().getSerializable("Validation");
@@ -111,6 +131,57 @@ public class ValidationFragment extends Fragment {
 //            ((MainActivity) getActivity()).removeOnListChangedListener(this);
 //        }
     }
+    void refreshItems()  {
+        // Load items
+        ArrayList<ToValidate> newChallengeList = new ArrayList<ToValidate>();
+        //TODO token !!!!!!!!!!!!
+        try {
+
+            /** HOT CHALLENGE LIST**/
+            //TODO : get user TOKEN !
+            String token = "da245e88375373c1b5bdf49f8a0b8f86fdeaecb9";
+            requestAPI req = new requestAPI(token);
+            JSONObject response = req.getChallengesToValidate();
+            JSONArray results = response.getJSONArray("results");
+            Log.d("count", ""+response.getInt("count"));
+            int count = response.getInt("count");
+            for (int i = 0; i<count; i++){
+                JSONObject r = results.getJSONObject(i);
+                String validate = r.getString("validate");
+                String unvalidate = r.getString("unvalidate");
+                JSONObject challenge = r.getJSONObject("challenge");
+                String url = challenge.getString("url");
+                String title = challenge.getString("title");
+                String summary = challenge.getString("summary");
+                String description = challenge.getString("description");
+                Boolean validated = r.getBoolean("validated");
+                JSONArray pics = r.getJSONArray("pictures");
+                String pictures ="";
+                if(pics.length()!=0) {
+                    pictures = r.getJSONArray("pictures").getString(0);
+                }
+                ToValidate tv = new ToValidate(validate, unvalidate, url, title, summary, description, validated, pictures);
+                newChallengeList.add(tv);
+            }
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Load complete
+        onItemsLoadComplete(newChallengeList);
+    }
+    void onItemsLoadComplete(ArrayList<ToValidate> newChallenges) {
+        // Update the adapter and notify data set changed
+        onListChanged(newChallenges);
+
+        // Stop refresh animation
+        refreshLayout.setRefreshing(false);
+    }
+
 
     public void onListChanged(List<ToValidate> newList) {
         if (newList == null) {

@@ -1,28 +1,20 @@
 package hexaram.challengelyon.ui.activities;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-import android.support.v4.app.FragmentTransaction;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +22,6 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
@@ -41,9 +32,7 @@ import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.services.requestAPI;
 import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
-import hexaram.challengelyon.ui.fragments.ProfileViewFragment;
 import hexaram.challengelyon.ui.fragments.ValidationFragment;
-import hexaram.challengelyon.ui.listeners.MyLocationListener;
 import hexaram.challengelyon.ui.tabs.SlidingTabLayout;
 
 
@@ -95,7 +84,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         try {
             /** HOT CHALLENGE LIST**/
             //TODO : get user TOKEN !
-            String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+            String token = "da245e88375373c1b5bdf49f8a0b8f86fdeaecb9";
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");
@@ -114,8 +103,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 JSONObject user = r.getJSONObject("creator");
                 User creator = new User(user.getString("url"), user.getString("email"), user.getInt("ranking"));
                 Log.d("mail", user.getString("email")+" "+user.getString("ranking"));
-                int category = r.getInt("category");
-                int type = r.getInt("type");
+                String category = r.getString("category");
+                String type = r.getString("type");
                 JSONObject metavalidation = r.getJSONObject("metavalidation");
                 Metavalidation meta = new Metavalidation(metavalidation.getBoolean("picture_validation"), metavalidation.getBoolean("quizz_validation"), metavalidation.getBoolean("location_validation"));
                 String quizz = r.getString("quizz");
