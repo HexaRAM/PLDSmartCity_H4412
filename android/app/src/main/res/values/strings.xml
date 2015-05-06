@@ -4,6 +4,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Paramètres</string>
+    <string name="log_out">Log Out</string>
 
     <!-- Drawer -->
     <string name="drawer_open">Ouvrir</string>

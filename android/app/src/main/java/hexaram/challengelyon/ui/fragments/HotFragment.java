@@ -79,7 +79,7 @@ public class HotFragment extends Fragment {
 
                Challenge c = (Challenge) parent.getItemAtPosition(position);
                Intent intent = new Intent(getActivity(), ChallengeViewActivity.class);
-               intent.putExtra(CHALLENGE_PARAM, c.getTitle());
+                intent.putExtra(CHALLENGE_PARAM, c);
                startActivity(intent);
 
                 /*FragmentManager fragmentManager = getFragmentManager();
