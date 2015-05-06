@@ -38,6 +38,10 @@
             android:name=".ui.activities.ChallengeViewActivity"
             android:label="@string/title_activity_challenge_view" >
         </activity>
+        <activity
+            android:name=".ui.activities.PictureValidationActivity"
+            android:label="@string/title_activity_picture_validation" >
+        </activity>
     </application>
 
 </manifest>
