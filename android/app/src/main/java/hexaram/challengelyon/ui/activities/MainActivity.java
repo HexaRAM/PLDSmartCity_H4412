@@ -1,6 +1,7 @@
 package hexaram.challengelyon.ui.activities;
 
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 
@@ -11,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -120,8 +122,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         mSlide = (SlidingTabLayout)findViewById(R.id.tabs);
         mSlide.setDistributeEvenly(true);
         mSlide.setViewPager(viewPager);
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        // String token = prefs.getString("token","no_token");
 
         /*AsyncTask<Void, Void, ArrayList<Challenge>> task = new AsyncTask<Void, Void,ArrayList<Challenge>>() {
             @Override
@@ -158,7 +158,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         try {
             /** HOT CHALLENGE LIST**/
             //TODO : get user TOKEN !
-            String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+            String token = prefs.getString("token","no_token");
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");

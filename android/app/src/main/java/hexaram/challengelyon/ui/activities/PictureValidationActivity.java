@@ -3,6 +3,8 @@ package hexaram.challengelyon.ui.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -115,8 +117,8 @@ public class PictureValidationActivity extends ActionBarActivity implements View
     @Override
     public void onClick(View v) {
         //Button validate Challenge
-        //TODO : get user TOKEN !
-        String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(PictureValidationActivity.this);
+        String token = prefs.getString("token","no_token");
         requestAPI req = new requestAPI(token);
         if(v.getId()==R.id.button_validate_challenge)
         {

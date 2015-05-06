@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
@@ -49,6 +51,9 @@ public class RealisationActivity extends ActionBarActivity {
     private final int VALIDATE_ACTION = 946;
     String imageFile;
 
+    TextView title;
+    TextView description;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +61,7 @@ public class RealisationActivity extends ActionBarActivity {
 
         Intent intent = getIntent();
         Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
-        String challengeID = intent.getStringExtra(CHALLENGE_PARAM_ID);
+        //String challengeID = intent.getStringExtra(CHALLENGE_PARAM_ID);
 
         context = getApplicationContext();
 
@@ -65,7 +70,10 @@ public class RealisationActivity extends ActionBarActivity {
         bUpload.setColorNormalResId(R.color.colorPrimaryDark);
         bUpload.setColorPressedResId(R.color.colorPrimaryLight);
         bUpload.setIcon(R.drawable.ic_add_circle_red600_48dp);
-
+        title = (TextView) findViewById(R.id.title_challenge);
+        description = (TextView) findViewById(R.id.description_challenge);
+        title.setText(challenge.getTitle());
+        description.setText(challenge.getDescription());
 
 
         bUpload.setOnClickListener(new View.OnClickListener() {
@@ -98,10 +106,11 @@ public class RealisationActivity extends ActionBarActivity {
                                         super.onPostExecute(response);
                                         if(response == null)
                                         {
-                                            //Toast.makeText(getActivity(), getResources().getString(R.string.no_creation), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RealisationActivity.this, getResources().getString(R.string.no_upload), Toast.LENGTH_SHORT).show();
                                         }
                                         else{
-                                            System.out.println(response.get(0));
+
+                                            Toast.makeText(RealisationActivity.this, getResources().getString(R.string.upload_ok), Toast.LENGTH_SHORT).show();
                                         }
 
                                     }

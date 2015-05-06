@@ -1,6 +1,8 @@
 package hexaram.challengelyon.models;
+import static java.nio.charset.StandardCharsets.*;
 
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Date;
 

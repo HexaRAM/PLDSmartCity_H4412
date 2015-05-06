@@ -1,6 +1,8 @@
 package hexaram.challengelyon.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -58,8 +60,8 @@ public class ChallengeViewActivity extends ActionBarActivity {
         bTakeChallenge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO : GET TOKEN
-                String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChallengeViewActivity.this);
+                String token = prefs.getString("token","no_token");
                 requestAPI req = new requestAPI(token);
                 try {
                     req.clickURL(challenge.getPlay());
