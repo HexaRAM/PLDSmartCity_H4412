@@ -87,7 +87,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         /** Get challenge list from server **/
         try {
-            requestAPI req = new requestAPI();
+            //TODO : get user TOKEN !
+            String token = "1a7d6b30a23da000c84d287f8f7fd0152412a9f9";
+            requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");
             Log.d("count", ""+response.getInt("count"));
