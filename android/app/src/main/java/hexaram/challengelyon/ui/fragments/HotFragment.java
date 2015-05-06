@@ -2,13 +2,7 @@ package hexaram.challengelyon.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +15,6 @@ import java.util.List;
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
 import hexaram.challengelyon.ui.activities.ChallengeViewActivity;
-import hexaram.challengelyon.ui.activities.MainActivity;
-import hexaram.challengelyon.ui.activities.RealisationActivity;
 import hexaram.challengelyon.ui.adapter.ChallengeAdapter;
 
 
@@ -79,7 +71,9 @@ public class HotFragment extends Fragment {
 
                Challenge c = (Challenge) parent.getItemAtPosition(position);
                Intent intent = new Intent(getActivity(), ChallengeViewActivity.class);
-                intent.putExtra(CHALLENGE_PARAM, c);
+
+               intent.putExtra(CHALLENGE_PARAM, c);
+
                startActivity(intent);
 
                 /*FragmentManager fragmentManager = getFragmentManager();

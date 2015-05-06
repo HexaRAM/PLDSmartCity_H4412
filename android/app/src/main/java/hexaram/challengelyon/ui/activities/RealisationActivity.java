@@ -22,13 +22,8 @@ import android.widget.ImageView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
-
 import hexaram.challengelyon.R;
-import hexaram.challengelyon.services.requestAPI;
+import hexaram.challengelyon.models.Challenge;
 
 
 public class RealisationActivity extends ActionBarActivity  {
@@ -53,6 +48,7 @@ public class RealisationActivity extends ActionBarActivity  {
         setContentView(R.layout.activity_realisation);
 
         Intent intent = getIntent();
+        Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
         String challengeID = intent.getStringExtra(CHALLENGE_PARAM_ID);
 
         context = getApplicationContext();
@@ -121,17 +117,28 @@ public class RealisationActivity extends ActionBarActivity  {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        try {
-            requestAPI req = new requestAPI();
-            JSONObject response = req.getMyJSONObjet();
-            Log.d("email", response.getString("email"));
+
+        String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+        /*try {
+            //requestAPI req = new requestAPI(token);
+            //JSONObject response = req.getAllChallenges();
+            //JSONObject responseUser = req.getUser("2");
+            //JSONObject responseAllToValidate = req.getChallengesToValidate();
+            //JSONArray responseAllPlayed = req.getAllChallengesPlayed();
+            //JSONObject responsePlayChallenge = req.playChallenge("http://vps165185.ovh.net/challenges/3/play/");
+            //JSONObject responseLogout = req.logout();
+
+
+            //Log.d("user", responseUser.getString("email"));
+            //Log.d("challenge", responsePlayChallenge.getString("status"));
+           // Log.d("logout mess",responseLogout.getString("detail"));
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -185,4 +192,5 @@ public class RealisationActivity extends ActionBarActivity  {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+
 }
