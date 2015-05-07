@@ -1,27 +1,20 @@
 package hexaram.challengelyon.services;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
-
-import hexaram.challengelyon.ui.activities.RealisationActivity;
 
 /**
  * Created by maria on 05/05/15.
@@ -145,6 +138,42 @@ public class requestAPI {
                 return mJSONArray;
             }
         }
+
+        private class TaskGetVelo extends AsyncTask <String, Void, JSONObject> {
+        private JSONObject mJSONObject;
+        private static final String TAG = "TaskGetVelo";
+        public String serverUrl = "http://vps165185.ovh.net/getClosestStation/";
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            String token = params[0];
+            String latitude = params[1];
+            String longitude = params[2];
+            serverUrl = serverUrl + "?latitude=" + latitude + "&longitude=" + longitude;
+
+            try {
+                //Create an HTTP client
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpGet httpGet = new HttpGet(serverUrl);
+
+                httpGet.addHeader("Authorization", "Token " + token);
+
+                //Perform the request and check the status code
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+
+                String responseBody = httpClient.execute(httpGet, responseHandler);
+
+                JSONObject response = new JSONObject(responseBody);
+                mJSONObject = response;
+
+
+
+            } catch (Exception ex) {
+                Log.e(TAG, "Failed to send request: " + ex);
+            }
+            return mJSONObject;
+        }
+    }
         private class TaskPlayChallenge extends AsyncTask <String, Void, JSONObject> {
             private JSONObject mJSONObject;
             private static final String TAG = "TaskPlayChallenge";
@@ -175,7 +204,48 @@ public class requestAPI {
                 return mJsonObject;
             }
         }
-        private class TaskLogout extends AsyncTask<Void, Void, JSONObject> {
+
+        private class TaskGoogleDirection extends AsyncTask <String, Void, JSONObject> {
+        private JSONObject mJSONObject;
+        private static final String TAG = "TaskGoogleDirection";
+        public String serverUrl = "https://maps.googleapis.com/maps/api/directions/json";
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+
+            String origin = params[0];
+            String destination = params[1];
+            String mode = "bicycling";
+            String ApiKey = "AIzaSyDYT95uE2lKZ0XFn7UkyRPSwr1qTDr0fVk";
+            serverUrl = serverUrl + "?origin=" + origin + "&destination=" + destination + "&mode=" + mode + "&key=" + ApiKey;
+
+            try {
+                //Create an HTTP client
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpGet httpGet = new HttpGet(serverUrl);
+
+
+
+                //Perform the request and check the status code
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+
+                String responseBody = httpClient.execute(httpGet, responseHandler);
+
+                JSONObject response = new JSONObject(responseBody);
+                mJSONObject = response;
+
+
+
+            } catch (Exception ex) {
+                Log.e(TAG, "Failed to send request: " + ex);
+            }
+            return mJSONObject;
+        }
+    }
+
+
+    private class TaskLogout extends AsyncTask<Void, Void, JSONObject> {
+
             private JSONObject mJSONObjetT;
             private static final String TAG = "TaskChallenge";
             public String serverUrl = "http://vps165185.ovh.net/auth/logout" ;
@@ -266,8 +336,14 @@ public class requestAPI {
             getUser.execute(token,idUser);
             return mJsonObject;
         }
+        public JSONObject getVelo(String latitude,String longitude) throws ExecutionException, InterruptedException {
+            TaskGetVelo getVelov = new TaskGetVelo();
+            getVelov.execute(token,latitude, longitude);
+            mJsonObject = getVelov.get();
+            return mJsonObject;
+        }
 
-        public JSONObject clickURL(String url) throws ExecutionException, InterruptedException {
+    public JSONObject clickURL(String url) throws ExecutionException, InterruptedException {
             TaskPlayChallenge getChallengesPlayedById = new TaskPlayChallenge();
             getChallengesPlayedById.execute(url);
             mJsonObject = getChallengesPlayedById.get();
@@ -280,6 +356,14 @@ public class requestAPI {
             mJsonObject = logMeOut.get();
             return mJsonObject;
         }
+        public JSONObject getGoogleDirection(String origin,String destination) throws ExecutionException, InterruptedException {
+            TaskGoogleDirection googleDir = new TaskGoogleDirection();
+            googleDir.execute(origin, destination);
+            mJsonObject = googleDir.get();
+            return mJsonObject;
+        }
+
+
 
     }
 

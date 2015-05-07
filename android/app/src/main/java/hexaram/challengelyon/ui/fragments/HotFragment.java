@@ -2,12 +2,8 @@ package hexaram.challengelyon.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +11,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.models.Challenge;
+import hexaram.challengelyon.models.Metavalidation;
+import hexaram.challengelyon.models.User;
+import hexaram.challengelyon.services.requestAPI;
 import hexaram.challengelyon.ui.activities.ChallengeViewActivity;
-import hexaram.challengelyon.ui.activities.MainActivity;
-import hexaram.challengelyon.ui.activities.RealisationActivity;
 import hexaram.challengelyon.ui.adapter.ChallengeAdapter;
 
 
@@ -31,6 +34,7 @@ public class HotFragment extends Fragment {
     protected ArrayList<Challenge> challengeList;
     protected ChallengeAdapter<Challenge> adapter;
     protected ListView challengeListView;
+    protected SwipeRefreshLayout refreshLayout;
 
     private final String CHALLENGE_PARAM = "challenge";
 
@@ -60,6 +64,18 @@ public class HotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.challenge_list, container, false);
+        refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+
+
+        /************ Refresh on scroll ***********/
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                refreshItems();
+            }
+        });
+        /********** End Refresh on Scroll ********/
 
         challengeList = (ArrayList<Challenge>) getArguments().getSerializable("Hot");
         if(challengeList == null) {
@@ -69,6 +85,7 @@ public class HotFragment extends Fragment {
         //Initialiser l'adapter
             adapter = new ChallengeAdapter<>(getActivity(), R.layout.challenge_list_item, challengeList);
             challengeListView = (ListView) rootView.findViewById(R.id.challenge_list);
+        Log.d("list view", "" +challengeListView);
             //L'appliquer sur la listView
             challengeListView.setAdapter(adapter);
 
@@ -103,6 +120,63 @@ public class HotFragment extends Fragment {
         });
         return rootView;
     }
+
+    void refreshItems()  {
+        // Load items
+        ArrayList<Challenge> newChallengeList = new ArrayList<Challenge>();
+        //TODO token !!!!!!!!!!!!
+        try {
+
+            /** HOT CHALLENGE LIST**/
+            //TODO : get user TOKEN !
+            String token = "da245e88375373c1b5bdf49f8a0b8f86fdeaecb9";
+            requestAPI req = new requestAPI(token);
+            JSONObject response = req.getAllChallenges();
+            JSONArray results = response.getJSONArray("results");
+            Log.d("count", "" + response.getInt("count"));
+            Log.d("url", results.getJSONObject(0).getString("url"));
+            int count = response.getInt("count");
+            for (int i = 0; i < count; i++) {
+                JSONObject r = results.getJSONObject(i);
+                String url = r.getString("url");
+                String play = r.getString("play");
+                String title = r.getString("title");
+                String summary = r.getString("summary");
+                String description = r.getString("description");
+                String starttime = r.getString("starttime");
+                String endtime = r.getString("endtime");
+                JSONObject user = r.getJSONObject("creator");
+                User creator = new User(user.getString("url"), user.getString("email"), user.getInt("ranking"));
+                Log.d("mail", user.getString("email") + " " + user.getString("ranking"));
+                String category = r.getString("category");
+                String type = r.getString("type");
+                JSONObject metavalidation = r.getJSONObject("metavalidation");
+                Metavalidation meta = new Metavalidation(metavalidation.getBoolean("picture_validation"), metavalidation.getBoolean("quizz_validation"), metavalidation.getBoolean("location_validation"));
+                String quizz = r.getString("quizz");
+                Challenge c = new Challenge(url, play, title, summary, description, starttime, endtime, creator, category, type, meta, quizz);
+                newChallengeList.add(c);
+            }
+
+    } catch (ExecutionException e) {
+        e.printStackTrace();
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    } catch (JSONException e) {
+        e.printStackTrace();
+    } catch (ParseException e) {
+        e.printStackTrace();
+    }
+        // Load complete
+        onItemsLoadComplete(newChallengeList);
+    }
+    void onItemsLoadComplete(ArrayList<Challenge> newChallenges) {
+        // Update the adapter and notify data set changed
+        onListChanged(newChallenges);
+
+        // Stop refresh animation
+        refreshLayout.setRefreshing(false);
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle icicle){

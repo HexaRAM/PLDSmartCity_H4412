@@ -1,7 +1,6 @@
 package hexaram.challengelyon.ui.activities;
 
 import android.app.AlertDialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,11 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -28,7 +27,6 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
-
 import org.json.JSONObject;
 
 import java.io.File;
@@ -36,17 +34,19 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
+import hexaram.challengelyon.models.Challenge;
 import hexaram.challengelyon.services.requestAPI;
 import hexaram.challengelyon.utils.MultipartUtility;
-import hexaram.challengelyon.models.Challenge;
 
-public class RealisationActivity extends ActionBarActivity {
+
+public class RealisationActivity extends ActionBarActivity  {
 
 
     FloatingActionButton bUpload;
     Button bSubmit;
     ImageView photo;
     Toolbar toolbar;
+
 
     Context context;
 
