@@ -59,7 +59,7 @@ class ChallengeViewSet(viewsets.ModelViewSet):
                             'validationitemid': challengeplayed.validationitem.id
                         }
                     }
-                    return retour
+                    return Response(retour)
                 except:
                     return Response({
                         'status': 'Good Luck !'
