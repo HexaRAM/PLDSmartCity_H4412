@@ -58,7 +58,8 @@
 
         <activity
             android:name=".ui.activities.LaMapActivity"
-            android:label="@string/title_activity_la_map" >
+            android:label="@string/title_activity_la_map"
+            android:screenOrientation="portrait">
         </activity>
 
         <meta-data

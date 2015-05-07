@@ -1,7 +1,9 @@
 package hexaram.challengelyon.ui.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -134,12 +136,13 @@ public class ValidationFragment extends Fragment {
     void refreshItems()  {
         // Load items
         ArrayList<ToValidate> newChallengeList = new ArrayList<ToValidate>();
-        //TODO token !!!!!!!!!!!!
+
         try {
 
             /** HOT CHALLENGE LIST**/
-            //TODO : get user TOKEN !
-            String token = "da245e88375373c1b5bdf49f8a0b8f86fdeaecb9";
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String token = prefs.getString("token","no_token");
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getChallengesToValidate();
             JSONArray results = response.getJSONArray("results");
@@ -161,6 +164,10 @@ public class ValidationFragment extends Fragment {
                     pictures = r.getJSONArray("pictures").getString(0);
                 }
                 ToValidate tv = new ToValidate(validate, unvalidate, url, title, summary, description, validated, pictures);
+                int reward = req.clickURL(url).getInt("reward");
+                tv.setReward(reward);
+
+
                 newChallengeList.add(tv);
             }
 

@@ -83,7 +83,7 @@ public class Challenge implements Serializable {
     }
 
     public String getEndtime() {
-        return starttime.toString();
+        return endtime.toString();
     }
 
 

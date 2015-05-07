@@ -17,6 +17,7 @@ public class LaMapActivity extends ActionBarActivity implements MyMapFragment.On
 
     MyMapFragment laMap;
     Button bSubmitDestination;
+    Button bSubmitChallenge;
 
 
     @Override
@@ -26,13 +27,15 @@ public class LaMapActivity extends ActionBarActivity implements MyMapFragment.On
 
         bSubmitDestination = (Button) findViewById(R.id.bSubmitDest);
         bSubmitDestination.setVisibility(View.GONE);
+        bSubmitChallenge = (Button) findViewById(R.id.bSubmitChallenge);
+        bSubmitChallenge.setVisibility(View.GONE);
         laMap = MyMapFragment.newInstance();
         laMap.setContext(this);
-        laMap.setButton(bSubmitDestination);
+        laMap.setButton(bSubmitDestination,bSubmitChallenge);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home_container,laMap ).commit();
         new AlertDialog.Builder(LaMapActivity.this)
                 .setTitle("Submit challenge")
-                .setMessage("Selectionne ta destination sur la carte")
+                .setMessage("Selectionnez la destination sur la carte")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                     }
