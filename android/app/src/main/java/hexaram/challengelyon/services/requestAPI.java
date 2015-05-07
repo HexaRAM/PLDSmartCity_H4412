@@ -153,9 +153,9 @@ public class requestAPI {
                 return mJSONArray;
             }
         }
-        private class TaskPlayChallenge extends AsyncTask <String, Void, JSONObject> {
+        private class TaskClickUrl extends AsyncTask <String, Void, JSONObject> {
             private JSONObject mJSONObject;
-            private static final String TAG = "TaskPlayChallenge";
+            private static final String TAG = "TaskClickUrl";
             public String serverUrl = "";
 
             @Override
@@ -280,9 +280,9 @@ public class requestAPI {
         }
 
         public JSONObject clickURL(String url) throws ExecutionException, InterruptedException {
-            TaskPlayChallenge getChallengesPlayedById = new TaskPlayChallenge();
-            getChallengesPlayedById.execute(url);
-            mJsonObject = getChallengesPlayedById.get();
+            TaskClickUrl click = new TaskClickUrl();
+            click.execute(url);
+            mJsonObject = click.get();
             return mJsonObject;
         }
 
