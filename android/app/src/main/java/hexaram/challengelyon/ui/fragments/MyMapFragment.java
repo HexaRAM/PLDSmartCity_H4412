@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -71,7 +73,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
      * this fragment using the provided parameters.
      * @return A new instance of fragment MyMapFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static MyMapFragment newInstance() {
         MyMapFragment fragment = new MyMapFragment();
         Bundle args = new Bundle();
@@ -115,8 +117,9 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
                 Criteria criteria = new Criteria();
                 Location currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
-                //todo tokeeeeennnnnennenenenenenenenennene!!
-                requestAPI req = new requestAPI("da245e88375373c1b5bdf49f8a0b8f86fdeaecb9");
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String token = prefs.getString("token", "no_token");
+                requestAPI req = new requestAPI(token);
                 try {
                     /******* Velo a cote de position actuelle *********/
                     JSONObject resp = req.getVelo("" + currentLocation.getLatitude(), "" + currentLocation.getLongitude());
@@ -297,7 +300,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
                 map.setMyLocationEnabled(true);
             }
         }
-    // TODO: Rename method, update argument and hook method into UI event
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -359,7 +362,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         public void onFragmentInteraction(Uri uri);
     }
 

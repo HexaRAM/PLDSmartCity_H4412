@@ -162,7 +162,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         try {
             /** HOT CHALLENGE LIST**/
-            //TODO : get user TOKEN !
+
 
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();

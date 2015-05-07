@@ -1,7 +1,9 @@
 package hexaram.challengelyon.ui.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -124,12 +126,13 @@ public class HotFragment extends Fragment {
     void refreshItems()  {
         // Load items
         ArrayList<Challenge> newChallengeList = new ArrayList<Challenge>();
-        //TODO token !!!!!!!!!!!!
+
         try {
 
             /** HOT CHALLENGE LIST**/
-            //TODO : get user TOKEN !
-            String token = "da245e88375373c1b5bdf49f8a0b8f86fdeaecb9";
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String token = prefs.getString("token","no_token");
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");
@@ -145,6 +148,7 @@ public class HotFragment extends Fragment {
                 String description = r.getString("description");
                 String starttime = r.getString("starttime");
                 String endtime = r.getString("endtime");
+                int reward = r.getInt("reward");
                 JSONObject user = r.getJSONObject("creator");
                 User creator = new User(user.getString("url"), user.getString("email"), user.getInt("ranking"));
                 Log.d("mail", user.getString("email") + " " + user.getString("ranking"));
@@ -154,6 +158,12 @@ public class HotFragment extends Fragment {
                 Metavalidation meta = new Metavalidation(metavalidation.getBoolean("picture_validation"), metavalidation.getBoolean("quizz_validation"), metavalidation.getBoolean("location_validation"));
                 String quizz = r.getString("quizz");
                 Challenge c = new Challenge(url, play, title, summary, description, starttime, endtime, creator, category, type, meta, quizz);
+                c.setReward(reward);
+                boolean played = r.getBoolean("played");
+                if(played) {
+
+                    c.setPlayed();
+                }
                 newChallengeList.add(c);
             }
 

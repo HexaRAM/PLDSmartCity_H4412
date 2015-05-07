@@ -27,10 +27,6 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
-
-
-import org.json.JSONException;
-
 import org.json.JSONObject;
 
 import java.io.File;
@@ -67,7 +63,7 @@ public class RealisationActivity extends ActionBarActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_realisation);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
         //String challengeID = intent.getStringExtra(CHALLENGE_PARAM_ID);
 
@@ -102,7 +98,7 @@ public class RealisationActivity extends ActionBarActivity  {
 
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent,945);
+                startActivityForResult(photoPickerIntent, 945);
 
 
             }
@@ -137,11 +133,15 @@ public class RealisationActivity extends ActionBarActivity  {
                                     @Override
                                     protected List<String> doInBackground(String... params) {
                                         try {
-                                            MultipartUtility multipart = new MultipartUtility("http://vps165185.ovh.net/picturesChallengePlayed/", "UTF-8", "Token 9cd348ec7010d544cc74a44311ea22ff5b7dc02a");
+                                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(RealisationActivity.this);
+                                            String token = prefs.getString("token", "no_token");
+                                            Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
+                                            String challengeID = intent.getStringExtra(CHALLENGE_PARAM_ID);
+                                            MultipartUtility multipart = new MultipartUtility("http://vps165185.ovh.net/picturesChallengePlayed/", "UTF-8", "Token "+token);
                                             multipart.addFilePart("image", new File(imageFile));
 
                                             multipart.addFormField("description","petite description");
-                                            multipart.addFormField("validationitem","2");
+                                            multipart.addFormField("validationitem","3");
 
 
 
