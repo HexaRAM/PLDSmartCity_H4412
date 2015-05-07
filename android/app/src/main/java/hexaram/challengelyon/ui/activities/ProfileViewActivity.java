@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -37,6 +38,7 @@ public class ProfileViewActivity extends ActionBarActivity {
 
         textItemName = (TextView) findViewById(R.id.profile_author_text);
         textItemScore = (TextView) findViewById(R.id.profile_score_text);
+
 
     }
 

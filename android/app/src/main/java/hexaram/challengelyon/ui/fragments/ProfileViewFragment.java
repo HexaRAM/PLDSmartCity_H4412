@@ -39,6 +39,7 @@ public class ProfileViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
@@ -50,8 +51,31 @@ public class ProfileViewFragment extends Fragment {
         textItemName = (TextView) rootView.findViewById(R.id.profile_author_text);
         textItemScore = (TextView) rootView.findViewById(R.id.profile_score_text);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String token = prefs.getString("token","no_token");
+        requestAPI req = new requestAPI(token);
+       /* try {
+            Log.d("score", ""+"Log1");
+            JSONObject response = req.getUser();
+            Log.d("score", ""+"Log2");
+            String email = response.getString("email");
+            Log.d("score", ""+"Log3");
+            int score = response.getInt("ranking");
+            Log.d("score", ""+score);
+            //User user1 = new User(email,score);
+            textItemName.setText(email);
+            textItemScore.setText(score);        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }*/
 
-    Log.d("Profile","Lauchend");
+
+
+
+        Log.d("Profile","Lauchend");
         /*Bundle args = this.getArguments();
         ImageView imageItem = (ImageView) rootView.findViewById(R.id.profile_view_picture);
         TextView textItemName = (TextView) rootView.findViewById(R.id.profile_view_username);

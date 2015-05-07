@@ -156,13 +156,34 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             }
         };
         task.execute();*/
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        String token = prefs.getString("token","no_token");
+        requestAPI req = new requestAPI(token);
+        try {
+            Log.d("score", ""+"Log1");
+            JSONObject response = req.getUser();
+            Log.d("score", ""+"Log2");
+            String email = response.getString("email");
+            Log.d("score", ""+"Log3");
+            int score = response.getInt("ranking");
+            Log.d("score", ""+score);
+            //User user1 = new User(email,score);
+            //textItemName.setText(email);
+            //textItemScore.setText(score);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         try {
             /** HOT CHALLENGE LIST**/
             //TODO : get user TOKEN !
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-            String token = prefs.getString("token","no_token");
-            requestAPI req = new requestAPI(token);
+            //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+           // String token = prefs.getString("token","no_token");
+            //requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");
             Log.d("count", ""+response.getInt("count"));
