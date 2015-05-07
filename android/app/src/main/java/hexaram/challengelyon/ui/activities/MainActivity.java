@@ -1,36 +1,26 @@
 package hexaram.challengelyon.ui.activities;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.StrictMode;
-
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-import android.support.v4.app.FragmentTransaction;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -40,26 +30,18 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
@@ -70,12 +52,8 @@ import hexaram.challengelyon.models.User;
 import hexaram.challengelyon.services.requestAPI;
 import hexaram.challengelyon.ui.fragments.HotFragment;
 import hexaram.challengelyon.ui.fragments.NavigationDrawerFragment;
-import hexaram.challengelyon.ui.fragments.ProfileViewFragment;
 import hexaram.challengelyon.ui.fragments.ValidationFragment;
-import hexaram.challengelyon.ui.fragments.ViewLogin;
-import hexaram.challengelyon.ui.listeners.MyLocationListener;
 import hexaram.challengelyon.ui.tabs.SlidingTabLayout;
-import hexaram.challengelyon.utils.JSonParser.JSonParser;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
@@ -158,15 +136,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         task.execute();*/
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         String token = prefs.getString("token","no_token");
-        requestAPI req = new requestAPI(token);
+        requestAPI request = new requestAPI(token);
         try {
-            Log.d("score", ""+"Log1");
-            JSONObject response = req.getUser();
-            Log.d("score", ""+"Log2");
+
+            JSONObject response = request.getUser();
+
             String email = response.getString("email");
-            Log.d("score", ""+"Log3");
+
             int score = response.getInt("ranking");
-            Log.d("score", ""+score);
+
 
 
             SharedPreferences.Editor editor = prefs.edit();
@@ -185,9 +163,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         try {
             /** HOT CHALLENGE LIST**/
             //TODO : get user TOKEN !
-            //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-           // String token = prefs.getString("token","no_token");
-            //requestAPI req = new requestAPI(token);
+
+            requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");
             Log.d("count", ""+response.getInt("count"));

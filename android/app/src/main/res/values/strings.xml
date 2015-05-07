@@ -35,5 +35,6 @@
     <string name="title_activity_realisation">RealisationActivity</string>
     <string name="title_activity_challenge_view">ChallengeViewActivity</string>
     <string name="title_activity_picture_validation">PictureValidationActivity</string>
+    <string name="title_activity_la_map">LaMapActivity</string>
 
 </resources>

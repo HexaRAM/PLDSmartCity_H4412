@@ -1,10 +1,6 @@
 package hexaram.challengelyon.models;
-import static java.nio.charset.StandardCharsets.*;
-
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.text.ParseException;
-import java.util.Date;
 
 /**
  * Created by William on 29/04/2015.
@@ -31,7 +27,7 @@ public class Challenge implements Serializable {
         this.summary = summary;
         this.creator = creator;
     }
-    public Challenge(String title, String summary, int reward) {
+    public Challenge(String title, String summary, String reward) {
         this.title = title;
         this.summary = summary;
 
@@ -89,6 +85,7 @@ public class Challenge implements Serializable {
     public String getEndtime() {
         return starttime.toString();
     }
+
 
     public int getReward() {
         return reward;

@@ -51,7 +51,20 @@ class ChallengeViewSet(viewsets.ModelViewSet):
 
                 challengeplayed = Challengeplayed(challenge=challenge, user=request.user, score=score)
                 challengeplayed.save()
-                return Response({'status': 'Good Luck !'})
+                try :
+                    retour = {
+                        'status': 'Good Luck !',
+                        'data': {
+                            'challengeplayedid': challengeplayed.id,
+                            'validationitemid': challengeplayed.validationitem.id
+                        }
+                    }
+                    return Response(retour)
+                except:
+                    return Response({
+                        'status': 'Good Luck !'
+                    })
+
             except:
                 return Response({'status':"Current challenge already played [maybe]"}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -78,11 +91,43 @@ class ChallengePlayedViewSet(viewsets.ViewSet):
                 challengeplayed = Challengeplayed.objects.filter(user=request.user).get(id=pk)
             except:
                 return Response({'status':'Challenge inconnu (ou pas le vôtre :p)'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # si c'est un challenge Velo'V, on récupère la position de l'utilisateur et on check si ça matche bien la localisation associée au challenge
+            isVeloVChallenge = challengeplayed.challenge.category.name == "Velo'V"
+            result = False
+            if isVeloVChallenge:
+                longitude = None
+                latitude = None
+                try:
+                    latitude = request.query_params['latitude']
+                    longitude = request.query_params['longitude']
+                except:
+                    return Response({'status':'Challenge Velo\'V ! Vous devez nous retourner votre position avant de submit le challenge.', 'format': '/challengePlayed/<id>/submit/?longitude=4.872572&latitude=45.781869'}, status=status.HTTP_400_BAD_REQUEST)
+                location = None
+                try:
+                    location = Location(latitude, longitude)
+                except:
+                    return Response({'status':'Challenge Velo\'V ! Vous devez nous retourner votre position avant de submit le challenge.', 'format': '/challengePlayed/<id>/submit/?longitude=4.872572&latitude=45.781869'}, status=status.HTTP_400_BAD_REQUEST)
+                result = challengeplayed.validatePosition(location)
+                if result:
+                    challengeplayed.validate()
+                    challengeplayed.save()
+                    user = challengeplayed.user
+                    user.ranking += challengeplayed.score
+                    user.save()
+                else:
+                    # possible qu'aucun point d'arrivée n'ait été défini
+                    return Response({'status':'Votre position n\'est pas assez proche du point d\'arrivée.'}, status=status.HTTP_400_BAD_REQUEST)
+
             challengeplayed.validationitem.submitted = True
             try:
                 challengeplayed.validationitem.save()
             except:
                 return Response({'status':'Déjà existant'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if isVeloVChallenge and result:
+                return Response({'status': 'Challenge validé ! Félicitations.'})
+
             return Response({'status': 'Soumis à validation !'})
         else:
             return Response({'status':'ID inconnu'}, status=status.HTTP_400_BAD_REQUEST)
@@ -173,6 +218,10 @@ class PictureChallengePlayedViewSet(viewsets.ModelViewSet):
     queryset = PictureChallengePlayed.objects.all()
     serializer_class = PictureChallengePlayedSerializer
 
+class LocationChallengePlayedViewSet(viewsets.ModelViewSet):
+    queryset = LocationChallengePlayed.objects.all()
+    serializer_class = LocationChallengePlayedSerializer
+
 
 class ToValidateViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ToValidateSerializer
@@ -198,7 +247,14 @@ def getClosestStation(request):
         return Response({"status": "Impossible de créer la localisation à partir des paramètres reçus."}, status=status.HTTP_400_BAD_REQUEST)
     station = None
     try:
-        station = location.getClosestStation()
+        arrivee = False
+        try:
+            request.query_params['arrivee']
+            arrivee = True
+        except:
+            pass
+
+        station = location.getClosestStation(arrivee)
     except:
         return Response({"status": "Impossible d'obtenir la station la plus proche"}, status=status.HTTP_400_BAD_REQUEST)
     if station is None:

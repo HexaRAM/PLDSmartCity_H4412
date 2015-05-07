@@ -31,6 +31,9 @@ class MetaValidationSerializer(serializers.ModelSerializer):
 class ChallengeSerializer(serializers.ModelSerializer):
     creator = UserSerializer(read_only=True)
     category = serializers.SlugRelatedField(slug_field='name', queryset=Category.objects.all())
+    reward = serializers.SerializerMethodField()
+    #category = serializers.SerializerMethodField()
+    #category = CategorySerializer()
     type = serializers.SlugRelatedField(slug_field='name', queryset=Type.objects.all())
     metavalidation = MetaValidationSerializer()
     play = serializers.HyperlinkedIdentityField(view_name='challenge-play', read_only=True)
@@ -38,10 +41,18 @@ class ChallengeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Challenge
-        fields = ('url', 'play', 'played', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'type', 'metavalidation', 'quizz')
+        fields = ('url', 'play', 'played', 'title', 'summary', 'description', 'starttime', 'endtime', 'creator', 'category', 'reward', 'type', 'metavalidation', 'quizz')
 
     def get_played(self, obj):
         return Challengeplayed.objects.filter(challenge=obj, user=self.context['request'].user).exists()
+
+    # def get_category(self, obj):
+    #     category = obj.category
+    #     return category.serialize()
+
+    def get_reward(self, obj):
+        return obj.category.reward
+            
 
     def computeMetaValidation(self, metadata):
         data_keys = ["picture_validation", "quizz_validation", "location_validation"]
@@ -120,12 +131,19 @@ class PictureChallengePlayedSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(u"L'image est trop lourde (maximum %s mo [%s o])"%(max_size_mo, max_size_o))
         return value
 
+class LocationChallengePlayedSerializer(serializers.ModelSerializer):
+    #validationitem = ValidationItemToShowChallengePlayedSerializer(read_only=True)
+    class Meta:
+        model = LocationChallengePlayed
+        fields = ('longitude', 'latitude', 'name', 'validationitem')
+
 class ValidationItemSerializer(serializers.ModelSerializer):
     picturechallengeplayed_set = PictureChallengePlayedSerializer('image', many=True, read_only=True)
+    locationchallengeplayed_set = LocationChallengePlayedSerializer(many=True, read_only=True)
 
     class Meta:
         model = Validationitem
-        fields = ('id', 'url', 'challengeplayed', 'submitted', 'users', 'useranswer_set', 'picturechallengeplayed_set')
+        fields = ('id', 'url', 'challengeplayed', 'submitted', 'users', 'useranswer_set', 'picturechallengeplayed_set', 'locationchallengeplayed_set')
 
 class ChallengePlayedSerializer(serializers.ModelSerializer):
     challenge = ChallengeSerializer(read_only=True)
@@ -176,12 +194,6 @@ class LocationChallengeSerializer(serializers.ModelSerializer):
     #validationitem = ValidationItemSerializer(read_only=True)
     class Meta:
         model = LocationChallenge
-        fields = ('longitude', 'latitude', 'name', 'validationitem')
-
-class LocationChallengePlayedSerializer(serializers.ModelSerializer):
-    validationitem = ValidationItemToShowChallengePlayedSerializer(read_only=True)
-    class Meta:
-        model = LocationChallengePlayed
         fields = ('longitude', 'latitude', 'name', 'validationitem')
 
 class ToValidateSerializer(ChallengePlayedListSerializer):

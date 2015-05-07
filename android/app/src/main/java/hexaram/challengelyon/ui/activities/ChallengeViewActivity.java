@@ -3,12 +3,11 @@ package hexaram.challengelyon.ui.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -40,11 +39,12 @@ public class ChallengeViewActivity extends ActionBarActivity {
     Toolbar toolbar;
 
     private static final int REALISATION_CHALLENGE = 900;
-
+    private static final int MAP_VIEW = 901;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge_view);
+
         Intent intent = getIntent();
         //Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
         toolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -58,6 +58,10 @@ public class ChallengeViewActivity extends ActionBarActivity {
         });
         setSupportActionBar(toolbar);
 
+
+
+
+
         final Challenge challenge = (Challenge)intent.getSerializableExtra("challenge");
 
         textCreatorName = (TextView) findViewById(R.id.challenge_list_item_author_text);
@@ -68,26 +72,44 @@ public class ChallengeViewActivity extends ActionBarActivity {
         textValidation = (TextView) findViewById(R.id.challenge_list_item_validation_text);
         textScore = (TextView) findViewById(R.id.challenge_list_item_points_text);
 
+
         bTakeChallenge = (Button) findViewById(R.id.take_challenge);
         bTakeChallenge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChallengeViewActivity.this);
-                String token = prefs.getString("token","no_token");
-                requestAPI req = new requestAPI(token);
-                try {
-                    req.clickURL(challenge.getPlay());
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                final String VELOV_CATEGORY = "Velo'V";
+                if (challenge.getCategory().contains(VELOV_CATEGORY)) {
+                    bTakeChallenge.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                    Intent intent = new Intent(ChallengeViewActivity.this, LaMapActivity.class);
+                    startActivityForResult(intent, MAP_VIEW);
+                } else {
+
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChallengeViewActivity.this);
+                    String token = prefs.getString("token", "no_token");
+                    requestAPI req = new requestAPI(token);
+                    try {
+                        req.clickURL(challenge.getPlay());
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    bTakeChallenge.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                    Intent intent = new Intent(ChallengeViewActivity.this, RealisationActivity.class);
+                    intent.putExtra("challenge", challenge);
+                    startActivityForResult(intent, REALISATION_CHALLENGE);
+
+
+                    try {
+                        req.clickURL(challenge.getPlay());
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+
+                    }
                 }
-                bTakeChallenge.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
-                Intent intent = new Intent(ChallengeViewActivity.this, RealisationActivity.class);
-                intent.putExtra("challenge", challenge);
-                startActivityForResult(intent, REALISATION_CHALLENGE);
-            }
-        });
+            } });
 
 
 
@@ -163,7 +185,7 @@ public class ChallengeViewActivity extends ActionBarActivity {
         } else
             //the number is the ID didn't find a better solution in order to solve this problem
             if(id == 16908332){
-                Log.d("MyTag","clicked_onOptions");
+                Log.d("MyTag", "clicked_onOptions");
                 this.finish();
             }
 

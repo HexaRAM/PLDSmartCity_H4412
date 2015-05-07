@@ -80,6 +80,12 @@ class Category(models.Model):
     def __unicode__(self):
         return u"Catégorie : %s"%self.name
 
+    def serialize(self):
+        return {
+            'name': self.name,
+            'reward': self.reward
+        }
+
     class Meta:
         verbose_name_plural = "Categories"
 
@@ -146,6 +152,20 @@ class Challengeplayed(models.Model):
             validation.save()
             self.validationitem = validation
             self.save()
+
+    def validatePosition(self, location):
+        arrived_location = None
+        try:
+            arrived_location = self.validationitem.locationchallengeplayed_set.first()
+            if arrived_location is None:
+                return False
+        except:
+            return False
+        arrivee = Location(arrived_location.latitude, arrived_location.longitude)
+        distance = location.getDistance(arrivee)
+        if distance < 0.3: # moins de 300 mètres du point d'arrivée pour valider
+            return True
+        return False
 
     def validate(self):
         self.validated = True
@@ -268,7 +288,7 @@ class LocationChallenge(models.Model):
 class LocationChallengePlayed(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
-    name = models.CharField(max_length=127)
+    name = models.CharField(max_length=127, null=True, blank=True)
     validationitem = models.ForeignKey(Validationitem)
 
     def __unicode__(self):
@@ -378,7 +398,19 @@ class Location:
         except:
             print u"Impossible de créer la localisation"
 
-    def getClosestStation(self):
+    def getDistance(self, loc):
+        """
+        Calculate distance between 2 locations
+        """
+        lat1, lon1, lat2, lon2 = map(radians, [self.lat, self.lng, loc.lat, loc.lng]) # convert degrees to radians
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+        c = 2*asin(sqrt(a))
+        km = 6367*c
+        return km
+
+    def getClosestStation(self, arrivee):
         stations = Station.getData()
 
         for station in stations:
@@ -391,7 +423,14 @@ class Location:
 
         stations_number = len(stations)
         if stations_number > 0:
-            while stations[closestStationWithBikes_index].bikes_available == 0 and closestStationWithBikes_index < stations_number:
+
+            attributeToWatch = "bikes_available"
+            if arrivee:
+                attributeToWatch = "bikes_stands"
+
+            #print u"Valeur intéressante [%s]:%s"%(attributeToWatch, getattr(stations[closestStationWithBikes_index],attributeToWatch))
+
+            while getattr(stations[closestStationWithBikes_index],attributeToWatch) == 0 and closestStationWithBikes_index < stations_number:
                 closestStationWithBikes_index += 1
             if closestStationWithBikes_index == stations_number:
                 return None
