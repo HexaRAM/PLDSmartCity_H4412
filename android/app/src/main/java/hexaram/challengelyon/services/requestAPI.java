@@ -28,6 +28,7 @@ import hexaram.challengelyon.ui.activities.RealisationActivity;
  */
 public class requestAPI {
         private JSONObject mJsonObject ;
+        private JSONObject mJsonObjectUser ;
         private String token;
         private class TaskGetUser extends AsyncTask <String, Void, JSONObject> {
             private JSONObject mJSONObjetT;
@@ -269,17 +270,26 @@ public class requestAPI {
             return mJSONArray;
         }
 
-        public JSONObject getUser() throws ExecutionException, InterruptedException, JSONException {
+        public JSONObject getUserByToken() throws ExecutionException, InterruptedException, JSONException {
             TaskGetUserByToken getUserByToken = new TaskGetUserByToken();
             getUserByToken.execute(token);
             mJsonObject = getUserByToken.get();
-            String idUser = mJsonObject.getString("id");
-            TaskGetUser getUser = new TaskGetUser();
-            getUser.execute(token,idUser);
+            this.mJsonObjectUser = mJsonObject;
+
             return mJsonObject;
         }
+        public JSONObject getUser() throws InterruptedException, ExecutionException, JSONException {
+            JSONObject myUserJson = getUserByToken();
+            String idUser = mJsonObject.getString("id");
+            TaskGetUser getUserT = new TaskGetUser();
+            getUserT.execute(token,idUser);
+            Log.d("rrrrrrrrrrr", getUserT.get().getString("email"));
+            return getUserT.get();
+        }
 
-        public JSONObject clickURL(String url) throws ExecutionException, InterruptedException {
+
+
+    public JSONObject clickURL(String url) throws ExecutionException, InterruptedException {
             TaskClickUrl click = new TaskClickUrl();
             click.execute(url);
             mJsonObject = click.get();
