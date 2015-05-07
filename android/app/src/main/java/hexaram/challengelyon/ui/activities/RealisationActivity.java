@@ -27,6 +27,10 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
+
+
+import org.json.JSONException;
+
 import org.json.JSONObject;
 
 import java.io.File;
@@ -170,7 +174,17 @@ public class RealisationActivity extends ActionBarActivity  {
         });
 
 
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle(R.string.realisation_upload_view_title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+
+
         String token = "9cd348ec7010d544cc74a44311ea22ff5b7dc02a";
+
 
         /*try {
             //requestAPI req = new requestAPI(token);

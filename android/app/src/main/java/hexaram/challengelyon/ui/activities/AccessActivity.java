@@ -161,6 +161,10 @@ public class AccessActivity extends ActionBarActivity {
             String token = prefs.getString("token","no_token");
             Log.d("test",token);
             if(token.equals("logout") == false) {
+
+                //startActivity(new Intent(AccessActivity.this, MainActivity.class));
+                Log.d("connected","redirect");
+
                 startActivity(new Intent(AccessActivity.this, MainActivity.class));
                 Log.d("test",token);
             }

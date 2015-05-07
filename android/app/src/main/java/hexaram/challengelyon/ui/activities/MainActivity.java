@@ -134,13 +134,36 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             }
         };
         task.execute();*/
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        String token = prefs.getString("token","no_token");
+        requestAPI request = new requestAPI(token);
+        try {
+
+            JSONObject response = request.getUser();
+
+            String email = response.getString("email");
+
+            int score = response.getInt("ranking");
+
+
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("email", email);
+            editor.putInt("score", score);
+            editor.apply();
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         try {
             /** HOT CHALLENGE LIST**/
             //TODO : get user TOKEN !
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-            String token = prefs.getString("token","no_token");
             requestAPI req = new requestAPI(token);
             JSONObject response = req.getAllChallenges();
             JSONArray results = response.getJSONArray("results");
@@ -160,11 +183,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 User creator = new User(user.getString("url"), user.getString("email"), user.getInt("ranking"));
                 Log.d("mail", user.getString("email")+" "+user.getString("ranking"));
                 String category = r.getString("category");
+
                 String type = r.getString("type");
                 JSONObject metavalidation = r.getJSONObject("metavalidation");
                 Metavalidation meta = new Metavalidation(metavalidation.getBoolean("picture_validation"), metavalidation.getBoolean("quizz_validation"), metavalidation.getBoolean("location_validation"));
                 String quizz = r.getString("quizz");
                 Challenge c = new Challenge(url,play,title,summary,description,starttime,endtime,creator,category,type,meta,quizz);
+                int reward = r.getInt("reward");
+                c.setReward(reward);
                 boolean played = r.getBoolean("played");
                 if(played) {
 
@@ -188,11 +214,17 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 String description = challenge.getString("description");
                 Boolean validated = r.getBoolean("validated");
                 JSONArray pics = r.getJSONArray("pictures");
+
+
+
                 String pictures ="";
                 if(pics.length()!=0) {
                     pictures = r.getJSONArray("pictures").getString(0);
                 }
                 ToValidate tv = new ToValidate(validate, unvalidate, url, title, summary, description, validated, pictures);
+                int reward = req.clickURL(url).getInt("reward");
+                tv.setReward(reward);
+
                 toValidateList.add(tv);
             }
         } catch (ExecutionException e) {
