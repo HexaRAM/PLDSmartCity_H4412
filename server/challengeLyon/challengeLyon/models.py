@@ -274,7 +274,7 @@ class LocationChallenge(models.Model):
 class LocationChallengePlayed(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
-    name = models.CharField(max_length=127)
+    name = models.CharField(max_length=127, null=True, blank=True)
     validationitem = models.ForeignKey(Validationitem)
 
     def __unicode__(self):

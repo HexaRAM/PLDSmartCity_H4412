@@ -14,6 +14,9 @@ De nombreuses informations et la liste exhaustive des services de base (récupé
         retour = appel de l'URL
         pictures = retour['validationitem']['picturechallengeplayed_set']
     ```
+- Upload une image ou une location pour la validation d'un challenge : `POST /picturesChallengePlayed/` ou `POST /locationsChallengePlayed/` les paramètres à envoyer se retrouvent ici :
+    - [Paramètres pour upload une image](http://vps165185.ovh.net/picturesChallengePlayed/)
+    - [Paramètres pour upload une location](http://vps165185.ovh.net/locationsChallengePlayed/)
 - Submit un challenge en cours : `GET /challengePlayed/<id>/submit`
 - Lister les challenges à valider : `GET /toValidate/`
     - Valider un challenge : `GET /challengePlayed/<id>/validate/`

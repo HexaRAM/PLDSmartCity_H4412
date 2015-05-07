@@ -173,6 +173,10 @@ class PictureChallengePlayedViewSet(viewsets.ModelViewSet):
     queryset = PictureChallengePlayed.objects.all()
     serializer_class = PictureChallengePlayedSerializer
 
+class LocationChallengePlayedViewSet(viewsets.ModelViewSet):
+    queryset = LocationChallengePlayed.objects.all()
+    serializer_class = LocationChallengePlayedSerializer
+
 
 class ToValidateViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ToValidateSerializer

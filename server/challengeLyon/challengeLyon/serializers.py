@@ -131,12 +131,19 @@ class PictureChallengePlayedSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(u"L'image est trop lourde (maximum %s mo [%s o])"%(max_size_mo, max_size_o))
         return value
 
+class LocationChallengePlayedSerializer(serializers.ModelSerializer):
+    #validationitem = ValidationItemToShowChallengePlayedSerializer(read_only=True)
+    class Meta:
+        model = LocationChallengePlayed
+        fields = ('longitude', 'latitude', 'name', 'validationitem')
+
 class ValidationItemSerializer(serializers.ModelSerializer):
     picturechallengeplayed_set = PictureChallengePlayedSerializer('image', many=True, read_only=True)
+    locationchallengeplayed_set = LocationChallengePlayedSerializer(many=True, read_only=True)
 
     class Meta:
         model = Validationitem
-        fields = ('id', 'url', 'challengeplayed', 'submitted', 'users', 'useranswer_set', 'picturechallengeplayed_set')
+        fields = ('id', 'url', 'challengeplayed', 'submitted', 'users', 'useranswer_set', 'picturechallengeplayed_set', 'locationchallengeplayed_set')
 
 class ChallengePlayedSerializer(serializers.ModelSerializer):
     challenge = ChallengeSerializer(read_only=True)
@@ -187,12 +194,6 @@ class LocationChallengeSerializer(serializers.ModelSerializer):
     #validationitem = ValidationItemSerializer(read_only=True)
     class Meta:
         model = LocationChallenge
-        fields = ('longitude', 'latitude', 'name', 'validationitem')
-
-class LocationChallengePlayedSerializer(serializers.ModelSerializer):
-    validationitem = ValidationItemToShowChallengePlayedSerializer(read_only=True)
-    class Meta:
-        model = LocationChallengePlayed
         fields = ('longitude', 'latitude', 'name', 'validationitem')
 
 class ToValidateSerializer(ChallengePlayedListSerializer):
