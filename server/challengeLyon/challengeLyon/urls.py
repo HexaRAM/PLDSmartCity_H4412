@@ -23,6 +23,7 @@ router.register(r'challengePlayed', ChallengePlayedViewSet, base_name="challenge
 router.register(r'validationItem', ValidationItemViewSet)
 #router.register(r'validation', ValidationViewSet)
 router.register(r'picturesChallengePlayed', PictureChallengePlayedViewSet)
+router.register(r'locationsChallengePlayed', LocationChallengePlayedViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),

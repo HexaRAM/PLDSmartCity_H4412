@@ -54,7 +54,7 @@ public class ChallengeAdapter<T> extends ArrayAdapter{
 
         }
         catch(ClassCastException e){
-            Log.d("HEY", "BINGO !");
+
             ToValidate challenge = (ToValidate) getItem(position);
 
             // Check if an existing view is being reused, otherwise inflate the view
@@ -69,7 +69,7 @@ public class ChallengeAdapter<T> extends ArrayAdapter{
             textItemTitle.setText(challenge.getTitle());
             textItemSummary.setText(challenge.getSummary());
 
-            textItemReward.setText("100");
+            textItemReward.setText("" + challenge.getReward());
 
         }
 

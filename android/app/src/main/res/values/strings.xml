@@ -23,7 +23,7 @@
     <string name="realisation_upload_view_title">Play Challenge</string>
 
     <string-array name="tabs">
-        <item>Hot</item>
+        <item>Challenges</item>
         <item>To Validate</item>
     </string-array>
 

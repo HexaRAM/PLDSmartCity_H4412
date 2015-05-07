@@ -16,14 +16,20 @@ public class User implements Serializable {
     protected String url;
 
 
+
+    public User( String email, int score) {
+        this.ranking = score;
+        this.email = email;
+
+    }
+
+
     public User(String address, String username, String mail) {
         this.address = address;
         this.username = username;
         this.email = mail;
 
     }
-
-
 
     public User(String url, String email, int ranking){
         this.url = url;
@@ -52,7 +58,7 @@ public class User implements Serializable {
 
     public int getScore(){
         // TO DO
-        return 300;
+        return ranking;
     }
 
     public int getRank(){

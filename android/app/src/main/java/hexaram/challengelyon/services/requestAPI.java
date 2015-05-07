@@ -3,6 +3,7 @@ package hexaram.challengelyon.services;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -10,6 +11,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +24,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class requestAPI {
         private JSONObject mJsonObject ;
+        private JSONObject mJsonObjectUser ;
         private String token;
         private class TaskGetUser extends AsyncTask <String, Void, JSONObject> {
             private JSONObject mJSONObjetT;
@@ -43,9 +47,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJSONObjetT = response;
 
                 } catch (Exception ex) {
@@ -71,9 +77,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJSONObjetT = response;
 
                 } catch (Exception ex) {
@@ -99,9 +107,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJSONObjetT = response;
 
                 } catch (Exception ex) {
@@ -127,9 +137,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONArray response = new JSONArray(responseBody);
+                    JSONArray response = new JSONArray(fluxJson);
                     mJSONArray = response;
 
                 } catch (Exception ex) {
@@ -174,9 +186,12 @@ public class requestAPI {
             return mJSONObject;
         }
     }
-        private class TaskPlayChallenge extends AsyncTask <String, Void, JSONObject> {
+
+
+
+        private class TaskClickUrl extends AsyncTask <String, Void, JSONObject> {
             private JSONObject mJSONObject;
-            private static final String TAG = "TaskPlayChallenge";
+            private static final String TAG = "TaskClickUrl";
             public String serverUrl = "";
 
             @Override
@@ -192,9 +207,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJsonObject = response;
 
 
@@ -244,7 +261,7 @@ public class requestAPI {
     }
 
 
-    private class TaskLogout extends AsyncTask<Void, Void, JSONObject> {
+        private class TaskLogout extends AsyncTask<Void, Void, JSONObject> {
 
             private JSONObject mJSONObjetT;
             private static final String TAG = "TaskChallenge";
@@ -289,9 +306,11 @@ public class requestAPI {
 
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-                    String responseBody = httpClient.execute(httpGet, responseHandler);
+                    HttpResponse responseBody = httpClient.execute(httpGet);
+                    HttpEntity entity = responseBody.getEntity();
+                    String fluxJson = EntityUtils.toString(entity, HTTP.UTF_8);
 
-                    JSONObject response = new JSONObject(responseBody);
+                    JSONObject response = new JSONObject(fluxJson);
                     mJSONObjetT = response;
 
                 } catch (Exception ex) {
@@ -327,26 +346,35 @@ public class requestAPI {
             return mJSONArray;
         }
 
-        public JSONObject getUser() throws ExecutionException, InterruptedException, JSONException {
+        public JSONObject getUserByToken() throws ExecutionException, InterruptedException, JSONException {
             TaskGetUserByToken getUserByToken = new TaskGetUserByToken();
             getUserByToken.execute(token);
             mJsonObject = getUserByToken.get();
-            String idUser = mJsonObject.getString("id");
-            TaskGetUser getUser = new TaskGetUser();
-            getUser.execute(token,idUser);
-            return mJsonObject;
-        }
-        public JSONObject getVelo(String latitude,String longitude) throws ExecutionException, InterruptedException {
-            TaskGetVelo getVelov = new TaskGetVelo();
-            getVelov.execute(token,latitude, longitude);
-            mJsonObject = getVelov.get();
+            this.mJsonObjectUser = mJsonObject;
+
             return mJsonObject;
         }
 
-    public JSONObject clickURL(String url) throws ExecutionException, InterruptedException {
-            TaskPlayChallenge getChallengesPlayedById = new TaskPlayChallenge();
-            getChallengesPlayedById.execute(url);
-            mJsonObject = getChallengesPlayedById.get();
+        public JSONObject getUser() throws InterruptedException, ExecutionException, JSONException {
+            JSONObject myUserJson = getUserByToken();
+            String idUser = mJsonObject.getString("id");
+            TaskGetUser getUserT = new TaskGetUser();
+            getUserT.execute(token,idUser);
+            //Log.d("rrrrrrrrrrr", getUserT.get().getString("email"));
+            return getUserT.get();
+        }
+
+
+    public JSONObject getVelo(String latitude,String longitude) throws ExecutionException, InterruptedException {
+        TaskGetVelo getVelov = new TaskGetVelo();
+        getVelov.execute(token,latitude, longitude);
+        mJsonObject = getVelov.get();
+        return mJsonObject;
+    }
+        public JSONObject clickURL(String url) throws ExecutionException, InterruptedException {
+            TaskClickUrl click = new TaskClickUrl();
+            click.execute(url);
+            mJsonObject = click.get();
             return mJsonObject;
         }
 

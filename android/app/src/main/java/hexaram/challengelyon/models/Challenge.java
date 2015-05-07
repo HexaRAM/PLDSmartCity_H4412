@@ -18,6 +18,7 @@ public class Challenge implements Serializable {
     protected String category;
     protected String type;
     protected String quizz;
+    protected int reward;
     protected Metavalidation metavalidation;
     protected boolean played = false;
 
@@ -86,8 +87,8 @@ public class Challenge implements Serializable {
     }
 
 
-    public String getReward() {
-        return category;
+    public int getReward() {
+        return reward;
     }
 
     public String getCreator() {
@@ -105,6 +106,11 @@ public class Challenge implements Serializable {
     public String getSummary() {
         return summary;
     }
+
+    public void setReward(int reward) {
+        this.reward = reward;
+    }
+
 
     public String getValidation() { return metavalidation.toString(); }
 
