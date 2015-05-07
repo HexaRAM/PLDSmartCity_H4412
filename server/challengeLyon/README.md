@@ -18,6 +18,8 @@ De nombreuses informations et la liste exhaustive des services de base (récupé
     - [Paramètres pour upload une image](http://vps165185.ovh.net/picturesChallengePlayed/)
     - [Paramètres pour upload une location](http://vps165185.ovh.net/locationsChallengePlayed/)
 - Submit un challenge en cours : `GET /challengePlayed/<id>/submit`
+    - Dans le cas d'un challenge **Vélo'V**, il faut également envoyer la position de l'utilisateur sous la forme suivante :
+    `GET /challengePlayed/<id>/submit/?longitude=4.872572&latitude=45.781869`
 - Lister les challenges à valider : `GET /toValidate/`
     - Valider un challenge : `GET /challengePlayed/<id>/validate/`
     - Ne pas valider un challenge : `GET /challengePlayed/<id>/unvalidate/`

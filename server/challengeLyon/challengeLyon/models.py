@@ -153,6 +153,20 @@ class Challengeplayed(models.Model):
             self.validationitem = validation
             self.save()
 
+    def validatePosition(self, location):
+        arrived_location = None
+        try:
+            arrived_location = self.validationitem.locationchallengeplayed_set.first()
+            if arrived_location is None:
+                return False
+        except:
+            return False
+        arrivee = Location(arrived_location.latitude, arrived_location.longitude)
+        distance = location.getDistance(arrivee)
+        if distance < 0.3: # moins de 300 mètres du point d'arrivée pour valider
+            return True
+        return False
+
     def validate(self):
         self.validated = True
 
@@ -383,6 +397,18 @@ class Location:
             self.lng = float(lng)
         except:
             print u"Impossible de créer la localisation"
+
+    def getDistance(self, loc):
+        """
+        Calculate distance between 2 locations
+        """
+        lat1, lon1, lat2, lon2 = map(radians, [self.lat, self.lng, loc.lat, loc.lng]) # convert degrees to radians
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+        c = 2*asin(sqrt(a))
+        km = 6367*c
+        return km
 
     def getClosestStation(self, arrivee):
         stations = Station.getData()
