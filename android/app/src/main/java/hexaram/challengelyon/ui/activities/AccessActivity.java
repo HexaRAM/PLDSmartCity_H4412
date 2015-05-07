@@ -34,7 +34,6 @@ public class AccessActivity extends ActionBarActivity {
     EditText textUserEmail;
     EditText textUserPassword;
     Button bLogin;
-    Button bRegister;
 
     private String userEmail;
     private String userPassword;
@@ -51,7 +50,6 @@ public class AccessActivity extends ActionBarActivity {
         textUserPassword = (EditText) findViewById(R.id.login_view_userPassword);
 
         bLogin = (Button) findViewById(R.id.login_view_buttonLogin);
-        bRegister = (Button) findViewById(R.id.login_view_buttonInscription);
 
 
 
@@ -161,9 +159,10 @@ public class AccessActivity extends ActionBarActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AccessActivity.this);
         if(prefs.contains("token")) {
             String token = prefs.getString("token","no_token");
+            Log.d("test",token);
             if(token.equals("logout") == false) {
                 startActivity(new Intent(AccessActivity.this, MainActivity.class));
-                Log.d("connected","redirect");
+                Log.d("test",token);
             }
 
         }
