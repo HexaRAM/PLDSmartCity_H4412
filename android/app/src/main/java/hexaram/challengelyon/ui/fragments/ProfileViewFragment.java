@@ -52,8 +52,12 @@ public class ProfileViewFragment extends Fragment {
         textItemScore = (TextView) rootView.findViewById(R.id.profile_score_text);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String token = prefs.getString("token","no_token");
-        requestAPI req = new requestAPI(token);
+        String email = prefs.getString("email","no_email");
+        int score = prefs.getInt("score",0);
+
+        textItemName.setText(email);
+        textItemScore.setText(""+score);
+
        /* try {
             Log.d("score", ""+"Log1");
             JSONObject response = req.getUser();

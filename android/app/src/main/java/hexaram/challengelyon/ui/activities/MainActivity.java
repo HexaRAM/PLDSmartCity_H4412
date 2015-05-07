@@ -167,9 +167,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             Log.d("score", ""+"Log3");
             int score = response.getInt("ranking");
             Log.d("score", ""+score);
-            //User user1 = new User(email,score);
-            //textItemName.setText(email);
-            //textItemScore.setText(score);
+
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("email", email);
+            editor.putInt("score", score);
+            editor.apply();
+
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
