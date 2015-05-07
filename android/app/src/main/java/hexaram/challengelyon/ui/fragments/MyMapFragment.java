@@ -1,7 +1,10 @@
 package hexaram.challengelyon.ui.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -33,11 +36,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import hexaram.challengelyon.R;
 import hexaram.challengelyon.services.requestAPI;
+import hexaram.challengelyon.ui.activities.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +63,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     Marker destinationMarker;
     Button bSubmitDestination;
     Polyline line;
+    Button bSubmitChallenge;
 
 
     /**
@@ -76,7 +82,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     public void setContext(Context activityContext){
         mapActivityContext = activityContext;
     }
-    public void setButton(Button subButt) { bSubmitDestination = subButt;}
+    public void setButton(Button subButtDest, Button subButtChal) { bSubmitDestination = subButtDest; bSubmitChallenge = subButtChal;}
 
     public MyMapFragment() {
         // Required empty public constructor
@@ -93,6 +99,17 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
         bSubmitDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /********* Disable click on map **********/
+                map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                                              @Override
+                                              public void onMapClick(LatLng clickedLatLng) {
+                                                  return ;
+                                              }
+                                          });
+                /****************************************/
+
                 LatLng destinationPosition = destinationMarker.getPosition();
                 LocationManager locationManager = (LocationManager) mapActivityContext.getSystemService(Context.LOCATION_SERVICE);
                 Criteria criteria = new Criteria();
@@ -150,6 +167,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
                                         new LatLng(dest.latitude, dest.longitude))
                                 .width(5).color(Color.BLUE).geodesic(true));
                     }
+                    bSubmitDestination.setVisibility(View.GONE);
+                    bSubmitChallenge.setVisibility(View.VISIBLE);
 
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -159,6 +178,51 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
                     e.printStackTrace();
                 }
 
+            }
+        });
+
+        bSubmitChallenge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocationManager locationManager = (LocationManager) mapActivityContext.getSystemService(Context.LOCATION_SERVICE);
+                Criteria criteria = new Criteria();
+                Location currentLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                LatLng destinationPosition = destinationMarker.getPosition();
+                //Convert LatLng to Location
+                Location destinationLocation = new Location("Destination");
+                destinationLocation.setLatitude(destinationPosition.latitude);
+                destinationLocation.setLongitude(destinationPosition.longitude);
+                destinationLocation.setTime(new Date().getTime()); //Set time as current Date
+
+                float distanceInMeters = destinationLocation.distanceTo(currentLocation);
+                boolean isWithin50m = distanceInMeters < 50;
+                if (isWithin50m){
+                    new AlertDialog.Builder(mapActivityContext)
+                            .setTitle("Bravo ! Challenge valide")
+                            .setMessage("Vous avez reussi ce Challenge ! Bravo")
+                            .setPositiveButton("Retour a la liste des challenge", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(mapActivityContext, MainActivity.class);
+                                    startActivityForResult(intent, 0);
+                                }
+                            })
+
+                            .setIcon(android.R.drawable.star_on)
+                            .show();
+                }else{
+                    new AlertDialog.Builder(mapActivityContext)
+                            .setTitle("Challenge non reussi")
+                            .setMessage("Vous n'etes pas localise a proximite de la destination. Echec du challenge")
+                            .setPositiveButton("Retour a la liste des challenge", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(mapActivityContext, MainActivity.class);
+                                    startActivityForResult(intent, 0);
+                                }
+                            })
+
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
             }
         });
     }

@@ -21,4 +21,13 @@
         android:background="@color/colorPrimary"
         android:textColor="@color/colorTextIcons"
         android:layout_marginTop="20dp" />
+    <Button
+        android:id="@+id/bSubmitChallenge"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Challenge effectué!"
+        android:background="@color/colorGreen"
+        android:textColor="@color/colorTextIcons"
+        android:layout_marginTop="20dp" />
 </LinearLayout>
