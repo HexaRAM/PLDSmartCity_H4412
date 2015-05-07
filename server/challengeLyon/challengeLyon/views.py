@@ -51,7 +51,20 @@ class ChallengeViewSet(viewsets.ModelViewSet):
 
                 challengeplayed = Challengeplayed(challenge=challenge, user=request.user, score=score)
                 challengeplayed.save()
-                return Response({'status': 'Good Luck !'})
+                try :
+                    retour = {
+                        'status': 'Good Luck !',
+                        'data': {
+                            'challengeplayedid': challengeplayed.id,
+                            'validationitemid': challengeplayed.validationitem.id
+                        }
+                    }
+                    return retour
+                except:
+                    return Response({
+                        'status': 'Good Luck !'
+                    })
+
             except:
                 return Response({'status':"Current challenge already played [maybe]"}, status=status.HTTP_400_BAD_REQUEST)
         else:
